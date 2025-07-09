@@ -7,7 +7,7 @@ A tool for analyzing and testing MCP (Model Context Protocol) servers and their 
 Use uvx to run the tool without cloning it!
 
 ```bash
-uvx --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git" mcp-interviewer "uvx mcp-server-fetch" --iterations 3
+uvx --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git[all]" mcp-interviewer "uvx mcp-server-fetch" --iterations 3
 ```
 
 ## Interview

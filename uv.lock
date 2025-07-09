@@ -506,6 +506,9 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+all = [
+    { name = "magentic-common", extra = ["trapi-autogen"] },
+]
 dev = [
     { name = "mypy" },
     { name = "pytest" },
@@ -523,13 +526,14 @@ requires-dist = [
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "magentic-common", extras = ["trapi-autogen"], marker = "extra == 'trapi'", git = "ssh://git@github.com/microsoft/magentic-common.git" },
     { name = "mcp", specifier = ">=1.10.1" },
+    { name = "mcp-interviewer", extras = ["trapi"], marker = "extra == 'all'" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.21.0" },
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.1.0" },
 ]
-provides-extras = ["dev", "trapi"]
+provides-extras = ["dev", "trapi", "all"]
 
 [[package]]
 name = "msal"

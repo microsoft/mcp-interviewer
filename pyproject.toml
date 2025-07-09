@@ -25,6 +25,8 @@ dev = [
 
 trapi = ["magentic-common[trapi-autogen]"]
 
+all = ["mcp-interviewer[trapi]"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
