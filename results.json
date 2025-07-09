@@ -1,0 +1,272 @@
+{
+  "score": 1.0,
+  "analysis": "Analyzed 1 servers with 32 total tools across multiple test iterations. Overall success rate: 100.00%. 1 servers are performing well (>70% success rate). Excellent performance across the entire MCP ecosystem.",
+  "servers": [
+    {
+      "name": "Server 1",
+      "score": 1.0,
+      "analysis": "Server 'Server 1' has 32 tools with an average success rate of 100.00%. 32 of 32 tools are working reliably (>50% success rate). Excellent performance across all tools.",
+      "tools": [
+        {
+          "name": "visit_url",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "history_back",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "refresh_page",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "web_search",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "click",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "click_full",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "input_text",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "hover",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "select_option",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "upload_file",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "keypress",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "page_up",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "page_down",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "get_visual_viewport",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "create_tab",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "switch_tab",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "close_tab",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "get_tabs_info",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "describe_page",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "get_screenshot",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "get_interactive_rects",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "get_visible_text",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "get_som_screenshot",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "get_focused_element_id",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "cleanup_animations",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "answer_question",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "summarize_page",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "sleep",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "stop_action",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "get_page_title",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "get_page_url",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        },
+        {
+          "name": "health_check",
+          "score": 1.0,
+          "analysis": "Tool works perfectly (1/1 successful calls)",
+          "rewritten": null,
+          "errors": [],
+          "test_results": null
+        }
+      ],
+      "metadata": null
+    }
+  ],
+  "total_tools": 32,
+  "successful_tools": 32
+}
