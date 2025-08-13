@@ -572,28 +572,21 @@ def generate_full_markdown(scorecard: ServerScoreCard) -> str:
             lines.append("")
             lines.append("")
 
-            # Request tracking (if available)
-            if any(
-                hasattr(step, field)
-                for field in [
-                    "sampling_requests",
-                    "elicitation_requests",
-                    "list_roots_requests",
-                    "logging_requests",
-                ]
-            ):
-                lines.append("**Request Tracking:**")
-                lines.append("")
-                if hasattr(step, "sampling_requests"):
-                    lines.append(f"- Sampling Requests: {step.sampling_requests}")
-                if hasattr(step, "elicitation_requests"):
-                    lines.append(f"- Elicitation Requests: {step.elicitation_requests}")
-                if hasattr(step, "list_roots_requests"):
-                    lines.append(f"- List Roots Requests: {step.list_roots_requests}")
-                if hasattr(step, "logging_requests"):
-                    lines.append(f"- Logging Requests: {step.logging_requests}")
-                lines.append("")
-                lines.append("")
+            # Request tracking (always show, with defaults of 0)
+            lines.append("**Request Tracking:**")
+            lines.append("")
+            lines.append(
+                f"- Sampling Requests: {getattr(step, 'sampling_requests', 0)}"
+            )
+            lines.append(
+                f"- Elicitation Requests: {getattr(step, 'elicitation_requests', 0)}"
+            )
+            lines.append(
+                f"- List Roots Requests: {getattr(step, 'list_roots_requests', 0)}"
+            )
+            lines.append(f"- Logging Requests: {getattr(step, 'logging_requests', 0)}")
+            lines.append("")
+            lines.append("")
 
             # Test Results
             lines.append("**Results:**")
