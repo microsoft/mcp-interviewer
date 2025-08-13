@@ -22,13 +22,14 @@ Open the `mcp-scorecard.md` to read the report on your MCP server.
 
 ## Installation
 
-Clone this repo and then use uv to install it.
-
 ```bash
 git clone git@github.com:microsoft/mcp-interviewer.git
 cd mcp-interviewer
+
 uv venv
 uv sync --all-extras --all-groups
+
+pre-commit install
 ```
 
 ## Usage
@@ -62,3 +63,4 @@ interviewer = MCPInterviewer(client, model)
 scorecard = await interviewer.score_server(params)
 ```
 
+### Example Output
