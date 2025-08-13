@@ -30,17 +30,17 @@ async def amain(
     interviewer = MCPInterviewer(client, model)
     scorecard = await interviewer.score_server(params)
 
-    path = out_dir / "mcp-scorecard.md"
+    path = out_dir / Path("mcp-scorecard.md")
     logger.info(f"Saving full scorecard to {path}")
     with open(path, "w") as fd:
         fd.write(generate_full_markdown(scorecard))
 
-    path = out_dir / "mcp-scorecard-short.md"
+    path = out_dir / Path("mcp-scorecard-short.md")
     logger.info(f"Saving short scorecard to {path}")
     with open(path, "w") as fd:
         fd.write(generate_summary_markdown(scorecard))
 
-    path = out_dir / "mcp-scorecard.json"
+    path = out_dir / Path("mcp-scorecard.json")
     logger.info(f"Saving scorecard json data to {path}")
     with open(path, "w") as fd:
         fd.write(scorecard.model_dump_json(indent=2))
