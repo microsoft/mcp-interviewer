@@ -410,10 +410,11 @@ def generate_summary_markdown(scorecard: ServerScoreCard) -> str:
     lines.append("")
     lines.append("")
 
-    # Overall score
-    lines.extend(generate_score_summary(scorecard, detailed=False))
+    # Score Summary
+    lines.append("## Score Summary")
     lines.append("")
     lines.append("")
+    lines.extend(generate_score_summary(scorecard, detailed=True))
 
     return "\n".join(lines)
 
@@ -483,6 +484,12 @@ def generate_full_markdown(scorecard: ServerScoreCard) -> str:
     lines.extend(generate_feature_counts_table(scorecard))
     lines.append("")
     lines.append("")
+
+    # Score Summary
+    lines.append("## Score Summary")
+    lines.append("")
+    lines.append("")
+    lines.extend(generate_score_summary(scorecard, detailed=True))
 
     # Tools Details
     if scorecard.tools:
@@ -630,11 +637,5 @@ def generate_full_markdown(scorecard: ServerScoreCard) -> str:
             )
             lines.append("")
             lines.append("")
-
-    # Score Summary
-    lines.append("## Score Summary")
-    lines.append("")
-    lines.append("")
-    lines.extend(generate_score_summary(scorecard, detailed=True))
 
     return "\n".join(lines)
