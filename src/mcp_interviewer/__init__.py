@@ -1,13 +1,9 @@
-__version__ = "0.0.1"
-
 from .interviewer import MCPInterviewer
-from .tester import ToolTester
-from .types import InterviewResults, ServerAnalysis, ToolAnalysis
+from .models import Client, ServerParameters, ServerScoreCard
 
 __all__ = [
     "MCPInterviewer",
-    "InterviewResults",
-    "ServerAnalysis",
-    "ToolAnalysis",
-    "ToolTester",
+    "Client",
+    "ServerParameters",
+    "ServerScoreCard",
 ]

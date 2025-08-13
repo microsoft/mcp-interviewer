@@ -1,565 +1,568 @@
-"""Main MCPInterviewer class for analyzing MCP workbenches."""
-
 import asyncio
+import logging
+from typing import Any
 
-from autogen_core.models import ChatCompletionClient
-from autogen_core.tools import ToolSchema
-from autogen_ext.tools.mcp import McpWorkbench
-from loguru import logger
+from mcp import ClientSession, stdio_client
+from mcp.shared.context import RequestContext
+from mcp.types import (
+    CreateMessageRequestParams,
+    CreateMessageResult,
+    ElicitRequestParams,
+    ElicitResult,
+    ListRootsResult,
+    LoggingMessageNotificationParams,
+    Root,
+    TextContent,
+    Tool,
+)
+from pydantic import FileUrl
 
-# Import patched MCP classes to ensure we get extended functionality
-from .prompts import generate_overall_analysis_prompt, generate_server_analysis_prompt
-from .tester import ToolTester
-from .types import InterviewResults, ServerAnalysis, ToolAnalysis
+from . import prompts
+from .models import (
+    Client,
+    FunctionalTest,
+    FunctionalTestOutput,
+    FunctionalTestScoreCard,
+    FunctionalTestStep,
+    FunctionalTestStepOutput,
+    FunctionalTestStepScoreCard,
+    Server,
+    ServerParameters,
+    ServerScoreCard,
+    ToolScoreCard,
+)
+
+logger = logging.getLogger(__name__)
 
 
 class MCPInterviewer:
-    """Main class for interviewing and analyzing MCP servers."""
+    """Main class for evaluating MCP servers.
 
-    def __init__(
-        self,
-        workbenches: list[McpWorkbench],
-        model_client: ChatCompletionClient | None = None,
-        tool_timeout: float = 30.0,
-        server_timeout: float = 300.0,
-        analysis_timeout: float = 60.0,
-        iterations_per_tool: int = 3,
-    ):
-        """Initialize the interviewer with workbenches and a model client.
+    The MCPInterviewer orchestrates the complete evaluation process for MCP servers,
+    including server inspection, tool quality assessment, and functional testing.
+    It uses an LLM to generate tests and score the server's capabilities.
+    """
+
+    def __init__(self, client: Client, model: str):
+        """Initialize the MCP Interviewer.
 
         Args:
-            workbenches: List of MCP workbenches to analyze. For best results with the
-                patched autogen_ext.tools.mcp, create workbenches with a model_client
-                parameter to enable server sampling capabilities:
-                    workbench = McpWorkbench(server_params, model_client=your_model_client)
-            model_client: Chat completion client for LLM-based analysis
-            tool_timeout: Timeout in seconds for individual tool testing (default: 30s)
-            server_timeout: Timeout in seconds for analyzing a complete server (default: 5m)
-            analysis_timeout: Timeout in seconds for LLM analysis generation (default: 60s)
-            iterations_per_tool: Number of test iterations to run per tool (default: 3)
+            client: OpenAI client (sync or async) for LLM-based evaluation
+            model: Model name to use for evaluation (e.g., "gpt-4", "gpt-3.5-turbo")
         """
-        self.workbenches = workbenches
-        if model_client is None:
-            try:
-                from trapi.autogen import TrapiChatCompletionClient
-            except ImportError:
-                raise ImportError(
-                    "trapi not found. Please install optional dependency group 'trapi'"
-                )
-            model_client = TrapiChatCompletionClient("gpt-4o")
+        self._client = client
+        self._model = model
 
-        assert isinstance(model_client, ChatCompletionClient)
-        self.model_client = model_client
-        self.tester = ToolTester(model_client, analysis_timeout)
-        self.tool_timeout = tool_timeout
-        self.server_timeout = server_timeout
-        self.analysis_timeout = analysis_timeout
-        self.iterations_per_tool = iterations_per_tool
-
-    async def interview(
-        self,
-    ) -> InterviewResults:
-        """Conduct a full interview of all workbenches following iterative testing logic.
-
-        For each workbench:
-        1. Iterates over each tool in the workbench
-        2. For each tool, runs multiple test iterations (configurable)
-           - Generates arguments for the tool
-           - Calls the tool with generated arguments
-           - Records success/failure of each tool call
-        3. Scores the workbench based on average tool success rate
-        4. Generates qualitative analysis for the workbench
-
-        Finally generates overall qualitative analysis across all workbenches.
+    async def score_tool(self, tool: Tool) -> ToolScoreCard:
+        """Score a single tool based on its name, description, and schema quality.
 
         Args:
-            check_tools: Whether to run tests to check if tools actually work
-            rewrite_tools: Whether to suggest new tool names and descriptions
+            tool: The Tool object to evaluate
 
         Returns:
-            Complete interview results with scores and analysis
+            ToolScoreCard containing scores for tool name, description, and schema quality
+
+        Raises:
+            Exception: If tool scoring fails
         """
-        server_analyses = []
-        failed_servers = 0
-
-        for i, workbench in enumerate(self.workbenches):
-            logger.info(f"Analyzing workbench {i + 1}/{len(self.workbenches)}")
-            server_name = getattr(workbench, "name", f"Server {i + 1}")
-
-            try:
-                # Apply server-level timeout to prevent hanging
-                server_analysis = await asyncio.wait_for(
-                    self._analyze_server(workbench, server_name),
-                    timeout=self.server_timeout,
-                )
-                server_analyses.append(server_analysis)
-            except TimeoutError:
-                logger.error(
-                    f"Server '{server_name}' analysis timed out after {self.server_timeout}s"
-                )
-                failed_servers += 1
-                server_analyses.append(
-                    ServerAnalysis(
-                        name=server_name,
-                        score=0.0,
-                        analysis=f"Server analysis timed out after {self.server_timeout} seconds",
-                        tools=[],
-                    )
-                )
-            except Exception as e:
-                logger.exception(f"Unexpected error analyzing server '{server_name}': {e}")
-                failed_servers += 1
-                server_analyses.append(
-                    ServerAnalysis(
-                        name=server_name,
-                        score=0.0,
-                        analysis=f"Server analysis failed: {str(e)}",
-                        tools=[],
-                    )
-                )
-
-        # Calculate overall score and analysis
-        overall_score = self._calculate_overall_score(server_analyses)
-
         try:
-            overall_analysis = await asyncio.wait_for(
-                self._generate_overall_analysis(server_analyses), timeout=self.analysis_timeout
-            )
-        except TimeoutError:
-            logger.error("Overall analysis generation timed out")
-            overall_analysis = (
-                f"Analysis completed with {failed_servers} failed servers. "
-                f"Overall analysis generation timed out after {self.analysis_timeout}s."
-            )
+            logger.debug(f"Scoring tool '{tool.name}'")
+            scorecard = await prompts.score_tool(self._client, self._model, tool)
+            logger.debug(f"Tool scorecard for '{tool.name}': {scorecard}")
+            return scorecard
         except Exception as e:
-            logger.exception(f"Error generating overall analysis: {e}")
-            overall_analysis = (
-                f"Analysis completed with {failed_servers} failed servers. "
-                f"Error generating analysis: {str(e)}"
-            )
+            logger.error(f"Failed to score tool '{tool.name}': {e}", exc_info=True)
+            raise
 
-        return InterviewResults(
-            score=overall_score, analysis=overall_analysis, servers=server_analyses
+    async def generate_functional_test(self, server: Server) -> FunctionalTest:
+        """Generate a functional test plan for the server's tools.
+
+        Creates a comprehensive test plan with multiple steps to evaluate the server's
+        functionality, including edge cases and error handling.
+
+        Args:
+            server: The Server object containing tools and capabilities to test
+
+        Returns:
+            FunctionalTest containing a test plan and steps to execute
+
+        Raises:
+            Exception: If test generation fails
+        """
+        try:
+            logger.debug(f"Generating functional test for {len(server.tools)} tools")
+            test = await prompts.generate_functional_test(
+                self._client, self._model, server
+            )
+            logger.info(f"Generated test plan with {len(test.steps)} steps")
+            logger.debug(f"Test plan: {test.plan}")
+            return test
+        except Exception as e:
+            logger.error(f"Failed to generate functional test: {e}", exc_info=True)
+            raise
+
+    async def execute_functional_test_step(
+        self, session: ClientSession, step: FunctionalTestStep
+    ) -> FunctionalTestStepOutput:
+        """Execute a single step of a functional test.
+
+        Calls the specified tool with the given arguments and tracks request counts
+        for sampling, elicitation, list_roots, and logging operations.
+
+        Args:
+            session: The MCP ClientSession to use for tool calls
+            step: The FunctionalTestStep containing tool name and arguments
+
+        Returns:
+            FunctionalTestStepOutput with the tool output and request tracking data
+        """
+        start_sampling_requests = self.sampling_requests
+        start_elicitation_requests = self.elicitation_requests
+        start_list_roots_requests = self.list_roots_requests
+        start_logging_requests = self.logging_requests
+        try:
+            logger.debug(f"Calling tool '{step.tool_name}'")
+            result = await session.call_tool(step.tool_name, step.tool_arguments)
+        except Exception as e:
+            logger.error(
+                f"Failed to execute test step '{step.tool_name}': {e}", exc_info=True
+            )
+            result = e
+
+        logger.debug(f"Tool output: {result}")
+        return FunctionalTestStepOutput(
+            **step.model_dump(),
+            tool_output=result,
+            sampling_requests=self.sampling_requests - start_sampling_requests,
+            elicitation_requests=self.elicitation_requests - start_elicitation_requests,
+            list_roots_requests=self.list_roots_requests - start_list_roots_requests,
+            logging_requests=self.logging_requests - start_logging_requests,
         )
 
-    async def _analyze_server(
-        self,
-        workbench: McpWorkbench,
-        server_name: str,
-    ) -> ServerAnalysis:
-        """Analyze a single MCP server."""
-        await workbench.start()
+    async def execute_functional_test(
+        self, session: ClientSession, test: FunctionalTest
+    ) -> FunctionalTestOutput:
+        """Execute all steps of a functional test.
 
+        Runs through all test steps sequentially, collecting outputs and tracking
+        the total number of requests made during the test execution.
+
+        Args:
+            session: The MCP ClientSession to use for tool calls
+            test: The FunctionalTest containing all test steps to execute
+
+        Returns:
+            FunctionalTestOutput with all step outputs and aggregate request counts
+
+        Raises:
+            Exception: If any test step fails critically
+        """
+        logger.debug(f"Starting test execution with {len(test.steps)} steps")
+
+        self.sampling_requests = 0
+        self.elicitation_requests = 0
+        self.list_roots_requests = 0
+        self.logging_requests = 0
+
+        step_outputs = []
+        for i, step in enumerate(test.steps, 1):
+            logger.info(f"Step {i}/{len(test.steps)}: {step.tool_name}")
+            try:
+                output = await self.execute_functional_test_step(session, step)
+                step_outputs.append(output)
+            except Exception as e:
+                logger.error(f"Step {i}/{len(test.steps)} failed: {e}")
+                raise
+
+        return FunctionalTestOutput(
+            plan=test.plan,
+            steps=step_outputs,
+            sampling_requests=self.sampling_requests,
+            elicitation_requests=self.elicitation_requests,
+            list_roots_requests=self.list_roots_requests,
+            logging_requests=self.logging_requests,
+        )
+
+    async def score_functional_test_step(
+        self, step: FunctionalTestStepOutput
+    ) -> FunctionalTestStepScoreCard:
+        """Score a single functional test step output.
+
+        Evaluates the step based on error handling, output relevance, quality,
+        schema compliance, and whether it meets expectations.
+
+        Args:
+            step: The FunctionalTestStepOutput to evaluate
+
+        Returns:
+            FunctionalTestStepScoreCard with detailed scoring for the step
+
+        Raises:
+            Exception: If step scoring fails
+        """
         try:
-            # Collect initialize result if available (after workbench is started)
-            initialize_result = None
-            try:
-                # Check if this is our patched workbench with initialize_result property
-                if (
-                    hasattr(workbench, "_actor")
-                    and workbench._actor
-                    and hasattr(workbench._actor, "initalize_result")
-                ):
-                    # Use getattr to avoid type checking issues
-                    initialize_result = getattr(workbench._actor, "initalize_result", None)
-                    logger.debug(
-                        f"Collected initialize_result for server '{server_name}': "
-                        f"{initialize_result}"
-                    )
-            except Exception as e:
-                logger.debug(f"Could not collect initialize_result for server '{server_name}': {e}")
-
-            # List all tools with timeout and retry
-            try:
-                tools = await asyncio.wait_for(
-                    self._retry_operation(workbench.list_tools), timeout=30.0
-                )
-            except TimeoutError:
-                logger.error(f"Timeout listing tools for server '{server_name}'")
-                metadata = {"initialize_result": initialize_result} if initialize_result else None
-                return ServerAnalysis(
-                    name=server_name,
-                    score=0.0,
-                    analysis="Failed to list tools: operation timed out",
-                    tools=[],
-                    metadata=metadata,
-                )
-            except Exception as e:
-                logger.exception(f"Error listing tools for server '{server_name}': {e}")
-                metadata = {"initialize_result": initialize_result} if initialize_result else None
-                return ServerAnalysis(
-                    name=server_name,
-                    score=0.0,
-                    analysis=f"Failed to list tools: {str(e)}",
-                    tools=[],
-                    metadata=metadata,
-                )
-
-            tool_analyses = []
-            failed_tools = 0
-
-            # Ensure we have a valid tools list
-            if not tools:
-                logger.warning(f"No tools found for server '{server_name}'")
-                metadata = {"initialize_result": initialize_result} if initialize_result else None
-                return ServerAnalysis(
-                    name=server_name,
-                    score=0.0,
-                    analysis="No tools found in server",
-                    tools=[],
-                    metadata=metadata,
-                )
-
-            # Analyze each tool with multiple iterations
-            for tool in tools:
-                try:
-                    # Run multiple iterations for each tool
-                    tool_analysis = await asyncio.wait_for(
-                        self._test_tool_with_iterations(workbench, tool, self.iterations_per_tool),
-                        timeout=self.tool_timeout * self.iterations_per_tool,
-                    )
-
-                    tool_analyses.append(tool_analysis)
-
-                except TimeoutError:
-                    logger.error(f"Timeout testing tool '{tool['name']}' in server '{server_name}'")
-                    failed_tools += 1
-                    timeout_duration = self.tool_timeout * self.iterations_per_tool
-                    tool_analyses.append(
-                        ToolAnalysis(
-                            name=tool["name"],
-                            score=0.0,
-                            analysis=f"Tool testing timed out after {timeout_duration} seconds",
-                            errors=["Timeout during testing"],
-                        )
-                    )
-                except Exception as e:
-                    logger.exception(f"Error testing tool '{tool['name']}': {e}")
-                    failed_tools += 1
-                    tool_analyses.append(
-                        ToolAnalysis(
-                            name=tool["name"],
-                            score=0.0,
-                            analysis=f"Tool testing failed: {str(e)}",
-                            errors=[str(e)],
-                        )
-                    )
-
-            # Calculate server score and generate analysis
-            server_score = self._calculate_server_score(tool_analyses)
-
-            try:
-                server_analysis_text = await asyncio.wait_for(
-                    self._generate_server_analysis(server_name, tool_analyses),
-                    timeout=self.analysis_timeout,
-                )
-            except TimeoutError:
-                logger.error(f"Timeout generating analysis for server '{server_name}'")
-                server_analysis_text = (
-                    f"Server '{server_name}' has {len(tool_analyses)} tools. "
-                    f"Analysis generation timed out. {failed_tools} tools failed testing."
-                )
-            except Exception as e:
-                logger.exception(f"Error generating analysis for server '{server_name}': {e}")
-                server_analysis_text = (
-                    f"Server '{server_name}' has {len(tool_analyses)} tools. "
-                    f"Error generating analysis: {str(e)}. {failed_tools} tools failed testing."
-                )
-
-            # Prepare metadata
-            metadata = {"initialize_result": initialize_result} if initialize_result else None
-
-            return ServerAnalysis(
-                name=server_name,
-                score=server_score,
-                analysis=server_analysis_text,
-                tools=tool_analyses,
-                metadata=metadata,
+            logger.debug(f"Scoring step '{step.tool_name}'")
+            scorecard = await prompts.score_functional_test_step_output(
+                self._client, self._model, step
             )
-
+            logger.debug(f"Step scorecard: {scorecard}")
+            return scorecard
         except Exception as e:
-            logger.exception(f"Unexpected error analyzing server '{server_name}': {e}")
-            # Try to get initialize_result even in error case
-            error_initialize_result = None
-            try:
-                if (
-                    hasattr(workbench, "_actor")
-                    and workbench._actor
-                    and hasattr(workbench._actor, "initalize_result")
-                ):
-                    error_initialize_result = getattr(workbench._actor, "initalize_result", None)
-            except Exception:
-                pass  # Ignore errors when trying to get initialize_result
-
-            error_metadata = (
-                {"initialize_result": error_initialize_result} if error_initialize_result else None
+            logger.error(
+                f"Failed to score test step '{step.tool_name}': {e}", exc_info=True
             )
-            return ServerAnalysis(
-                name=server_name,
-                score=0.0,
-                analysis=f"Failed to analyze server: {str(e)}",
-                tools=[],
-                metadata=error_metadata,
+            raise
+
+    async def score_functional_test(
+        self, test: FunctionalTestOutput
+    ) -> FunctionalTestScoreCard:
+        """Score the entire functional test output.
+
+        Evaluates the overall test execution, including all individual steps,
+        to determine if the server meets functional expectations.
+
+        Args:
+            test: The FunctionalTestOutput containing all step results
+
+        Returns:
+            FunctionalTestScoreCard with overall test scoring and individual step scores
+
+        Raises:
+            Exception: If test scoring fails
+        """
+        try:
+            logger.debug(f"Scoring test with {len(test.steps)} steps")
+            scorecard = await prompts.score_functional_test_output(
+                self._client, self._model, test
             )
+            logger.debug(f"Test scorecard: {scorecard}")
+            return scorecard
+        except Exception as e:
+            logger.error(f"Failed to score functional test: {e}", exc_info=True)
+            raise
 
-    async def _test_tool_with_iterations(
-        self, workbench: McpWorkbench, tool: ToolSchema, iterations: int
-    ) -> ToolAnalysis:
-        """Test a tool multiple times with generated arguments and calculate success rate."""
-        tool_name = tool["name"]
-        logger.info(f"Testing tool '{tool_name}' with {iterations} iterations")
+    async def inspect_server(
+        self, server: ServerParameters, session: ClientSession
+    ) -> Server:
+        """Inspect an MCP server to discover its capabilities and features.
 
-        successful_calls = 0
-        failed_calls = 0
-        errors = []
-        messages = []  # Maintain message history across iterations
+        Initializes the server connection and retrieves all available tools,
+        resources, resource templates, and prompts based on the server's
+        advertised capabilities.
 
-        for iteration in range(iterations):
+        Args:
+            server: ServerParameters for launching the server
+            session: The MCP ClientSession to use for inspection
+
+        Returns:
+            Server object containing all discovered features and capabilities
+        """
+        logger.info(
+            f"Starting server inspection for: {server.command} {' '.join(server.args or [])}"
+        )
+        logger.debug(f"Server parameters: {server}")
+
+        logger.info("Initializing client session...")
+        initialize_result = await session.initialize()
+        await asyncio.sleep(0.2)
+        logger.info("Client session initialized successfully")
+        logger.debug(f"Server capabilities: {initialize_result.capabilities}")
+        tools = []
+        resources = []
+        resource_templates = []
+        prompts = []
+
+        if initialize_result.capabilities.tools is not None:
+            logger.info("Server supports tools capability - fetching tools")
             try:
-                logger.debug(f"Testing tool '{tool_name}' - iteration {iteration + 1}/{iterations}")
+                result = await session.list_tools()
+                logger.debug(f"Initial tools batch: {len(result.tools)} tools")
 
-                # Generate arguments for this tool call, using accumulated message history
-                args = await self.tester._generate_mock_args_with_llm(tool, messages)
-
-                # Call the tool with generated arguments
-                result = await workbench.call_tool(tool_name, args)
-
-                # Check if the call was successful
-                if result and not getattr(result, "isError", False):
-                    successful_calls += 1
-                    logger.debug(f"Tool '{tool_name}' iteration {iteration + 1} succeeded")
-
-                    # Add the successful call to message history to encourage variation
-                    from autogen_core.models import AssistantMessage
-
-                    messages.append(
-                        AssistantMessage(
-                            content=f"Successfully called {tool_name} with args: {args}",
-                            source="assistant",
-                        )
-                    )
-                else:
-                    failed_calls += 1
-                    error_msg = getattr(result, "content", "Unknown error")
-                    errors.append(f"Iteration {iteration + 1}: {error_msg}")
+                while result.nextCursor:
+                    tools.extend(result.tools)
                     logger.debug(
-                        f"Tool '{tool_name}' iteration {iteration + 1} failed: {error_msg}"
+                        f"Fetching next batch of tools with cursor: {result.nextCursor}"
                     )
+                    result = await session.list_tools(result.nextCursor)
+                    logger.debug(f"Retrieved {len(result.tools)} more tools")
 
-                    # Add the failed call to message history to learn from failures
-                    from autogen_core.models import AssistantMessage
-
-                    messages.append(
-                        AssistantMessage(
-                            content=f"Failed to call {tool_name} with args: {args}. Error: {error_msg}",
-                            source="assistant",
-                        )
-                    )
-
+                tools.extend(result.tools)
+                logger.info(f"Successfully fetched {len(tools)} total tools")
+                for tool in tools:
+                    logger.debug(f"Tool found: {tool.name}")
             except Exception as e:
-                failed_calls += 1
-                error_msg = str(e)
-                errors.append(f"Iteration {iteration + 1}: {error_msg}")
+                logger.warning(f"Failed to list tools: {e}", exc_info=True)
+        else:
+            logger.info("Server does not support tools capability")
+
+        if initialize_result.capabilities.resources is not None:
+            logger.info("Server supports resources capability - fetching resources")
+            try:
+                result = await session.list_resources()
                 logger.debug(
-                    f"Tool '{tool_name}' iteration {iteration + 1} failed with exception: {e}"
+                    f"Initial resources batch: {len(result.resources)} resources"
                 )
 
-                # Add the exception to message history
-                from autogen_core.models import AssistantMessage
-
-                messages.append(
-                    AssistantMessage(
-                        content=f"Exception calling {tool_name}: {error_msg}", source="assistant"
+                while result.nextCursor:
+                    resources.extend(result.resources)
+                    logger.debug(
+                        f"Fetching next batch of resources with cursor: {result.nextCursor}"
                     )
-                )
+                    result = await session.list_resources(result.nextCursor)
+                    logger.debug(f"Retrieved {len(result.resources)} more resources")
 
-        # Calculate success rate as score
-        total_calls = successful_calls + failed_calls
-        success_rate = successful_calls / total_calls if total_calls > 0 else 0.0
-
-        # Generate analysis text
-        if success_rate == 1.0:
-            analysis = f"Tool works perfectly ({successful_calls}/{total_calls} successful calls)"
-        elif success_rate >= 0.8:
-            analysis = f"Tool works well ({successful_calls}/{total_calls} successful calls)"
-        elif success_rate >= 0.5:
-            analysis = f"Tool has mixed results ({successful_calls}/{total_calls} successful calls)"
-        elif success_rate > 0:
-            analysis = f"Tool mostly fails ({successful_calls}/{total_calls} successful calls)"
-        else:
-            analysis = f"Tool completely fails (0/{total_calls} successful calls)"
-
-        return ToolAnalysis(
-            name=tool_name, score=success_rate, analysis=analysis, errors=errors if errors else None
-        )
-
-    def _calculate_server_score(self, tool_analyses: list[ToolAnalysis]) -> float:
-        """Calculate overall score for a server based on average tool success rate."""
-        if not tool_analyses:
-            return 0.0
-
-        total_score = sum(tool.score for tool in tool_analyses)
-        return total_score / len(tool_analyses)
-
-    def _calculate_overall_score(self, server_analyses: list[ServerAnalysis]) -> float:
-        """Calculate overall score across all servers."""
-        if not server_analyses:
-            return 0.0
-
-        # Weight by number of tools in each server
-        total_weighted_score = 0.0
-        total_tools = 0
-
-        for server in server_analyses:
-            tool_count = len(server.tools)
-            if tool_count > 0:
-                total_weighted_score += server.score * tool_count
-                total_tools += tool_count
-
-        return total_weighted_score / total_tools if total_tools > 0 else 0.0
-
-    async def _generate_server_analysis(
-        self, server_name: str, tool_analyses: list[ToolAnalysis]
-    ) -> str:
-        """Generate LLM-based analysis for a server."""
-        if not tool_analyses:
-            return f"Server '{server_name}' has no tools to analyze."
-
-        prompt = generate_server_analysis_prompt(server_name, tool_analyses)
-
-        try:
-            from autogen_core.models import UserMessage
-
-            messages = [UserMessage(source="user", content=prompt)]
-            response = await asyncio.wait_for(
-                self.model_client.create(messages=messages),
-                timeout=self.analysis_timeout,
-            )
-
-            if hasattr(response, "content") and response.content:
-                if isinstance(response.content, str):
-                    return response.content.strip()
-                elif isinstance(response.content, list) and len(response.content) > 0:
-                    return str(response.content[0]).strip()
-
-            # Fallback to template-based analysis
-            return self._fallback_server_analysis(server_name, tool_analyses)
-
-        except Exception as e:
-            logger.warning(f"Failed to generate LLM analysis for server '{server_name}': {e}")
-            return self._fallback_server_analysis(server_name, tool_analyses)
-
-    def _fallback_server_analysis(self, server_name: str, tool_analyses: list[ToolAnalysis]) -> str:
-        """Fallback template-based server analysis."""
-        working_tools = len([t for t in tool_analyses if t.score > 0.5])
-        total_tools = len(tool_analyses)
-        avg_score = sum(t.score for t in tool_analyses) / len(tool_analyses)
-
-        analysis = (
-            f"Server '{server_name}' has {total_tools} tools with an average success rate of "
-            f"{avg_score:.2%}. {working_tools} of {total_tools} tools are working reliably "
-            f"(>50% success rate)."
-        )
-
-        if avg_score >= 0.9:
-            analysis += " Excellent performance across all tools."
-        elif avg_score >= 0.7:
-            analysis += " Good overall performance with room for minor improvements."
-        elif avg_score >= 0.5:
-            analysis += " Mixed performance - some tools need attention."
-        elif avg_score >= 0.2:
-            analysis += " Poor performance - most tools have significant issues."
-        else:
-            analysis += " Very poor performance - server needs major fixes."
-
-        # Add specific issues
-        common_issues = []
-        for tool in tool_analyses:
-            common_issues.extend(tool.errors or [])
-
-        if common_issues:
-            unique_issues = list(set(common_issues))
-            analysis += f" Common issues: {', '.join(unique_issues[:3])}"
-
-        return analysis
-
-    async def _generate_overall_analysis(self, server_analyses: list[ServerAnalysis]) -> str:
-        """Generate LLM-based overall analysis across all servers."""
-        if not server_analyses:
-            return "No servers analyzed."
-
-        prompt = generate_overall_analysis_prompt(server_analyses)
-
-        try:
-            from autogen_core.models import UserMessage
-
-            messages = [UserMessage(source="user", content=prompt)]
-            response = await asyncio.wait_for(
-                self.model_client.create(messages=messages),
-                timeout=self.analysis_timeout,
-            )
-
-            if hasattr(response, "content") and response.content:
-                if isinstance(response.content, str):
-                    return response.content.strip()
-                elif isinstance(response.content, list) and len(response.content) > 0:
-                    return str(response.content[0]).strip()
-
-            # Fallback to template-based analysis
-            return self._fallback_overall_analysis(server_analyses)
-
-        except Exception as e:
-            logger.warning(f"Failed to generate LLM overall analysis: {e}")
-            return self._fallback_overall_analysis(server_analyses)
-
-    def _fallback_overall_analysis(self, server_analyses: list[ServerAnalysis]) -> str:
-        """Fallback template-based overall analysis."""
-        total_servers = len(server_analyses)
-        total_tools = sum(len(server.tools) for server in server_analyses)
-        working_servers = len([s for s in server_analyses if s.score > 0.7])
-
-        # Calculate overall success rate
-        if total_tools > 0:
-            total_score = sum(server.score * len(server.tools) for server in server_analyses)
-            overall_success_rate = total_score / total_tools
-        else:
-            overall_success_rate = 0.0
-
-        analysis = (
-            f"Analyzed {total_servers} servers with {total_tools} total tools across "
-            f"multiple test iterations. Overall success rate: {overall_success_rate:.2%}. "
-            f"{working_servers} servers are performing well (>70% success rate)."
-        )
-
-        if overall_success_rate >= 0.9:
-            analysis += " Excellent performance across the entire MCP ecosystem."
-        elif overall_success_rate >= 0.7:
-            analysis += " Good overall ecosystem health with minor issues to address."
-        elif overall_success_rate >= 0.5:
-            analysis += " Mixed ecosystem performance - several areas need improvement."
-        elif overall_success_rate >= 0.2:
-            analysis += " Poor ecosystem health - significant improvements needed across servers."
-        else:
-            analysis += " Critical ecosystem issues - major overhaul required for most servers."
-
-        return analysis
-
-    async def _retry_operation(self, operation, max_retries: int = 3, delay: float = 1.0):
-        """Retry an operation with exponential backoff."""
-        for attempt in range(max_retries):
-            try:
-                result = operation()
-                if asyncio.iscoroutine(result):
-                    return await result
-                else:
-                    return result
+                resources.extend(result.resources)
+                logger.info(f"Successfully fetched {len(resources)} total resources")
+                for resource in resources:
+                    logger.debug(
+                        f"Resource found: {resource.name if hasattr(resource, 'name') else resource}"
+                    )
             except Exception as e:
-                if attempt == max_retries - 1:  # Last attempt
-                    raise e
+                logger.warning(f"Failed to list resources: {e}", exc_info=True)
+        else:
+            logger.info("Server does not support resources capability")
 
-                wait_time = delay * (2**attempt)  # Exponential backoff
-                logger.warning(
-                    f"Operation failed (attempt {attempt + 1}/{max_retries}), "
-                    f"retrying in {wait_time}s: {e}"
+            logger.info("Fetching resource templates")
+            try:
+                result = await session.list_resource_templates()
+                logger.debug(
+                    f"Initial resource templates batch: {len(result.resourceTemplates)} templates"
                 )
-                await asyncio.sleep(wait_time)
+
+                while result.nextCursor:
+                    resource_templates.extend(result.resourceTemplates)
+                    logger.debug(
+                        f"Fetching next batch of resource templates with cursor: {result.nextCursor}"
+                    )
+                    result = await session.list_resource_templates(result.nextCursor)
+                    logger.debug(
+                        f"Retrieved {len(result.resourceTemplates)} more templates"
+                    )
+
+                resource_templates.extend(result.resourceTemplates)
+                logger.info(
+                    f"Successfully fetched {len(resource_templates)} total resource templates"
+                )
+                for template in resource_templates:
+                    logger.debug(
+                        f"Resource template found: {template.name if hasattr(template, 'name') else template}"
+                    )
+            except Exception as e:
+                logger.warning(f"Failed to list resource templates: {e}", exc_info=True)
+
+        if initialize_result.capabilities.prompts is not None:
+            logger.info("Server supports prompts capability - fetching prompts")
+            try:
+                result = await session.list_prompts()
+                logger.debug(f"Initial prompts batch: {len(result.prompts)} prompts")
+
+                while result.nextCursor:
+                    prompts.extend(result.prompts)
+                    logger.debug(
+                        f"Fetching next batch of prompts with cursor: {result.nextCursor}"
+                    )
+                    result = await session.list_prompts(result.nextCursor)
+                    logger.debug(f"Retrieved {len(result.prompts)} more prompts")
+
+                prompts.extend(result.prompts)
+                logger.info(f"Successfully fetched {len(prompts)} total prompts")
+                for prompt in prompts:
+                    logger.debug(
+                        f"Prompt found: {prompt.name if hasattr(prompt, 'name') else prompt}"
+                    )
+            except Exception as e:
+                logger.warning(f"Failed to list prompts: {e}", exc_info=True)
+        else:
+            logger.info("Server does not support prompts capability")
+
+        logger.info("Server inspection completed successfully")
+        logger.info(
+            f"Server summary: {len(tools)} tools, {len(resources)} resources, "
+            f"{len(resource_templates)} resource templates, {len(prompts)} prompts"
+        )
+
+        server_obj = Server(
+            parameters=server,
+            initialize_result=initialize_result,
+            tools=tools,
+            resources=resources,
+            resource_templates=resource_templates,
+            prompts=prompts,
+        )
+        logger.debug(f"Created Server object: {server_obj}")
+        return server_obj
+
+    async def sampling_callback(
+        self,
+        context: RequestContext["ClientSession", Any],
+        params: CreateMessageRequestParams,
+    ) -> CreateMessageResult:
+        """Callback for handling sampling requests from the server.
+
+        Tracks the number of sampling requests and returns a dummy response.
+
+        Args:
+            context: The request context from the MCP session
+            params: Parameters for the message creation request
+
+        Returns:
+            CreateMessageResult with dummy content
+        """
+        self.sampling_requests += 1
+        return CreateMessageResult(
+            role="assistant",
+            content=TextContent(type="text", text="Dummy content"),
+            model="dummy",
+        )
+
+    async def elicitation_callback(
+        self,
+        context: RequestContext["ClientSession", Any],
+        params: ElicitRequestParams,
+    ) -> ElicitResult:
+        """Callback for handling elicitation requests from the server.
+
+        Tracks the number of elicitation requests and cancels them.
+
+        Args:
+            context: The request context from the MCP session
+            params: Parameters for the elicitation request
+
+        Returns:
+            ElicitResult with cancel action
+        """
+        self.elicitation_requests += 1
+        return ElicitResult(action="cancel")
+
+    async def list_roots_callback(
+        self,
+        context: RequestContext["ClientSession", Any],
+    ) -> ListRootsResult:
+        """Callback for handling list roots requests from the server.
+
+        Tracks the number of list roots requests and returns a dummy root.
+
+        Args:
+            context: The request context from the MCP session
+
+        Returns:
+            ListRootsResult with a dummy file root
+        """
+        self.list_roots_requests += 1
+        return ListRootsResult(roots=[Root(uri=FileUrl("file://dummy.txt"))])
+
+    async def logging_callback(
+        self,
+        params: LoggingMessageNotificationParams,
+    ) -> None:
+        """Callback for handling logging notifications from the server.
+
+        Tracks the number of logging requests received.
+
+        Args:
+            params: Parameters containing the logging message
+        """
+        self.logging_requests += 1
+        pass
+
+    async def score_server(self, params: ServerParameters) -> ServerScoreCard:
+        """Perform a complete evaluation of an MCP server.
+
+        This is the main entry point that orchestrates the entire evaluation process:
+        1. Server inspection to discover capabilities
+        2. Tool quality assessment for all discovered tools
+        3. Functional testing to verify server behavior
+        4. Compilation of results into a comprehensive scorecard
+
+        Args:
+            params: ServerParameters for launching and connecting to the server
+
+        Returns:
+            ServerScoreCard containing complete evaluation results including:
+            - Server information and capabilities
+            - Individual tool scorecards
+            - Functional test results
+            - Overall scoring metrics
+
+        Raises:
+            Exception: If server evaluation fails at any stage
+        """
+        logger.info("=" * 60)
+        logger.info(f"Starting MCP Server Evaluation: {params.command}")
+        logger.info("=" * 60)
+
+        try:
+            async with stdio_client(params) as (read, write):
+                async with ClientSession(
+                    read,
+                    write,
+                    sampling_callback=self.sampling_callback,
+                    elicitation_callback=self.elicitation_callback,
+                    list_roots_callback=self.list_roots_callback,
+                    logging_callback=self.logging_callback,
+                ) as session:
+                    # Phase 1: Server Inspection
+                    logger.info("=" * 60)
+                    logger.info("PHASE 1: Server Inspection")
+                    logger.info("=" * 60)
+                    server = await self.inspect_server(params, session)
+
+                    # Phase 2: Tool Scoring
+                    logger.info("=" * 60)
+                    logger.info("PHASE 2: Tool Quality Assessment")
+                    logger.info("=" * 60)
+                    if server.tools:
+                        logger.info(f"Evaluating {len(server.tools)} tools")
+                        tool_scorecards = await asyncio.gather(
+                            *[self.score_tool(tool) for tool in server.tools],
+                            return_exceptions=True,
+                        )
+
+                        # Log any errors from tool scoring
+                        successful_scorecards = []
+                        for i, scorecard in enumerate(tool_scorecards):
+                            if isinstance(scorecard, Exception):
+                                logger.error(
+                                    f"Tool {server.tools[i].name} scoring failed: {scorecard}"
+                                )
+                            else:
+                                successful_scorecards.append(scorecard)
+
+                        tool_scorecards = successful_scorecards
+                    else:
+                        logger.info("No tools found")
+                        tool_scorecards = []
+
+                    # Phase 3: Functional Testing
+                    logger.info("=" * 60)
+                    logger.info("PHASE 3: Functional Testing")
+                    logger.info("=" * 60)
+                    functional_test = await self.generate_functional_test(server)
+
+                    functional_test_output = await self.execute_functional_test(
+                        session, functional_test
+                    )
+
+                    # Score functional test
+                    functional_test_scorecard = await self.score_functional_test(
+                        functional_test_output
+                    )
+
+                    # Create final scorecard
+                    logger.info("Creating final server scorecard")
+                    scorecard = ServerScoreCard(
+                        **server.model_dump(),
+                        model=self._model,
+                        tool_scorecards=tool_scorecards,
+                        functional_test_scorecard=functional_test_scorecard,
+                    )
+
+                    logger.info("=" * 60)
+                    logger.info("Evaluation Complete")
+                    logger.info("=" * 60)
+
+                    return scorecard
+        except Exception as e:
+            logger.error(f"Evaluation failed: {e}", exc_info=True)
+            logger.error("=" * 60)
+            raise
