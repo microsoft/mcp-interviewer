@@ -13,6 +13,8 @@ dependencies = [
 dev = [
     "ruff>=0.1.0",
     "pre-commit>=4.3.0",
+    "pyright>=1.1.403",
+    "poethepoet>=0.37.0",
 ]
 
 
@@ -43,3 +45,10 @@ select = ["F", "I", "UP"]
 [tool.uv.sources]
 magentic-common = { git = "ssh://git@github.com/microsoft/magentic-common.git" }
 
+[tool.poe.tasks]
+format = "ruff format src"
+formatcheck = "ruff format --check src"
+lint = "ruff check src"
+lintfix = "ruff check --fix src"
+typecheck = "pyright src"
+check = ["formatcheck",  "lint",  "typecheck"]
