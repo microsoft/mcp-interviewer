@@ -5,6 +5,6 @@ repos:
         name: poe check
         language: system
         entry: "poe"
-        args: ["check"]
+        args: ["precommit"]
         pass_filenames: false
         always_run: true

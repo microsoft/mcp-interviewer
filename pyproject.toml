@@ -52,3 +52,4 @@ lint = "ruff check src"
 lintfix = "ruff check --fix src"
 typecheck = "pyright src"
 check = ["formatcheck",  "lint",  "typecheck"]
+precommit = ["formatcheck",  "lint"]
