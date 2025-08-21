@@ -111,6 +111,7 @@ class Report:
     def add_blank_line(self) -> "Report":
         """Add a blank line to the report."""
         self._lines.append("")
+        # self._lines.append("")
         return self
 
     def add_code_block(self, code: str, language: str = "") -> "Report":
@@ -141,15 +142,18 @@ class Report:
         self.add_title("Server Information (🧮)", 2)
         self.add_blank_line()
         self.add_text(f"**Title:** {info.get('title') or 'No title found'}")
+        self.add_blank_line()
         self.add_text(f"**Name:** {info.get('name') or 'No name found'}")
+        self.add_blank_line()
         self.add_text(f"**Version:** {info.get('version') or 'No version found'}")
+        self.add_blank_line()
         self.add_text(
             f"**Protocol Version:** {info.get('protocol_version') or 'No protocol version found'}"
         )
+        self.add_blank_line()
         self.add_text(
             f"**Instructions:** {info.get('instructions') or 'No instructions found'}"
         )
-        self.add_blank_line()
         self.add_blank_line()
 
         return self
@@ -178,7 +182,6 @@ class Report:
             params.append(f'"env": {self._scorecard.parameters.env}')
 
         self.add_code_block("\n".join(params), "json")
-        self.add_blank_line()
         self.add_blank_line()
 
         return self
@@ -245,7 +248,6 @@ class Report:
         self.add_table_row(["Tools List Changed", tools_list_changed])
 
         self.add_blank_line()
-        self.add_blank_line()
 
         return self
 
@@ -265,7 +267,6 @@ class Report:
             ["Resource Templates", str(len(self._scorecard.resource_templates))]
         )
 
-        self.add_blank_line()
         self.add_blank_line()
 
         return self
@@ -322,7 +323,6 @@ class Report:
 
             if self._scorecard.tool_scorecards:
                 self.add_blank_line()
-                self.add_blank_line()
                 self.add_text(
                     f"**Tools Evaluated:** {len(self._scorecard.tool_scorecards)}"
                 )
@@ -333,7 +333,6 @@ class Report:
                     f"- Tool Quality: {tool_percentage:.0f}% ({tool_passes}/{tool_total})"
                 )
 
-            self.add_blank_line()
             self.add_blank_line()
 
             # Functional test summary
@@ -357,7 +356,6 @@ class Report:
                 f"- Test Coverage: {func_percentage:.0f}% ({func_passes}/{func_total})"
             )
 
-        self.add_blank_line()
         self.add_blank_line()
 
         return self
@@ -401,7 +399,6 @@ class Report:
             ]
         )
         self.add_blank_line()
-        self.add_blank_line()
 
         # Tool Description Assessment
         self.add_title("Description Quality (🤖)", 4)
@@ -426,7 +423,6 @@ class Report:
                 desc_sc.examples.justification,
             ]
         )
-        self.add_blank_line()
         self.add_blank_line()
 
         # Tool Schema Assessment (Input)
@@ -467,7 +463,6 @@ class Report:
         # Tool Schema Assessment (Output) if exists
         if hasattr(tool_scorecard, "tool_output_schema"):
             self.add_blank_line()
-            self.add_blank_line()
             self.add_title("Output Schema Quality (🤖)", 4)
             self.add_blank_line()
             self.add_table_header(["Aspect", "Score", "Justification"])
@@ -503,7 +498,6 @@ class Report:
             )
 
         self.add_blank_line()
-        self.add_blank_line()
 
         return self
 
@@ -534,7 +528,6 @@ class Report:
                     f"- **Step {step_num}**: `{tool_name}` with arguments: `{json.dumps(tool_args, separators=(',', ':'))}`"
                 )
             self.add_blank_line()
-            self.add_blank_line()
 
         return self
 
@@ -545,7 +538,6 @@ class Report:
 
         if hasattr(self._scorecard, "model") and self._scorecard.model:
             self.add_text(f"**Evaluation Model:** {self._scorecard.model}")
-            self.add_blank_line()
             self.add_blank_line()
 
         return self
@@ -573,7 +565,6 @@ class Report:
                 self.add_blank_line()
                 if tool.description:
                     self.add_text(f"**Description:** {tool.description}")
-                self.add_blank_line()
                 self.add_blank_line()
 
         return self
@@ -607,24 +598,23 @@ class Report:
             self.add_blank_line()
             self.add_text(self._scorecard.functional_test_scorecard.plan)
             self.add_blank_line()
-            self.add_blank_line()
 
         self.add_title("Overall Test Result (🤖)", 3)
         self.add_blank_line()
         meets_exp = self._scorecard.functional_test_scorecard.meets_expectations
         self.add_text(f"**Status:** {format_score(meets_exp.score)}")
-        self.add_text(f"**Justification:** {meets_exp.justification}")
         self.add_blank_line()
+        self.add_text(f"**Justification:** {meets_exp.justification}")
         self.add_blank_line()
 
         if self._scorecard.functional_test_scorecard.error_type.score != "N/A":
             self.add_text(
                 f"**Error Type:** {self._scorecard.functional_test_scorecard.error_type.score}"
             )
+            self.add_blank_line()
             self.add_text(
                 f"**Error Justification:** {self._scorecard.functional_test_scorecard.error_type.justification}"
             )
-            self.add_blank_line()
             self.add_blank_line()
 
         # Individual Test Steps
@@ -642,17 +632,36 @@ class Report:
 
                 self.add_text(f"**Justification: (🤖)** {step.justification}")
                 self.add_blank_line()
-                self.add_blank_line()
 
                 self.add_text(f"**Expected Output: (🤖)** {step.expected_output}")
-                self.add_blank_line()
                 self.add_blank_line()
 
                 self.add_text("**Arguments: (🤖)**")
                 self.add_blank_line()
                 self.add_code_block(json.dumps(step.tool_arguments, indent=2), "json")
                 self.add_blank_line()
-                self.add_blank_line()
+
+                # Add tool output if available
+                tool_output = step.tool_output or step.exception
+                if tool_output is not None:
+                    self.add_text("**Tool Output (🧮):**")
+                    self.add_blank_line()
+                    # Format and truncate tool output
+                    if isinstance(tool_output, str):
+                        output_type = ""
+                        output_str = tool_output
+                    else:
+                        output_type = "json"
+                        output_str = tool_output.model_dump_json(indent=2)
+
+                    if len(output_str) > 500:
+                        output_str = (
+                            output_str[:500]
+                            + f"... ({len(output_str) - 500} chars truncated)"
+                        )
+
+                    self.add_code_block(output_str, output_type)
+                    self.add_blank_line()
 
                 # Request tracking
                 self.add_text("**Request Tracking (🧮):**")
@@ -660,21 +669,22 @@ class Report:
                 self.add_text(
                     f"- Sampling Requests: {getattr(step, 'sampling_requests', 0)}"
                 )
+                self.add_blank_line()
                 self.add_text(
                     f"- Elicitation Requests: {getattr(step, 'elicitation_requests', 0)}"
                 )
+                self.add_blank_line()
                 self.add_text(
                     f"- List Roots Requests: {getattr(step, 'list_roots_requests', 0)}"
                 )
+                self.add_blank_line()
                 self.add_text(
                     f"- Logging Requests: {getattr(step, 'logging_requests', 0)}"
                 )
                 self.add_blank_line()
-                self.add_blank_line()
 
                 # Test Results
                 self.add_text("**Results: (🤖)**")
-                self.add_blank_line()
                 self.add_blank_line()
                 self.add_table_header(["Criterion", "Score", "Justification"])
 
@@ -733,7 +743,6 @@ class Report:
                     ]
                 )
                 self.add_blank_line()
-                self.add_blank_line()
 
         return self
 
@@ -783,7 +792,6 @@ class Report:
                 self.add_blank_line()
                 self.add_text(f"**Failure Reason:** {justification}")
                 self.add_blank_line()
-                self.add_blank_line()
                 self.add_text("**Arguments (🤖):**")
                 self.add_code_block(json.dumps(tool_args, indent=2), "json")
                 self.add_blank_line()
@@ -802,14 +810,15 @@ class Report:
                         except:
                             self.add_code_block(str(tool_output), "")
                     self.add_blank_line()
-                self.add_blank_line()
 
         return self
 
     def add_emoji_legend(self) -> "Report":
         """Add emoji legend to the report."""
         self.add_text("**Legend:**")
+        self.add_blank_line()
         self.add_text("- (🤖) = AI-generated content")
+        self.add_blank_line()
         self.add_text("- (🧮) = Computed metrics and data")
         self.add_blank_line()
         self.add_text("---")
@@ -821,6 +830,9 @@ class Report:
     ) -> "Report":
         """Add constraint violations section to the report."""
         if not violations:
+            self.add_title("✅ Constraint Violations (🧮)", 2)
+            self.add_text("No constraint violations found.")
+            self.add_blank_line()
             return self
 
         # Separate by severity
@@ -838,7 +850,6 @@ class Report:
                 constraint_name = violation.constraint.__class__.__name__
                 self.add_text(f"- **{constraint_name}:** {violation.message}")
             self.add_blank_line()
-            self.add_blank_line()
 
         if warning_violations:
             self.add_title("⚠️ Warnings (🧮)", 3)
@@ -846,7 +857,6 @@ class Report:
             for violation in warning_violations:
                 constraint_name = violation.constraint.__class__.__name__
                 self.add_text(f"- **{constraint_name}:** {violation.message}")
-            self.add_blank_line()
             self.add_blank_line()
 
         return self
