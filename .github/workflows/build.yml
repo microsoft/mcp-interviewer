@@ -95,6 +95,7 @@ jobs:
     
     - name: Commit version bump
       run: |
-        git add pyproject.toml src/mcp_interviewer/__init__.py
+        uv lock
+        git add pyproject.toml uv.lock src/mcp_interviewer/__init__.py
         git commit -m "chore: bump version to ${{ steps.calc_version.outputs.new_version }}"
         git push origin main
