@@ -327,13 +327,6 @@ source = { editable = "." }
 dependencies = [
     { name = "mcp" },
     { name = "openai" },
-]
-
-[package.optional-dependencies]
-all = [
-    { name = "tiktoken" },
-]
-openai = [
     { name = "tiktoken" },
 ]
 
@@ -348,11 +341,9 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "mcp", specifier = ">=1.10.1" },
-    { name = "mcp-interviewer", extras = ["openai"], marker = "extra == 'all'" },
     { name = "openai", specifier = ">=1.93.3" },
-    { name = "tiktoken", marker = "extra == 'openai'" },
+    { name = "tiktoken", specifier = ">=0.11.0" },
 ]
-provides-extras = ["openai", "all"]
 
 [package.metadata.requires-dev]
 dev = [

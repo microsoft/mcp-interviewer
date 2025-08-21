@@ -7,6 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "mcp>=1.10.1",
     "openai>=1.93.3",
+    "tiktoken>=0.11.0",
 ]
 
 [dependency-groups]
@@ -19,11 +20,6 @@ dev = [
 
 [project.scripts]
 mcp-interviewer = "mcp_interviewer.cli:cli"
-
-[project.optional-dependencies]
-openai = ["tiktoken"]
-
-all = ["mcp-interviewer[openai]"]
 
 [build-system]
 requires = ["hatchling"]
