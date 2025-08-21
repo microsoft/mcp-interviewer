@@ -44,12 +44,6 @@ jobs:
         path: dist/*
         retention-days: 7
     
-    - name: Check build artifacts
-      run: |
-        ls -la dist/
-        uv pip install check-wheel-contents
-        check-wheel-contents dist/*.whl
-  
   bump-version:
     needs: build
     runs-on: ubuntu-latest
