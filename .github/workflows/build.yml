@@ -25,9 +25,13 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     
+    - name: Install the package
+      run: |
+        uv venv
+        uv sync --locked --all-extras --all-groups
+
     - name: Build package
       run: |
-        uv sync
         uv build
     
     - name: Upload artifacts
