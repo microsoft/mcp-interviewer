@@ -17,14 +17,13 @@ dev = [
     "poethepoet>=0.37.0",
 ]
 
-
 [project.scripts]
 mcp-interviewer = "mcp_interviewer.cli:cli"
 
 [project.optional-dependencies]
-trapi = ["magentic-common[trapi]"]
+openai = ["tiktoken"]
 
-all = ["mcp-interviewer[trapi]"]
+all = ["mcp-interviewer[openai]"]
 
 [build-system]
 requires = ["hatchling"]
@@ -42,9 +41,6 @@ target-version = "py311"
 [tool.ruff.lint]
 select = ["F", "I", "UP"]
 
-[tool.uv.sources]
-magentic-common = { git = "ssh://git@github.com/microsoft/magentic-common.git" }
-
 [tool.poe.tasks]
 format = "ruff format src"
 formatcheck = "ruff format --check src"
@@ -53,3 +49,4 @@ lintfix = "ruff check --fix src"
 typecheck = "pyright src"
 check = ["formatcheck",  "lint",  "typecheck"]
 precommit = ["formatcheck",  "lint"]
+fix = ["format", "lintfix"]
