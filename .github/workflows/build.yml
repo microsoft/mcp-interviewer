@@ -1,5 +1,6 @@
 name: Build
-
+permissions:
+  contents: write # Needs to write the bumped versions
 on:
   workflow_run:
     workflows: ["Check"]
