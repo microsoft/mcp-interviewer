@@ -19,6 +19,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
     
     - name: Install uv
       uses: astral-sh/setup-uv@v6
@@ -44,5 +47,59 @@ jobs:
     - name: Check build artifacts
       run: |
         ls -la dist/
-        uv pip install --system check-wheel-contents
+        uv pip install check-wheel-contents
         check-wheel-contents dist/*.whl
+  
+  bump-version:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Configure Git
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+    
+    - name: Get current version and create tag
+      id: get_version
+      run: |
+        CURRENT_VERSION=$(grep -Po '(?<=^version = ")[^"]*' pyproject.toml)
+        echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        echo "Current version: $CURRENT_VERSION"
+        
+        # Tag the current version before bumping
+        git tag "v$CURRENT_VERSION" || echo "Tag v$CURRENT_VERSION already exists"
+        git push origin "v$CURRENT_VERSION" || echo "Tag v$CURRENT_VERSION already pushed"
+    
+    - name: Calculate new version
+      id: calc_version
+      run: |
+        CURRENT_VERSION="${{ steps.get_version.outputs.current_version }}"
+        
+        IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
+        patch=$((patch + 1))
+        
+        NEW_VERSION="${major}.${minor}.${patch}"
+        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+        echo "New version: $NEW_VERSION"
+    
+    - name: Update pyproject.toml
+      run: |
+        sed -i 's/^version = ".*"/version = "${{ steps.calc_version.outputs.new_version }}"/' pyproject.toml
+    
+    - name: Update __init__.py
+      run: |
+        sed -i 's/^__version__ = ".*"/__version__ = "${{ steps.calc_version.outputs.new_version }}"/' src/mcp_interviewer/__init__.py
+    
+    - name: Commit version bump
+      run: |
+        git add pyproject.toml src/mcp_interviewer/__init__.py
+        git commit -m "chore: bump version to ${{ steps.calc_version.outputs.new_version }}"
+        git push origin main
