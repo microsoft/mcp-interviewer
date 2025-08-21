@@ -28,6 +28,19 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/mcp_interviewer"]
 
+[tool.hatch.build]
+include = [
+    "src/**/*",
+    "LICENSE",
+    "README.md",
+]
+exclude = [
+    ".DS_Store",
+    "__pycache__",
+    "*.pyc",
+    "*.pyo",
+]
+
 [tool.hatch.metadata]
 allow-direct-references = true
 
