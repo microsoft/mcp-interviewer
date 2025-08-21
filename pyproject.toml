@@ -1,6 +1,6 @@
 [project]
 name = "mcp-interviewer"
-version = "0.0.2"
+version = "0.0.3"
 description = "A tool for analyzing and testing MCP (Model Context Protocol) servers and their tools"
 readme = "README.md"
 requires-python = ">=3.11"
