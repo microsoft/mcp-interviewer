@@ -1,6 +1,6 @@
 # mcp-interviewer
 
-A CLI tool for Model Context Protocol (MCP) Server developers to evaluate their servers' readiness for agentic use-cases. Collects server statistics and performs LLM-as-a-judge functional testing of MCP (Model Context Protocol) servers.
+A CLI tool for Model Context Protocol (MCP) Server developers to evaluate their servers' readiness for agentic use-cases. Collects server statistics and performs LLM-as-a-judge functional testing of tools.
 
 ## Quick Start
 
@@ -63,4 +63,6 @@ interviewer = MCPInterviewer(client, model)
 scorecard = await interviewer.score_server(params)
 ```
 
-### Example Output
+## Trademarks 
+
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow Microsoft’s Trademark & Brand Guidelines. Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party’s policies.
