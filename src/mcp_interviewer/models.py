@@ -1,10 +1,16 @@
 from typing import Any, Generic, Literal, TypeVar
 
 from mcp.client.stdio import StdioServerParameters
-from mcp.types import InitializeResult, Prompt, Resource, ResourceTemplate, Tool
+from mcp.types import (
+    CallToolResult,
+    InitializeResult,
+    Prompt,
+    Resource,
+    ResourceTemplate,
+    Tool,
+)
 from openai import AsyncOpenAI, OpenAI
-from pydantic import BaseModel, field_serializer
-from pydantic_core import to_json
+from pydantic import BaseModel
 
 Client = OpenAI | AsyncOpenAI
 
@@ -73,22 +79,23 @@ class FunctionalTestStep(BaseModel):
     """Realistic arguments to call the tool with"""
 
 
-class FunctionalTestStepOutput(FunctionalTestStep):
-    tool_output: Any
+class FunctionalTestStepOutput(BaseModel):
+    tool_output: CallToolResult | None
+    exception: str | None
     sampling_requests: int = 0
     elicitation_requests: int = 0
     list_roots_requests: int = 0
     logging_requests: int = 0
 
-    @field_serializer("tool_output")
-    def serialize_tool_output(self, tool_output):
-        try:
-            return to_json(tool_output).decode()
-        except Exception:
-            return str(tool_output)
+    # @field_serializer("tool_output")
+    # def serialize_tool_output(self, tool_output):
+    #     try:
+    #         return to_json(tool_output).decode()
+    #     except Exception:
+    #         return str(tool_output)
 
 
-class FunctionalTestStepScoreCard(FunctionalTestStepOutput):
+class FunctionalTestStepEvaluationRubric(BaseModel):
     error_handling: PassFailScoreCard
     """N/A = No error occurred | Fail = No error message or uninformative (e.g., "Error occurred") | Pass = Detailed, actionable error message (e.g., "Invalid city name 'Lond@n'. City names must contain only letters, spaces, and hyphens.")"""
     error_type: ScoreCard[
@@ -113,6 +120,11 @@ class FunctionalTestStepScoreCard(FunctionalTestStepOutput):
     """Fail = Output differs significantly from expected results (e.g., calendar tool returning appointments in wrong timezone) | Pass = Output perfectly matches expected behavior (e.g., all appointments returned with complete details in the correct timezone)"""
 
 
+class FunctionalTestStepScoreCard(
+    FunctionalTestStep, FunctionalTestStepOutput, FunctionalTestStepEvaluationRubric
+): ...
+
+
 TFunctionalTestStep = TypeVar("TFunctionalTestStep", bound=FunctionalTestStep)
 
 
@@ -125,14 +137,14 @@ class FunctionalTest(BaseModel, Generic[TFunctionalTestStep]):
     """The steps of this plan"""
 
 
-class FunctionalTestOutput(FunctionalTest[FunctionalTestStepOutput]):
+class FunctionalTestOutput(BaseModel):
     sampling_requests: int = 0
     elicitation_requests: int = 0
     list_roots_requests: int = 0
     logging_requests: int = 0
 
 
-class FunctionalTestScoreCard(FunctionalTest[FunctionalTestStepScoreCard]):
+class FunctionalTestEvaluationRubric(BaseModel):
     meets_expectations: PassFailScoreCard
     error_type: ScoreCard[
         Literal[
@@ -143,6 +155,13 @@ class FunctionalTestScoreCard(FunctionalTest[FunctionalTestStepScoreCard]):
             "N/A",
         ]
     ]
+
+
+class FunctionalTestScoreCard(
+    FunctionalTest[FunctionalTestStepScoreCard],
+    FunctionalTestOutput,
+    FunctionalTestEvaluationRubric,
+): ...
 
 
 # TODO: Add models for SSE and StreamableHTTP

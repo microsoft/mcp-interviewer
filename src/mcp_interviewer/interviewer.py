@@ -120,6 +120,7 @@ class MCPInterviewer:
         start_elicitation_requests = self.elicitation_requests
         start_list_roots_requests = self.list_roots_requests
         start_logging_requests = self.logging_requests
+        exception = None
         try:
             logger.debug(f"Calling tool '{step.tool_name}'")
             result = await session.call_tool(step.tool_name, step.tool_arguments)
@@ -127,12 +128,13 @@ class MCPInterviewer:
             logger.error(
                 f"Failed to execute test step '{step.tool_name}': {e}", exc_info=True
             )
-            result = e
+            result = None
+            exception = str(e)
 
         logger.debug(f"Tool output: {result}")
         return FunctionalTestStepOutput(
-            **step.model_dump(),
             tool_output=result,
+            exception=exception,
             sampling_requests=self.sampling_requests - start_sampling_requests,
             elicitation_requests=self.elicitation_requests - start_elicitation_requests,
             list_roots_requests=self.list_roots_requests - start_list_roots_requests,
@@ -141,7 +143,7 @@ class MCPInterviewer:
 
     async def execute_functional_test(
         self, session: ClientSession, test: FunctionalTest
-    ) -> FunctionalTestOutput:
+    ) -> tuple[FunctionalTestOutput, list[FunctionalTestStepOutput]]:
         """Execute all steps of a functional test.
 
         Runs through all test steps sequentially, collecting outputs and tracking
@@ -175,16 +177,14 @@ class MCPInterviewer:
                 raise
 
         return FunctionalTestOutput(
-            plan=test.plan,
-            steps=step_outputs,
             sampling_requests=self.sampling_requests,
             elicitation_requests=self.elicitation_requests,
             list_roots_requests=self.list_roots_requests,
             logging_requests=self.logging_requests,
-        )
+        ), step_outputs
 
     async def score_functional_test_step(
-        self, step: FunctionalTestStepOutput
+        self, step: FunctionalTestStep, output: FunctionalTestStepOutput
     ) -> FunctionalTestStepScoreCard:
         """Score a single functional test step output.
 
@@ -203,7 +203,7 @@ class MCPInterviewer:
         try:
             logger.debug(f"Scoring step '{step.tool_name}'")
             scorecard = await prompts.score_functional_test_step_output(
-                self._client, self._model, step
+                self._client, self._model, step, output
             )
             logger.debug(f"Step scorecard: {scorecard}")
             return scorecard
@@ -214,7 +214,10 @@ class MCPInterviewer:
             raise
 
     async def score_functional_test(
-        self, test: FunctionalTestOutput
+        self,
+        test: FunctionalTest,
+        output: FunctionalTestOutput,
+        step_outputs: list[FunctionalTestStepOutput],
     ) -> FunctionalTestScoreCard:
         """Score the entire functional test output.
 
@@ -230,10 +233,21 @@ class MCPInterviewer:
         Raises:
             Exception: If test scoring fails
         """
+
+        step_scorecards: list[FunctionalTestStepScoreCard] = []
+        for step, step_output in zip(test.steps, step_outputs):
+            step_scorecard = await self.score_functional_test_step(step, step_output)
+
+            step_scorecards.append(step_scorecard)
+
         try:
             logger.debug(f"Scoring test with {len(test.steps)} steps")
             scorecard = await prompts.score_functional_test_output(
-                self._client, self._model, test
+                self._client,
+                self._model,
+                test,
+                output,
+                step_scorecards,
             )
             logger.debug(f"Test scorecard: {scorecard}")
             return scorecard
@@ -319,10 +333,9 @@ class MCPInterviewer:
                     )
             except Exception as e:
                 logger.warning(f"Failed to list resources: {e}", exc_info=True)
-        else:
-            logger.info("Server does not support resources capability")
 
             logger.info("Fetching resource templates")
+
             try:
                 result = await session.list_resource_templates()
                 logger.debug(
@@ -349,6 +362,8 @@ class MCPInterviewer:
                     )
             except Exception as e:
                 logger.warning(f"Failed to list resource templates: {e}", exc_info=True)
+        else:
+            logger.info("Server does not support resources capability")
 
         if initialize_result.capabilities.prompts is not None:
             logger.info("Server supports prompts capability - fetching prompts")
@@ -539,13 +554,16 @@ class MCPInterviewer:
                     logger.info("=" * 60)
                     functional_test = await self.generate_functional_test(server)
 
-                    functional_test_output = await self.execute_functional_test(
-                        session, functional_test
-                    )
+                    (
+                        functional_test_output,
+                        functional_test_step_outputs,
+                    ) = await self.execute_functional_test(session, functional_test)
 
                     # Score functional test
                     functional_test_scorecard = await self.score_functional_test(
-                        functional_test_output
+                        functional_test,
+                        functional_test_output,
+                        functional_test_step_outputs,
                     )
 
                     # Create final scorecard

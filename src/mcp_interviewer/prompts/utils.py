@@ -1,12 +1,20 @@
 import inspect
 import json
+import logging
 from collections.abc import Sequence
 from typing import TypeVar
 
-from openai.types.chat import ChatCompletionMessageParam, ChatCompletionUserMessageParam
+import pydantic
+from openai.types.chat import (
+    ChatCompletionAssistantMessageParam,
+    ChatCompletionMessageParam,
+    ChatCompletionUserMessageParam,
+)
 from pydantic import BaseModel
 
 from ..models import Client
+
+logger = logging.getLogger(__name__)
 
 
 def parse_json_completion(completion: str):
@@ -41,6 +49,9 @@ async def create_typed_completion(
             completion = await completion
 
         content = completion.choices[0].message.content
+        messages.append(
+            ChatCompletionAssistantMessageParam(role="assistant", content=content)
+        )
 
         if not content:
             raise ValueError("chat completion content was None")
@@ -49,7 +60,9 @@ async def create_typed_completion(
             response = parse_json_completion(content)
             response = response_model.model_validate(response)
             return response
-        except Exception as e:
+        except (json.decoder.JSONDecodeError, pydantic.ValidationError) as e:
+            print(content)
+            logger.exception("Error parsing json")
             import traceback
 
             tb_str = traceback.format_exc()
@@ -59,5 +72,4 @@ async def create_typed_completion(
                     content=f"Error parsing json: {e}\nTraceback:\n{tb_str}",
                 )
             )
-
-    raise ValueError("Exceeded maximum retries.")
+    raise Exception("Exceeded maximum retries")

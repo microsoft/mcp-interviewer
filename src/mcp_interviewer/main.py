@@ -4,6 +4,7 @@ from pathlib import Path
 
 from openai import OpenAI
 
+from .constraints import AllConstraints
 from .interviewer import MCPInterviewer
 from .models import ServerParameters
 from .reports import generate_full_markdown, generate_summary_markdown
@@ -29,16 +30,17 @@ async def amain(
     """
     interviewer = MCPInterviewer(client, model)
     scorecard = await interviewer.score_server(params)
+    violations = list(AllConstraints().test(scorecard))
 
     path = out_dir / Path("mcp-scorecard.md")
     logger.info(f"Saving full scorecard to {path}")
     with open(path, "w") as fd:
-        fd.write(generate_full_markdown(scorecard))
+        fd.write(generate_full_markdown(scorecard, violations))
 
     path = out_dir / Path("mcp-scorecard-short.md")
     logger.info(f"Saving short scorecard to {path}")
     with open(path, "w") as fd:
-        fd.write(generate_summary_markdown(scorecard))
+        fd.write(generate_summary_markdown(scorecard, violations))
 
     path = out_dir / Path("mcp-scorecard.json")
     logger.info(f"Saving scorecard json data to {path}")

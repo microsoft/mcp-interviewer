@@ -1,11 +1,22 @@
 from openai.types.chat import ChatCompletionUserMessageParam
 
-from ..models import Client, FunctionalTestOutput, FunctionalTestScoreCard
+from ..models import (
+    Client,
+    FunctionalTest,
+    FunctionalTestEvaluationRubric,
+    FunctionalTestOutput,
+    FunctionalTestScoreCard,
+    FunctionalTestStepScoreCard,
+)
 from .utils import create_typed_completion
 
 
 async def score_functional_test_output(
-    client: Client, model: str, test: FunctionalTestOutput
+    client: Client,
+    model: str,
+    test: FunctionalTest,
+    output: FunctionalTestOutput,
+    step_scorecards: list[FunctionalTestStepScoreCard],
 ):
     prompt = f"""
 You are creating an overall evaluation report for an MCP (Model Context Protocol) server based on the results of an executed evaluation plan. Analyze the evaluation steps and their execution results to provide a comprehensive assessment.
@@ -32,15 +43,24 @@ Base your assessment on the actual evaluation data provided, considering both to
 
 ### Instructions:
 
-Fill out the following rubric and return your evaluation as a JSON object:
+Fill out the following rubric and return your evaluation as a JSON object. ONLY return the JSON, nothing else!
 
 ```json
-{FunctionalTestScoreCard.model_json_schema()}
+{FunctionalTestEvaluationRubric.model_json_schema()}
 ```
 """.strip()
 
     messages = [ChatCompletionUserMessageParam(role="user", content=prompt)]
 
-    return await create_typed_completion(
-        client, model, messages, FunctionalTestScoreCard
+    evaluation = await create_typed_completion(
+        client, model, messages, FunctionalTestEvaluationRubric
+    )
+
+    return FunctionalTestScoreCard(
+        **{
+            **test.model_dump(exclude={"steps"}),
+            **output.model_dump(),
+            **evaluation.model_dump(),
+        },
+        steps=step_scorecards,
     )
