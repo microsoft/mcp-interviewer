@@ -1,10 +1,10 @@
 # mcp-interviewer
 
-A tool for performing automatic LLM-as-a-judge analysis and functional testing of MCP (Model Context Protocol) servers.
+A CLI tool for Model Context Protocol (MCP) Server developers to evaluate their servers' readiness for agentic use-cases. Collects server statistics and performs LLM-as-a-judge functional testing of MCP (Model Context Protocol) servers.
 
-## Quick start
+## Quick Start
 
-Use uvx to run the tool without cloning it!
+Easy one-liner with `uvx`:
 
 ```bash
 uvx --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git" mcp-interviewer --model gpt-4.1 "npx -y @modelcontextprotocol/server-everything"
@@ -20,7 +20,7 @@ The command will save three files:
 
 Open the `mcp-scorecard.md` to read the report on your MCP server.
 
-## Installation
+## Developer Installation
 
 ```bash
 git clone git@github.com:microsoft/mcp-interviewer.git
@@ -32,7 +32,7 @@ uv sync --all-extras --all-groups
 pre-commit install
 ```
 
-## Usage
+## Detailed Usage
 
 ### CLI
 
