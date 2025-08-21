@@ -57,6 +57,9 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
     
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+
     - name: Configure Git
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
