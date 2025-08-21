@@ -27,6 +27,7 @@ jobs:
     
     - name: Build package
       run: |
+        uv sync
         uv build
     
     - name: Upload artifacts
