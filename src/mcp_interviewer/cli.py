@@ -6,7 +6,11 @@ def cli():
 
     parser.add_argument("server_params")
     parser.add_argument("--model", required=True)
-    parser.add_argument("--client", default="openai.OpenAI")
+    parser.add_argument(
+        "--client",
+        default="openai.OpenAI",
+        help="Import path to a parameter-less callable that returns an OpenAI or AsyncOpenAI compatible object",
+    )
     parser.add_argument("--out-dir", "-o", default=".")
     parser.add_argument(
         "--log-level", default="INFO", choices=["DEBUG", "INFO", "WARN", "ERROR"]
