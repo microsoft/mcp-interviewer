@@ -1,6 +1,16 @@
 # mcp-interviewer
 
-A CLI tool for Model Context Protocol (MCP) Server developers to evaluate their servers' readiness for agentic use-cases. Collects server statistics and performs LLM-as-a-judge functional testing of tools.
+A CLI tool to evaluate an Model Context Protocol (MCP) servers' readiness for agentic use-cases. Inspects server capabilities and statistics, performs LLM-as-a-judge functional testing of tools, and generates a report.
+
+## How is this for?
+
+### Server Developers
+
+If you are an MCP Server Developer, the `mcp-interviewer` can help you validate the functionality of your server and alert you to any potential issues for downstream clients consuming your server.
+
+### Users
+
+Before using an MCP Server, you can interview it to see how it behaves with your LLM.
 
 ## Quick Start
 
@@ -18,19 +28,7 @@ The command will save three files:
 ./mcp-scorecard.json
 ```
 
-Open the `mcp-scorecard.md` to read the report on your MCP server.
-
-## Developer Installation
-
-```bash
-git clone git@github.com:microsoft/mcp-interviewer.git
-cd mcp-interviewer
-
-uv venv
-uv sync --all-extras --all-groups
-
-pre-commit install
-```
+Open the `mcp-scorecard.md` to read the report on the MCP server.
 
 ## Detailed Usage
 

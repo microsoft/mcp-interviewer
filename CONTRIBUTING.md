@@ -12,3 +12,24 @@ instructions provided by the bot. You will only need to do this once across all 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
 or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+## Installation
+
+```bash
+git clone git@github.com:microsoft/mcp-interviewer.git
+cd mcp-interviewer
+
+uv venv
+uv sync --all-extras --all-groups
+
+pre-commit install
+```
+
+Before committing (or if precommit gives you ruff errors), you can run 
+
+```bash
+uv run poe fix
+```
+
+To format the code and fix any fixable errors (e.g. import sorting).
+
