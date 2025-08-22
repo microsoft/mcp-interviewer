@@ -5,9 +5,10 @@ from pathlib import Path
 from openai import OpenAI
 
 from .constraints import AllConstraints
+from .constraints.base import Severity
 from .interviewer import MCPInterviewer
 from .models import ServerParameters
-from .reports import generate_full_markdown, generate_summary_markdown
+from .reports import FullReport, ShortReport
 
 logger = logging.getLogger(__name__)
 
@@ -32,15 +33,25 @@ async def amain(
     scorecard = await interviewer.score_server(params)
     violations = list(AllConstraints().test(scorecard))
 
+    for violation in violations:
+        if violation.severity == Severity.WARNING:
+            logger.warning(
+                f"{type(violation.constraint).__name__}: {violation.message}"
+            )
+        elif violation.severity == Severity.CRITICAL:
+            logger.critical(
+                f"{type(violation.constraint).__name__}: {violation.message}"
+            )
+
     path = out_dir / Path("mcp-scorecard.md")
     logger.info(f"Saving full scorecard to {path}")
     with open(path, "w") as fd:
-        fd.write(generate_full_markdown(scorecard, violations))
+        fd.write(FullReport(scorecard, violations).build())
 
     path = out_dir / Path("mcp-scorecard-short.md")
     logger.info(f"Saving short scorecard to {path}")
     with open(path, "w") as fd:
-        fd.write(generate_summary_markdown(scorecard, violations))
+        fd.write(ShortReport(scorecard, violations).build())
 
     path = out_dir / Path("mcp-scorecard.json")
     logger.info(f"Saving scorecard json data to {path}")

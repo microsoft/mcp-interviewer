@@ -61,29 +61,26 @@ def get_server_info(scorecard: ServerScoreCard) -> dict[str, str | None]:
         "instructions": None,
     }
 
-    if (
-        hasattr(scorecard.initialize_result, "serverInfo")
-        and scorecard.initialize_result.serverInfo
-    ):
+    if scorecard.initialize_result.serverInfo:
         server_info = scorecard.initialize_result.serverInfo
-        info["title"] = getattr(server_info, "title", None)
-        info["name"] = getattr(server_info, "name", None)
-        info["version"] = getattr(server_info, "version", None)
+        info["title"] = server_info.title
+        info["name"] = server_info.name
+        info["version"] = server_info.version
 
     # Fallback title from parameters if not found
-    if not info["title"] and hasattr(scorecard, "parameters"):
-        if hasattr(scorecard.parameters, "command"):
+    if not info["title"]:
+        if scorecard.parameters.connection_type == "stdio":
             info["title"] = str(scorecard.parameters.command)
-            if hasattr(scorecard.parameters, "args") and scorecard.parameters.args:
+            if scorecard.parameters.args:
                 info["title"] += " " + " ".join(
                     str(arg) for arg in scorecard.parameters.args
                 )
+        else:
+            # For SSE and StreamableHttp, use the URL as title
+            info["title"] = str(scorecard.parameters.url)
 
-    if hasattr(scorecard.initialize_result, "protocolVersion"):
-        info["protocol_version"] = str(scorecard.initialize_result.protocolVersion)
-
-    if hasattr(scorecard.initialize_result, "instructions"):
-        info["instructions"] = scorecard.initialize_result.instructions
+    info["protocol_version"] = str(scorecard.initialize_result.protocolVersion)
+    info["instructions"] = scorecard.initialize_result.instructions
 
     return info
 
@@ -99,8 +96,8 @@ class Report:
     def add_title(self, title: str, level: int = 1) -> "Report":
         """Add a title to the report."""
         prefix = "#" * level
-        self._lines.append(f"{prefix} {title}")
-        self._lines.append("")
+        self.add_text(f"{prefix} {title}")
+        self.add_blank_line()
         return self
 
     def add_text(self, text: str) -> "Report":
@@ -110,26 +107,25 @@ class Report:
 
     def add_blank_line(self) -> "Report":
         """Add a blank line to the report."""
-        self._lines.append("")
-        # self._lines.append("")
+        self.add_text("")
         return self
 
     def add_code_block(self, code: str, language: str = "") -> "Report":
         """Add a code block to the report."""
-        self._lines.append(f"```{language}")
-        self._lines.append(code)
-        self._lines.append("```")
+        self.add_text(f"```{language}")
+        self.add_text(code)
+        self.add_text("```")
         return self
 
     def add_table_header(self, columns: list[str]) -> "Report":
         """Add a table header to the report."""
-        self._lines.append("| " + " | ".join(columns) + " |")
-        self._lines.append("|" + "|".join(["---" for _ in columns]) + "|")
+        self.add_text("| " + " | ".join(columns) + " |")
+        self.add_text("|" + "|".join(["---" for _ in columns]) + "|")
         return self
 
     def add_table_row(self, values: list[str]) -> "Report":
         """Add a table row to the report."""
-        self._lines.append("| " + " | ".join(values) + " |")
+        self.add_text("| " + " | ".join(values) + " |")
         return self
 
     def add_server_info(self) -> "Report":
@@ -167,19 +163,35 @@ class Report:
         self.add_blank_line()
 
         params = []
-        if hasattr(self._scorecard.parameters, "command"):
+
+        # Add connection type
+        params.append(
+            f'"connection_type": "{self._scorecard.parameters.connection_type}"'
+        )
+
+        if self._scorecard.parameters.connection_type == "stdio":
+            # Stdio parameters
             params.append(f'"command": "{self._scorecard.parameters.command}"')
-        if (
-            hasattr(self._scorecard.parameters, "args")
-            and self._scorecard.parameters.args
-        ):
-            args_str = ", ".join(f'"{arg}"' for arg in self._scorecard.parameters.args)
-            params.append(f'"args": [{args_str}]')
-        if (
-            hasattr(self._scorecard.parameters, "env")
-            and self._scorecard.parameters.env
-        ):
-            params.append(f'"env": {self._scorecard.parameters.env}')
+            if self._scorecard.parameters.args:
+                args_str = ", ".join(
+                    f'"{arg}"' for arg in self._scorecard.parameters.args
+                )
+                params.append(f'"args": [{args_str}]')
+            if self._scorecard.parameters.env:
+                params.append(f'"env": {self._scorecard.parameters.env}')
+        else:
+            # SSE or StreamableHttp parameters
+            params.append(f'"url": "{self._scorecard.parameters.url}"')
+            if self._scorecard.parameters.headers:
+                import json
+
+                params.append(
+                    f'"headers": {json.dumps(self._scorecard.parameters.headers)}'
+                )
+            params.append(f'"timeout": {self._scorecard.parameters.timeout}')
+            params.append(
+                f'"sse_read_timeout": {self._scorecard.parameters.sse_read_timeout}'
+            )
 
         self.add_code_block("\n".join(params), "json")
         self.add_blank_line()
@@ -194,57 +206,43 @@ class Report:
         self.add_title("Capabilities (🧮)", 2)
         self.add_blank_line()
 
-        caps = (
-            self._scorecard.initialize_result.capabilities
-            if hasattr(self._scorecard.initialize_result, "capabilities")
-            else None
-        )
+        caps = self._scorecard.initialize_result.capabilities
 
         self.add_table_header(["Feature", "Supported"])
 
         # Check logging capability
-        logging_supported = (
-            "✅" if caps and getattr(caps, "logging", None) is not None else "❌"
-        )
+        logging_supported = "✅" if caps and caps.logging is not None else "❌"
         self.add_table_row(["Logging", logging_supported])
 
         # Check prompts capabilities
-        prompts_cap = getattr(caps, "prompts", None) if caps else None
+        prompts_cap = caps.prompts if caps else None
         prompts_supported = "✅" if prompts_cap else "❌"
         self.add_table_row(["Prompts", prompts_supported])
 
-        prompts_list_changed = (
-            "✅" if prompts_cap and getattr(prompts_cap, "listChanged", False) else "❌"
-        )
+        prompts_list_changed = "✅" if prompts_cap and prompts_cap.listChanged else "❌"
         self.add_table_row(["Prompts List Changed", prompts_list_changed])
 
         # Check resources capabilities
-        resources_cap = getattr(caps, "resources", None) if caps else None
+        resources_cap = caps.resources if caps else None
         resources_supported = "✅" if resources_cap else "❌"
         self.add_table_row(["Resources", resources_supported])
 
         resources_subscribe = (
-            "✅"
-            if resources_cap and getattr(resources_cap, "subscribe", False)
-            else "❌"
+            "✅" if resources_cap and resources_cap.subscribe else "❌"
         )
         self.add_table_row(["Resources Subscribe", resources_subscribe])
 
         resources_list_changed = (
-            "✅"
-            if resources_cap and getattr(resources_cap, "listChanged", False)
-            else "❌"
+            "✅" if resources_cap and resources_cap.listChanged else "❌"
         )
         self.add_table_row(["Resources List Changed", resources_list_changed])
 
         # Check tools capabilities
-        tools_cap = getattr(caps, "tools", None) if caps else None
+        tools_cap = caps.tools if caps else None
         tools_supported = "✅" if tools_cap else "❌"
         self.add_table_row(["Tools", tools_supported])
 
-        tools_list_changed = (
-            "✅" if tools_cap and getattr(tools_cap, "listChanged", False) else "❌"
-        )
+        tools_list_changed = "✅" if tools_cap and tools_cap.listChanged else "❌"
         self.add_table_row(["Tools List Changed", tools_list_changed])
 
         self.add_blank_line()
@@ -366,11 +364,7 @@ class Report:
             raise ValueError("Scorecard must be set before adding tool scorecard")
 
         tool_scorecard = self._scorecard.tool_scorecards[tool_index]
-        tool_name = (
-            self._scorecard.tools[tool_index].name
-            if tool_index < len(self._scorecard.tools)
-            else f"Tool {tool_index + 1}"
-        )
+        tool_name = self._scorecard.tools[tool_index].name
 
         self.add_title(f"Tool: `{tool_name}`", 3)
         self.add_blank_line()
@@ -460,42 +454,41 @@ class Report:
             ]
         )
 
-        # Tool Schema Assessment (Output) if exists
-        if hasattr(tool_scorecard, "tool_output_schema"):
-            self.add_blank_line()
-            self.add_title("Output Schema Quality (🤖)", 4)
-            self.add_blank_line()
-            self.add_table_header(["Aspect", "Score", "Justification"])
+        # Tool Schema Assessment (Output)
+        self.add_blank_line()
+        self.add_title("Output Schema Quality (🤖)", 4)
+        self.add_blank_line()
+        self.add_table_header(["Aspect", "Score", "Justification"])
 
-            output_sc = tool_scorecard.tool_output_schema
-            self.add_table_row(
-                [
-                    "Complexity",
-                    format_score(output_sc.complexity.score),
-                    output_sc.complexity.justification,
-                ]
-            )
-            self.add_table_row(
-                [
-                    "Parameters",
-                    format_score(output_sc.parameters.score),
-                    output_sc.parameters.justification,
-                ]
-            )
-            self.add_table_row(
-                [
-                    "Optionals",
-                    format_score(output_sc.optionals.score),
-                    output_sc.optionals.justification,
-                ]
-            )
-            self.add_table_row(
-                [
-                    "Constraints",
-                    format_score(output_sc.constraints.score),
-                    output_sc.constraints.justification,
-                ]
-            )
+        output_sc = tool_scorecard.tool_output_schema
+        self.add_table_row(
+            [
+                "Complexity",
+                format_score(output_sc.complexity.score),
+                output_sc.complexity.justification,
+            ]
+        )
+        self.add_table_row(
+            [
+                "Parameters",
+                format_score(output_sc.parameters.score),
+                output_sc.parameters.justification,
+            ]
+        )
+        self.add_table_row(
+            [
+                "Optionals",
+                format_score(output_sc.optionals.score),
+                output_sc.optionals.justification,
+            ]
+        )
+        self.add_table_row(
+            [
+                "Constraints",
+                format_score(output_sc.constraints.score),
+                output_sc.constraints.justification,
+            ]
+        )
 
         self.add_blank_line()
 
@@ -507,17 +500,11 @@ class Report:
             raise ValueError("Scorecard must be set before adding failed test steps")
 
         failed_steps = []
-        if (
-            hasattr(self._scorecard, "functional_test_scorecard")
-            and self._scorecard.functional_test_scorecard.steps
-        ):
+        if self._scorecard.functional_test_scorecard.steps:
             for i, step in enumerate(
                 self._scorecard.functional_test_scorecard.steps, 1
             ):
-                if (
-                    hasattr(step, "meets_expectations")
-                    and step.meets_expectations.score == "fail"
-                ):
+                if step.meets_expectations.score == "fail":
                     failed_steps.append((i, step.tool_name, step.tool_arguments))
 
         if failed_steps:
@@ -536,7 +523,7 @@ class Report:
         if not self._scorecard:
             raise ValueError("Scorecard must be set before adding model info")
 
-        if hasattr(self._scorecard, "model") and self._scorecard.model:
+        if self._scorecard.model:
             self.add_text(f"**Evaluation Model:** {self._scorecard.model}")
             self.add_blank_line()
 
@@ -580,6 +567,32 @@ class Report:
 
             for i in range(len(self._scorecard.tool_scorecards)):
                 self.add_tool_scorecard(i)
+
+        return self
+
+    def add_tool_output(self, tool_output) -> "Report":
+        # Add tool output if available
+        self.add_text("**Tool Output (🧮):**")
+        self.add_blank_line()
+        if tool_output is not None:
+            # Format and truncate tool output
+            if isinstance(tool_output, str):
+                output_type = ""
+                output_str = tool_output
+            else:
+                output_type = "json"
+                output_str = tool_output.model_dump_json(indent=2)
+
+            if len(output_str) > 500:
+                output_str = (
+                    output_str[:500] + f"... ({len(output_str) - 500} chars truncated)"
+                )
+
+            self.add_code_block(output_str, output_type)
+            self.add_blank_line()
+        else:
+            self.add_text("_No tool output_")
+            self.add_blank_line()
 
         return self
 
@@ -641,46 +654,18 @@ class Report:
                 self.add_code_block(json.dumps(step.tool_arguments, indent=2), "json")
                 self.add_blank_line()
 
-                # Add tool output if available
-                tool_output = step.tool_output or step.exception
-                if tool_output is not None:
-                    self.add_text("**Tool Output (🧮):**")
-                    self.add_blank_line()
-                    # Format and truncate tool output
-                    if isinstance(tool_output, str):
-                        output_type = ""
-                        output_str = tool_output
-                    else:
-                        output_type = "json"
-                        output_str = tool_output.model_dump_json(indent=2)
-
-                    if len(output_str) > 500:
-                        output_str = (
-                            output_str[:500]
-                            + f"... ({len(output_str) - 500} chars truncated)"
-                        )
-
-                    self.add_code_block(output_str, output_type)
-                    self.add_blank_line()
+                self.add_tool_output(step.tool_output or step.exception)
 
                 # Request tracking
                 self.add_text("**Request Tracking (🧮):**")
                 self.add_blank_line()
-                self.add_text(
-                    f"- Sampling Requests: {getattr(step, 'sampling_requests', 0)}"
-                )
+                self.add_text(f"- Sampling Requests: {step.sampling_requests}")
                 self.add_blank_line()
-                self.add_text(
-                    f"- Elicitation Requests: {getattr(step, 'elicitation_requests', 0)}"
-                )
+                self.add_text(f"- Elicitation Requests: {step.elicitation_requests}")
                 self.add_blank_line()
-                self.add_text(
-                    f"- List Roots Requests: {getattr(step, 'list_roots_requests', 0)}"
-                )
+                self.add_text(f"- List Roots Requests: {step.list_roots_requests}")
                 self.add_blank_line()
-                self.add_text(
-                    f"- Logging Requests: {getattr(step, 'logging_requests', 0)}"
-                )
+                self.add_text(f"- Logging Requests: {step.logging_requests}")
                 self.add_blank_line()
 
                 # Test Results
@@ -705,7 +690,7 @@ class Report:
                         ]
                     )
 
-                if hasattr(step, "no_silent_error"):
+                if step.no_silent_error:
                     self.add_table_row(
                         [
                             "No Silent Error",
@@ -754,24 +739,18 @@ class Report:
             )
 
         failed_steps = []
-        if (
-            hasattr(self._scorecard, "functional_test_scorecard")
-            and self._scorecard.functional_test_scorecard.steps
-        ):
+        if self._scorecard.functional_test_scorecard.steps:
             for i, step in enumerate(
                 self._scorecard.functional_test_scorecard.steps, 1
             ):
-                if (
-                    hasattr(step, "meets_expectations")
-                    and step.meets_expectations.score == "fail"
-                ):
+                if step.meets_expectations.score == "fail":
                     failed_steps.append(
                         (
                             i,
                             step.tool_name,
                             step.tool_arguments,
                             step.meets_expectations.justification,
-                            getattr(step, "tool_output", None),
+                            step.tool_output,
                         )
                     )
 
@@ -795,21 +774,8 @@ class Report:
                 self.add_text("**Arguments (🤖):**")
                 self.add_code_block(json.dumps(tool_args, indent=2), "json")
                 self.add_blank_line()
-                if tool_output is not None:
-                    self.add_text("**Tool Output (🧮):**")
-                    # Format tool output based on its type
-                    if isinstance(tool_output, Exception):
-                        self.add_code_block(str(tool_output), "")
-                    elif isinstance(tool_output, str):
-                        self.add_code_block(tool_output, "json")
-                    else:
-                        try:
-                            self.add_code_block(
-                                json.dumps(tool_output, indent=2), "json"
-                            )
-                        except:
-                            self.add_code_block(str(tool_output), "")
-                    self.add_blank_line()
+                self.add_tool_output(tool_output)
+                self.add_blank_line()
 
         return self
 
@@ -868,7 +834,7 @@ def generate_summary_markdown(
     """Generate a concise Markdown summary suitable for a README."""
     report = Report(scorecard)
 
-    report.add_title("📊 MCP Server Score Card", 2)
+    report.add_title("📊 MCP Server Score Card", 1)
     report.add_blank_line()
     report.add_emoji_legend()
     report.add_model_info()
