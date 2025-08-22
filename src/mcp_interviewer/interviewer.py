@@ -1,8 +1,11 @@
 import asyncio
 import logging
+from contextlib import asynccontextmanager
 from typing import Any
 
 from mcp import ClientSession, stdio_client
+from mcp.client.sse import sse_client
+from mcp.client.streamable_http import streamablehttp_client
 from mcp.shared.context import RequestContext
 from mcp.types import (
     CreateMessageRequestParams,
@@ -33,6 +36,39 @@ from .models import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def mcp_client(params: ServerParameters):
+    """Create an MCP client based on the server connection type.
+
+    Args:
+        params: ServerParameters specifying the connection type and configuration
+
+    Yields:
+        Tuple of (read_stream, write_stream) for the MCP client connection
+    """
+    if params.connection_type == "stdio":
+        async with stdio_client(params) as (read, write):
+            yield read, write
+    elif params.connection_type == "sse":
+        async with sse_client(
+            params.url,
+            headers=params.headers,
+            timeout=params.timeout,
+            sse_read_timeout=params.sse_read_timeout,
+        ) as (read, write):
+            yield read, write
+    elif params.connection_type == "streamable_http":
+        async with streamablehttp_client(
+            params.url,
+            headers=params.headers,
+            timeout=params.timeout,
+            sse_read_timeout=params.sse_read_timeout,
+        ) as (read, write, _):
+            yield read, write
+    else:
+        raise ValueError(f"Unknown connection type: {params.connection_type}")
 
 
 class MCPInterviewer:
@@ -271,9 +307,12 @@ class MCPInterviewer:
         Returns:
             Server object containing all discovered features and capabilities
         """
-        logger.info(
-            f"Starting server inspection for: {server.command} {' '.join(server.args or [])}"
-        )
+        if server.connection_type == "stdio":
+            logger.info(
+                f"Starting server inspection for: {server.command} {' '.join(server.args or [])}"
+            )
+        else:
+            logger.info(f"Starting server inspection for: {server.url}")
         logger.debug(f"Server parameters: {server}")
 
         logger.info("Initializing client session...")
@@ -503,11 +542,14 @@ class MCPInterviewer:
             Exception: If server evaluation fails at any stage
         """
         logger.info("=" * 60)
-        logger.info(f"Starting MCP Server Evaluation: {params.command}")
+        if params.connection_type == "stdio":
+            logger.info(f"Starting MCP Server Evaluation: {params.command}")
+        else:
+            logger.info(f"Starting MCP Server Evaluation: {params.url}")
         logger.info("=" * 60)
 
         try:
-            async with stdio_client(params) as (read, write):
+            async with mcp_client(params) as (read, write):
                 async with ClientSession(
                     read,
                     write,

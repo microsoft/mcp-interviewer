@@ -1,6 +1,6 @@
-from typing import Any, Generic, Literal, TypeVar
+from typing import Annotated, Any, Generic, Literal, TypeVar
 
-from mcp.client.stdio import StdioServerParameters
+from mcp.client.stdio import StdioServerParameters as McpStdioServerParameters
 from mcp.types import (
     CallToolResult,
     InitializeResult,
@@ -10,7 +10,7 @@ from mcp.types import (
     Tool,
 )
 from openai import AsyncOpenAI, OpenAI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 Client = OpenAI | AsyncOpenAI
 
@@ -165,8 +165,32 @@ class FunctionalTestScoreCard(
 ): ...
 
 
-# TODO: Add models for SSE and StreamableHTTP
-ServerParameters = StdioServerParameters
+class SseServerParameters(BaseModel):
+    connection_type: Literal["sse"] = "sse"
+
+    url: str
+    headers: dict[str, Any] | None = None
+    timeout: float = 5
+    sse_read_timeout: float = 60 * 5
+
+
+class StreamableHttpServerParameters(BaseModel):
+    connection_type: Literal["streamable_http"] = "streamable_http"
+
+    url: str
+    headers: dict[str, Any] | None = None
+    timeout: float = 5
+    sse_read_timeout: float = 60 * 5
+
+
+class StdioServerParameters(McpStdioServerParameters):
+    connection_type: Literal["stdio"] = "stdio"
+
+
+ServerParameters = Annotated[
+    StdioServerParameters | StreamableHttpServerParameters | SseServerParameters,
+    Field(discriminator="connection_type"),
+]
 
 
 class Server(BaseModel):

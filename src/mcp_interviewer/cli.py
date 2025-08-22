@@ -4,7 +4,16 @@ import argparse
 def cli():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("server_params")
+    parser.add_argument(
+        "server_params",
+        help="Either the shell command to execute, or the url to connect to.",
+    )
+    parser.add_argument(
+        "--remote-connection-type",
+        choices=["sse", "streamable_http"],
+        default="streamable_http",
+        help="If MCP server is remote, whether to use streamable_http or sse.",
+    )
     parser.add_argument("--model", required=True)
     parser.add_argument(
         "--client",
@@ -15,6 +24,18 @@ def cli():
     parser.add_argument(
         "--log-level", default="INFO", choices=["DEBUG", "INFO", "WARN", "ERROR"]
     )
+    parser.add_argument(
+        "--headers", nargs="*", help="Remote MCP connection headers in KEY=VALUE format"
+    )
+    parser.add_argument(
+        "--timeout", default=5, type=int, help="Remote MCP connection timeout"
+    )
+    parser.add_argument(
+        "--sse-read-timeout",
+        default=5,
+        type=int,
+        help="Remote MCP connection read timeout",
+    )
 
     args = parser.parse_args()
 
@@ -22,13 +43,56 @@ def cli():
 
     logging.basicConfig(level=getattr(logging, args.log_level))
 
-    params = args.server_params.split(" ")
-    params_command = params[0]
-    params_args = params[1:]
+    from .models import (
+        SseServerParameters,
+        StdioServerParameters,
+        StreamableHttpServerParameters,
+    )
 
-    from .models import ServerParameters
+    # Parse server-params to determine if it's a URL or command
+    server_params_str = args.server_params
 
-    params = ServerParameters(command=params_command, args=params_args)
+    # Check if it's a URL (starts with http:// or https://)
+    if server_params_str.startswith(("http://", "https://")):
+        # Remote connection
+        url = server_params_str
+
+        # Parse headers if provided
+        headers = {}
+        if args.headers:
+            for header in args.headers:
+                if "=" in header:
+                    key, value = header.split("=", 1)
+                    headers[key] = value
+                else:
+                    raise ValueError(
+                        f"Header argument does not match expected KEY=VALUE format: {header}"
+                    )
+
+        # Create appropriate remote server parameters
+        if args.remote_connection_type == "sse":
+            params = SseServerParameters(
+                url=url,
+                headers=headers if headers else None,
+                timeout=args.timeout,
+                sse_read_timeout=args.sse_read_timeout,
+            )
+        else:  # streamable_http
+            params = StreamableHttpServerParameters(
+                url=url,
+                headers=headers if headers else None,
+                timeout=args.timeout,
+                sse_read_timeout=args.sse_read_timeout,
+            )
+    else:
+        # Local stdio connection - parse as command and args
+        import shlex
+
+        params_list = shlex.split(server_params_str)
+        params_command = params_list[0]
+        params_args = params_list[1:] if len(params_list) > 1 else []
+
+        params = StdioServerParameters(command=params_command, args=params_args)
 
     import importlib
 
