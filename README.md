@@ -35,10 +35,33 @@ Open the `mcp-scorecard.md` to read the report on the MCP server.
 ### CLI
 
 ```bash
-usage: mcp-interviewer [-h] --model MODEL [--client CLIENT] [--out-dir OUT_DIR]
-                       [--log-level {DEBUG,INFO,WARN,ERROR}]
+usage: mcp-interviewer [-h] [--remote-connection-type {sse,streamable_http}] --model MODEL [--client CLIENT] [--out-dir OUT_DIR]
+                       [--log-level {DEBUG,INFO,WARN,ERROR}] [--headers [HEADERS ...]] [--timeout TIMEOUT] [--sse-read-timeout SSE_READ_TIMEOUT]
+                       [--no-score-tools] [--no-score-test] [--no-score]
                        server_params
+
+positional arguments:
+  server_params         Either the shell command to execute, or the url to connect to.
+
+options:
+  -h, --help            show this help message and exit
+  --remote-connection-type {sse,streamable_http}
+                        If MCP server is remote, whether to use streamable_http or sse.
+  --model MODEL
+  --client CLIENT       Import path to a parameter-less callable that returns an OpenAI or AsyncOpenAI compatible object
+  --out-dir, -o OUT_DIR
+  --log-level {DEBUG,INFO,WARN,ERROR}
+  --headers [HEADERS ...]
+                        Remote MCP connection headers in KEY=VALUE format
+  --timeout TIMEOUT     Remote MCP connection timeout
+  --sse-read-timeout SSE_READ_TIMEOUT
+                        Remote MCP connection read timeout
+  --no-score-tools      Skip LLM scoring of tools (will still generate test plan)
+  --no-score-test       Skip LLM scoring of functional tests (will still execute tests)
+  --no-score            Skip all LLM scoring operations (equivalent to --no-score-tools --no-score-test)
 ```
+
+e.g. 
 
 ```bash
 mcp-interviewer --model gpt-4.1 "uvx mcp-server-fetch"

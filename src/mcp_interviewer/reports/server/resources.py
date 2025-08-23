@@ -2,8 +2,8 @@
 
 import json
 
-from ..models import ServerScoreCard
-from .base import BaseReport
+from ...models import ServerScoreCard
+from ..base import BaseReport
 
 
 class ResourcesReport(BaseReport):
@@ -16,7 +16,7 @@ class ResourcesReport(BaseReport):
 
     def _build(self):
         """Build the resources section."""
-        self.add_title("Available Resources (🧮)", 2)
+        self.add_title("Resources", 2)
 
         if not self._scorecard.resources:
             self.add_text("_No resources available_")

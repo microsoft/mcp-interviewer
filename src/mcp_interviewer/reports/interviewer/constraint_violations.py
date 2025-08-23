@@ -1,8 +1,8 @@
 """Constraint violations report generation."""
 
-from ..constraints.base import ConstraintViolation, Severity
-from ..models import ServerScoreCard
-from .base import BaseReport
+from ...constraints.base import ConstraintViolation, Severity
+from ...models import ServerScoreCard
+from ..base import BaseReport
 
 
 class ConstraintViolationsReport(BaseReport):
@@ -20,7 +20,7 @@ class ConstraintViolationsReport(BaseReport):
 
     def _build(self):
         """Build the constraint violations section."""
-        self.add_title("Constraint Violations (🧮)", 2)
+        self.add_title("Constraint Violations", 2)
 
         if not self.violations:
             self.add_text("✅ **No constraint violations found**")

@@ -2,8 +2,8 @@
 
 import json
 
-from ..models import ServerScoreCard
-from .base import BaseReport
+from ...models import ServerScoreCard
+from ..base import BaseReport
 
 
 class ToolsReport(BaseReport):
@@ -20,7 +20,7 @@ class ToolsReport(BaseReport):
 
     def add_available_tools(self) -> "ToolsReport":
         """Add list of available tools with full details."""
-        self.add_title("Available Tools (🧮)", 2)
+        self.add_title("Tools", 2)
 
         if not self._scorecard.tools:
             self.add_text("_No tools available_")
@@ -38,17 +38,21 @@ class ToolsReport(BaseReport):
 
             # Tool description
             if tool.description:
-                self.add_text(f"**Description:** {tool.description}")
-                self.add_blank_line()
+                self.add_text("**Description:**")
+                self.add_code_block(tool.description)
 
             # Input schema
+            self.add_text("**Input Schema:**")
             if tool.inputSchema:
-                self.add_text("**Input Schema:**")
                 self.add_code_block(json.dumps(tool.inputSchema, indent=2), "json")
+            else:
+                self.add_text("_No Input Schema_")
 
             # Output schema
+            self.add_text("**Output Schema:**")
             if tool.outputSchema:
-                self.add_text("**Output Schema:**")
                 self.add_code_block(json.dumps(tool.outputSchema, indent=2), "json")
+            else:
+                self.add_text("_No Output Schema_")
 
         return self

@@ -1,8 +1,8 @@
 """Score summary report generation."""
 
-from ..models import ServerScoreCard
-from .base import BaseReport
-from .utils import count_scores
+from ...models import ServerScoreCard
+from ..base import BaseReport
+from ..utils import count_scores
 
 
 class ScoreSummaryReport(BaseReport):
@@ -16,6 +16,25 @@ class ScoreSummaryReport(BaseReport):
 
     def _build(self):
         """Build the score summary section."""
+        # Check if scoring was disabled
+        scoring_disabled = False
+        if self._scorecard.tool_scorecards:
+            first_scorecard = self._scorecard.tool_scorecards[0]
+            # Check if all scores are N/A (indicating scoring was disabled)
+            sample_score = first_scorecard.tool_name.length.score
+            if (
+                sample_score == "N/A"
+                and "No score generated"
+                in first_scorecard.tool_name.length.justification
+            ):
+                scoring_disabled = True
+
+        if scoring_disabled:
+            self.add_title("Score Summary", 2)
+            self.add_text("**Overall Score:** _Scoring disabled_")
+            self.add_blank_line()
+            return
+
         self.add_title("Score Summary (🤖)", 2)
 
         # Calculate overall score first

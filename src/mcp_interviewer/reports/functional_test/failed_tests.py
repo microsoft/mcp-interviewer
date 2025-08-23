@@ -1,7 +1,7 @@
 """Failed tests report generation."""
 
-from ..models import ServerScoreCard
-from .base import BaseReport
+from ...models import ServerScoreCard
+from ..base import BaseReport
 from .test_step import TestStepReport
 
 

@@ -1,49 +1,41 @@
-"""Server information report generation."""
+"""Interviewer information report generation."""
 
-from ..models import ServerScoreCard
-from .base import BaseReport
-from .utils import get_server_info
+from datetime import datetime
+
+from ... import __version__
+from ...models import ServerScoreCard
+from ..base import BaseReport
 
 
-class ServerInfoReport(BaseReport):
-    """Report for server information and metadata."""
+class InterviewerInfoReport(BaseReport):
+    """Report for MCP Interviewer information including model, server launch params, date and version."""
 
     def __init__(self, scorecard: ServerScoreCard):
-        """Initialize and build the server info report."""
+        """Initialize and build the interviewer info report."""
         super().__init__(scorecard)
         self._build()
 
     def _build(self):
-        """Build the server info section."""
-        self.add_server_info()
-        self.add_launch_parameters()
+        """Build the interviewer info section."""
+        self.add_title("Interviewer Parameters", 2)
 
-    def add_server_info(self) -> "ServerInfoReport":
-        """Add server information section."""
-        info = get_server_info(self._scorecard)
-
-        self.add_title("Server Information (🧮)", 2)
-
-        if info["name"]:
-            self.add_text(f"**Name:** {info['name']}")
-            self.add_blank_line()
-        if info["version"]:
-            self.add_text(f"**Version:** {info['version']}")
-            self.add_blank_line()
-        self.add_text(f"**Protocol Version:** {info['protocol_version']}")
+        self.add_title("Metadata", 4)
+        # Add date and version
+        self.add_text(f"**Date:** {datetime.now().strftime('%Y-%m-%d')}")
+        self.add_blank_line()
+        self.add_text(f"**mcp-interviewer Version:** {__version__}")
         self.add_blank_line()
 
-        if info["instructions"]:
-            self.add_text("**Instructions:**")
-            self.add_blank_line()
-            self.add_text(f"> {info['instructions']}")
-            self.add_blank_line()
+        # Add model info
+        self.add_text(f"**Evaluation Model:** {self._scorecard.model}")
+        self.add_blank_line()
 
-        return self
+        # Add server launch parameters
+        self.add_launch_parameters()
 
-    def add_launch_parameters(self) -> "ServerInfoReport":
+    def add_launch_parameters(self) -> "InterviewerInfoReport":
         """Add launch parameters section."""
-        self.add_title("Launch Parameters (🧮)", 2)
+        self.add_title("Server Launch Parameters", 4)
 
         params = self._scorecard.parameters
         if params.connection_type == "stdio":

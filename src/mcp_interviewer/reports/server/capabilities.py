@@ -1,7 +1,7 @@
 """Capabilities and feature counts report generation."""
 
-from ..models import ServerScoreCard
-from .base import BaseReport
+from ...models import ServerScoreCard
+from ..base import BaseReport
 
 
 class CapabilitiesReport(BaseReport):
@@ -13,17 +13,16 @@ class CapabilitiesReport(BaseReport):
         self._build()
 
     def _build(self):
-        """Build the capabilities sections."""
+        """Build the capabilities section."""
         self.add_capabilities_table()
-        self.add_feature_counts()
 
     def add_capabilities_table(self) -> "CapabilitiesReport":
-        """Add capabilities summary table."""
-        self.add_title("Capabilities (🧮)", 2)
+        """Add capabilities summary table with counts."""
+        self.add_title("Server Capabilities", 2)
 
         capabilities = self._scorecard.initialize_result.capabilities
 
-        self.add_table_header(["Feature", "Status", "Additional Features"])
+        self.add_table_header(["Feature", "Supported", "Count", "Additional Features"])
 
         # Tools capability
         if capabilities.tools:
@@ -31,9 +30,11 @@ class CapabilitiesReport(BaseReport):
             if capabilities.tools.listChanged:
                 details.append("listChanged")
             details_str = ", ".join(details) if details else ""
-            self.add_table_row(["Tools", "✅", details_str])
+            self.add_table_row(
+                ["Tools", "✅", str(len(self._scorecard.tools)), details_str]
+            )
         else:
-            self.add_table_row(["Tools", "❌", ""])
+            self.add_table_row(["Tools", "❌", str(len(self._scorecard.tools)), ""])
 
         # Resources capability
         if capabilities.resources:
@@ -43,9 +44,29 @@ class CapabilitiesReport(BaseReport):
             if capabilities.resources.listChanged:
                 details.append("listChanged")
             details_str = ", ".join(details) if details else ""
-            self.add_table_row(["Resources", "✅", details_str])
+            self.add_table_row(
+                ["Resources", "✅", str(len(self._scorecard.resources)), details_str]
+            )
+            self.add_table_row(
+                [
+                    "Resource Templates",
+                    "✅",
+                    str(len(self._scorecard.resource_templates)),
+                    "",
+                ]
+            )
         else:
-            self.add_table_row(["Resources", "❌", ""])
+            self.add_table_row(
+                ["Resources", "❌", str(len(self._scorecard.resources)), ""]
+            )
+            self.add_table_row(
+                [
+                    "Resource Templates",
+                    "❌",
+                    str(len(self._scorecard.resource_templates)),
+                    "",
+                ]
+            )
 
         # Prompts capability
         if capabilities.prompts:
@@ -53,15 +74,17 @@ class CapabilitiesReport(BaseReport):
             if capabilities.prompts.listChanged:
                 details.append("listChanged")
             details_str = ", ".join(details) if details else ""
-            self.add_table_row(["Prompts", "✅", details_str])
+            self.add_table_row(
+                ["Prompts", "✅", str(len(self._scorecard.prompts)), details_str]
+            )
         else:
-            self.add_table_row(["Prompts", "❌", ""])
+            self.add_table_row(["Prompts", "❌", str(len(self._scorecard.prompts)), ""])
 
         # Logging capability
         if capabilities.logging:
-            self.add_table_row(["Logging", "✅", ""])
+            self.add_table_row(["Logging", "✅", "", ""])
         else:
-            self.add_table_row(["Logging", "❌", ""])
+            self.add_table_row(["Logging", "❌", "", ""])
 
         # Experimental features
         if capabilities.experimental:
@@ -71,22 +94,7 @@ class CapabilitiesReport(BaseReport):
                     if additional_features
                     else ""
                 )
-                self.add_table_row([f"{feature} (experimental)", "✅", details_str])
-
-        self.add_blank_line()
-        return self
-
-    def add_feature_counts(self) -> "CapabilitiesReport":
-        """Add feature counts section."""
-        self.add_title("Feature Counts (🧮)", 2)
-
-        self.add_table_header(["Feature", "Count"])
-        self.add_table_row(["Tools", str(len(self._scorecard.tools))])
-        self.add_table_row(["Resources", str(len(self._scorecard.resources))])
-        self.add_table_row(
-            ["Resource Templates", str(len(self._scorecard.resource_templates))]
-        )
-        self.add_table_row(["Prompts", str(len(self._scorecard.prompts))])
+                self.add_table_row([f"{feature} (experimental)", "✅", "", details_str])
 
         self.add_blank_line()
         return self

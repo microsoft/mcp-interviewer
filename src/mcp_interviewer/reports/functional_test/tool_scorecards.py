@@ -1,8 +1,8 @@
 """Tool scorecards report generation."""
 
-from ..models import ServerScoreCard
-from .base import BaseReport
-from .utils import count_scores, format_score
+from ...models import ServerScoreCard
+from ..base import BaseReport
+from ..utils import count_scores, format_score
 
 
 class ToolScorecardsReport(BaseReport):
@@ -15,7 +15,26 @@ class ToolScorecardsReport(BaseReport):
 
     def _build(self):
         """Build the tool scorecards section."""
-        self.add_title("Tool Scorecards (🤖)", 2)
+        # Check if scoring was disabled
+        scoring_disabled = False
+        if self._scorecard.tool_scorecards:
+            first_scorecard = self._scorecard.tool_scorecards[0]
+            # Check if all scores are N/A (indicating scoring was disabled)
+            sample_score = first_scorecard.tool_name.length.score
+            if (
+                sample_score == "N/A"
+                and "No score generated"
+                in first_scorecard.tool_name.length.justification
+            ):
+                scoring_disabled = True
+
+        if scoring_disabled:
+            self.add_title("Tool Scorecards", 2)
+            self.add_text("_Tool scoring disabled - no evaluations generated_")
+            self.add_blank_line()
+            return
+        else:
+            self.add_title("Tool Scorecards (🤖)", 2)
 
         if not self._scorecard.tool_scorecards:
             self.add_text("_No tool evaluations available_")

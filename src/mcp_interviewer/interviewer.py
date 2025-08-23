@@ -79,15 +79,25 @@ class MCPInterviewer:
     It uses an LLM to generate tests and score the server's capabilities.
     """
 
-    def __init__(self, client: Client, model: str):
+    def __init__(
+        self,
+        client: Client,
+        model: str,
+        should_score_tool: bool = True,
+        should_score_functional_test: bool = True,
+    ):
         """Initialize the MCP Interviewer.
 
         Args:
             client: OpenAI client (sync or async) for LLM-based evaluation
             model: Model name to use for evaluation (e.g., "gpt-4", "gpt-3.5-turbo")
+            should_score_tool: Whether to perform expensive LLM scoring of tools (default: True)
+            should_score_functional_test: Whether to perform expensive LLM scoring of functional tests (default: True)
         """
         self._client = client
         self._model = model
+        self._should_score_tool = should_score_tool
+        self._should_score_functional_test = should_score_functional_test
 
     async def score_tool(self, tool: Tool) -> ToolScoreCard:
         """Score a single tool based on its name, description, and schema quality.
@@ -101,6 +111,45 @@ class MCPInterviewer:
         Raises:
             Exception: If tool scoring fails
         """
+        if not self._should_score_tool:
+            logger.info(f"Skipping scoring for tool '{tool.name}' (scoring disabled)")
+            # Return a scorecard with N/A values
+            from .models import (
+                PassFailScoreCard,
+                ToolDescriptionScoreCard,
+                ToolNameScoreCard,
+                ToolSchemaScoreCard,
+            )
+
+            na_scorecard = PassFailScoreCard(
+                justification="No score generated", score="N/A"
+            )
+
+            return ToolScoreCard(
+                tool_name=ToolNameScoreCard(
+                    length=na_scorecard,
+                    uniqueness=na_scorecard,
+                    descriptiveness=na_scorecard,
+                ),
+                tool_description=ToolDescriptionScoreCard(
+                    length=na_scorecard,
+                    parameters=na_scorecard,
+                    examples=na_scorecard,
+                ),
+                tool_input_schema=ToolSchemaScoreCard(
+                    complexity=na_scorecard,
+                    parameters=na_scorecard,
+                    optionals=na_scorecard,
+                    constraints=na_scorecard,
+                ),
+                tool_output_schema=ToolSchemaScoreCard(
+                    complexity=na_scorecard,
+                    parameters=na_scorecard,
+                    optionals=na_scorecard,
+                    constraints=na_scorecard,
+                ),
+            )
+
         try:
             logger.debug(f"Scoring tool '{tool.name}'")
             scorecard = await prompts.score_tool(self._client, self._model, tool)
@@ -236,6 +285,44 @@ class MCPInterviewer:
         Raises:
             Exception: If step scoring fails
         """
+        if not self._should_score_functional_test:
+            logger.info(
+                f"Skipping scoring for test step '{step.tool_name}' (scoring disabled)"
+            )
+            from .models import ErrorType, PassFailScoreCard, ScoreCard
+
+            na_scorecard = PassFailScoreCard(
+                justification="No score generated", score="N/A"
+            )
+
+            # Create error type scorecard with the correct literal type
+            na_error_type = ScoreCard[ErrorType](
+                justification="No score generated", score="N/A"
+            )
+
+            return FunctionalTestStepScoreCard(
+                # Include the step data
+                justification=step.justification,
+                expected_output=step.expected_output,
+                tool_name=step.tool_name,
+                tool_arguments=step.tool_arguments,
+                # Include the output data
+                tool_output=output.tool_output,
+                exception=output.exception,
+                sampling_requests=output.sampling_requests,
+                elicitation_requests=output.elicitation_requests,
+                list_roots_requests=output.list_roots_requests,
+                logging_requests=output.logging_requests,
+                # Add the evaluation rubric with N/A scores
+                error_handling=na_scorecard,
+                error_type=na_error_type,
+                no_silent_error=na_scorecard,
+                output_relevance=na_scorecard,
+                output_quality=na_scorecard,
+                schema_compliance=na_scorecard,
+                meets_expectations=na_scorecard,
+            )
+
         try:
             logger.debug(f"Scoring step '{step.tool_name}'")
             scorecard = await prompts.score_functional_test_step_output(
@@ -273,8 +360,34 @@ class MCPInterviewer:
         step_scorecards: list[FunctionalTestStepScoreCard] = []
         for step, step_output in zip(test.steps, step_outputs):
             step_scorecard = await self.score_functional_test_step(step, step_output)
-
             step_scorecards.append(step_scorecard)
+
+        if not self._should_score_functional_test:
+            logger.debug("Skipping overall functional test scoring (scoring disabled)")
+            # Return a scorecard with N/A values for the overall test
+            from .models import ErrorType, PassFailScoreCard, ScoreCard
+
+            na_scorecard = PassFailScoreCard(
+                justification="No score generated", score="N/A"
+            )
+
+            na_error_type = ScoreCard[ErrorType](
+                justification="No score generated", score="N/A"
+            )
+
+            return FunctionalTestScoreCard(
+                # Include the test plan and steps
+                plan=test.plan,
+                steps=step_scorecards,
+                # Include the output data
+                sampling_requests=output.sampling_requests,
+                elicitation_requests=output.elicitation_requests,
+                list_roots_requests=output.list_roots_requests,
+                logging_requests=output.logging_requests,
+                # Add the evaluation rubric with N/A scores
+                meets_expectations=na_scorecard,
+                error_type=na_error_type,
+            )
 
         try:
             logger.debug(f"Scoring test with {len(test.steps)} steps")

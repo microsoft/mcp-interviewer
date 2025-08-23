@@ -1,7 +1,7 @@
 """Model information report generation."""
 
-from ..models import ServerScoreCard
-from .base import BaseReport
+from ...models import ServerScoreCard
+from ..base import BaseReport
 
 
 class ModelInfoReport(BaseReport):
@@ -14,6 +14,6 @@ class ModelInfoReport(BaseReport):
 
     def _build(self):
         """Build the model info section."""
-        self.add_title("Model Information", 2)
-        self.add_text(f"**Evaluation Model:** {self._scorecard.model}")
+        self.add_title("Evaluation Model Information", 2)
+        self.add_text(f"**Model:** {self._scorecard.model}")
         self.add_blank_line()

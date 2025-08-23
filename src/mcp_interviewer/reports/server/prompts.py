@@ -1,7 +1,7 @@
 """Prompts report generation."""
 
-from ..models import ServerScoreCard
-from .base import BaseReport
+from ...models import ServerScoreCard
+from ..base import BaseReport
 
 
 class PromptsReport(BaseReport):
@@ -14,7 +14,7 @@ class PromptsReport(BaseReport):
 
     def _build(self):
         """Build the prompts section."""
-        self.add_title("Available Prompts (🧮)", 2)
+        self.add_title("Available Prompts", 2)
 
         if not self._scorecard.prompts:
             self.add_text("_No prompts available_")

@@ -1,7 +1,7 @@
 """Emoji legend report generation."""
 
-from ..models import ServerScoreCard
-from .base import BaseReport
+from ...models import ServerScoreCard
+from ..base import BaseReport
 
 
 class EmojiLegendReport(BaseReport):

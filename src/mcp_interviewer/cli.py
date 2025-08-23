@@ -36,6 +36,21 @@ def cli():
         type=int,
         help="Remote MCP connection read timeout",
     )
+    parser.add_argument(
+        "--no-score-tools",
+        action="store_true",
+        help="Skip LLM scoring of tools (will still generate test plan)",
+    )
+    parser.add_argument(
+        "--no-score-test",
+        action="store_true",
+        help="Skip LLM scoring of functional tests (will still execute tests)",
+    )
+    parser.add_argument(
+        "--no-score",
+        action="store_true",
+        help="Skip all LLM scoring operations (equivalent to --no-score-tools --no-score-test)",
+    )
 
     args = parser.parse_args()
 
@@ -104,7 +119,18 @@ def cli():
 
     from .main import main
 
-    main(client, args.model, params, out_dir=args.out_dir)
+    # Handle the --no-score flag which disables both scoring operations
+    should_score_tool = not (args.no_score or args.no_score_tools)
+    should_score_functional_test = not (args.no_score or args.no_score_test)
+
+    main(
+        client,
+        args.model,
+        params,
+        out_dir=args.out_dir,
+        should_score_tool=should_score_tool,
+        should_score_functional_test=should_score_functional_test,
+    )
 
 
 if __name__ == "__main__":
