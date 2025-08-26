@@ -1,19 +1,9 @@
-name: Check and Build
+name: Build
 
 permissions:
   contents: write # Needs to write the bumped versions
 
 on:
-  push:
-    branches: ["**"]
-    paths:
-      - 'src/**'
-      - 'pyproject.toml'
-  pull_request:
-    branches: [ "main" ]
-    paths:
-      - 'src/**'
-      - 'pyproject.toml'
   workflow_dispatch:
 
 jobs:
@@ -33,9 +23,7 @@ jobs:
         run: uv run poe check
 
   build:
-    needs: check
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
