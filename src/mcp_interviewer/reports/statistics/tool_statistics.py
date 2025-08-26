@@ -15,6 +15,14 @@ from ..utils import count_scores
 class ToolStatisticsReport(BaseReport):
     """Report showing aggregate tool statistics."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "tool-stats"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "TS"
+
     def __init__(self, scorecard: ServerScoreCard):
         """Initialize and build the tool summary report."""
         super().__init__(scorecard)
@@ -22,6 +30,7 @@ class ToolStatisticsReport(BaseReport):
 
     def _build(self):
         """Build the tool summary section."""
+        # Never collapse this section - always show the statistics
         self.add_title("Tool Statistics", 2)
 
         self.add_table_header(["Metric", "Total", "Average", "Min", "Max"])
@@ -150,3 +159,5 @@ class ToolStatisticsReport(BaseReport):
                 )
 
                 self.add_blank_line()
+
+        # No end_collapsible since we never start one

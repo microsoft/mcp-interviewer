@@ -37,19 +37,39 @@ def cli():
         help="Remote MCP connection read timeout",
     )
     parser.add_argument(
-        "--no-score-tools",
+        "--score-tools",
         action="store_true",
-        help="Skip LLM scoring of tools (will still generate test plan)",
+        help="Enable LLM scoring of tools (generates evaluation scores)",
     )
     parser.add_argument(
-        "--no-score-test",
+        "--score-test",
         action="store_true",
-        help="Skip LLM scoring of functional tests (will still execute tests)",
+        help="Enable LLM scoring of functional tests (generates evaluation scores)",
     )
     parser.add_argument(
-        "--no-score",
+        "--score",
         action="store_true",
-        help="Skip all LLM scoring operations (equivalent to --no-score-tools --no-score-test)",
+        help="Enable all LLM scoring operations (equivalent to --score-tools --score-test)",
+    )
+    parser.add_argument(
+        "--short",
+        action="store_true",
+        help="Generate short report instead of full report",
+    )
+    parser.add_argument(
+        "--reports",
+        nargs="+",
+        help="Specify which reports to include (in order). Can use full names (e.g., interviewer-info, server-info) or shorthand codes (e.g., II, SI, CAP, TS, TCS, FT, CV, T, R, RT, P)",
+    )
+    parser.add_argument(
+        "--no-collapse",
+        action="store_true",
+        help="Don't use collapsible sections in the report",
+    )
+    parser.add_argument(
+        "--select",
+        nargs="+",
+        help="Specify which constraint violations to check (all enabled by default). Can use full names (e.g., openai-tool-count, openai-name-length) or shorthand codes (e.g., OTC, ONL, ONP, OTL, OA)",
     )
 
     args = parser.parse_args()
@@ -119,9 +139,9 @@ def cli():
 
     from .main import main
 
-    # Handle the --no-score flag which disables both scoring operations
-    should_score_tool = not (args.no_score or args.no_score_tools)
-    should_score_functional_test = not (args.no_score or args.no_score_test)
+    # Handle the --score flag which enables scoring operations (disabled by default)
+    should_score_tool = args.score or args.score_tools
+    should_score_functional_test = args.score or args.score_test
 
     main(
         client,
@@ -130,6 +150,10 @@ def cli():
         out_dir=args.out_dir,
         should_score_tool=should_score_tool,
         should_score_functional_test=should_score_functional_test,
+        short_report=args.short,
+        custom_reports=args.reports,
+        no_collapse=args.no_collapse,
+        selected_constraints=args.select,
     )
 
 

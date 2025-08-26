@@ -61,6 +61,26 @@ class Constraint(ABC):
     constraint validation logic.
     """
 
+    @classmethod
+    @abstractmethod
+    def cli_name(cls) -> str:
+        """Return the CLI-friendly name for this constraint.
+
+        Returns:
+            str: The CLI name (e.g., "tool-count")
+        """
+        ...
+
+    @classmethod
+    @abstractmethod
+    def cli_code(cls) -> str:
+        """Return the shorthand code for this constraint.
+
+        Returns:
+            str: The shorthand code (e.g., "TC")
+        """
+        ...
+
     @abstractmethod
     def test(
         self, server: ServerScoreCard
@@ -82,6 +102,16 @@ class CompositeConstraint(Constraint):
     Allows combining multiple constraints into a single constraint
     that tests all of them sequentially.
     """
+
+    @classmethod
+    def cli_name(cls) -> str:
+        """Return the CLI-friendly name for this composite constraint."""
+        return "composite"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        """Return the shorthand code for this composite constraint."""
+        return "COMP"
 
     def __init__(self, *constraints: Constraint):
         """Initialize with multiple constraints.
@@ -108,6 +138,8 @@ class CompositeConstraint(Constraint):
 
 class ToolConstraint(Constraint, ABC):
     """Abstract base class for constraints that validate individual tools."""
+
+    # Subclasses must still implement cli_name and cli_code
 
     @abstractmethod
     def test_tool(self, tool: Tool) -> Generator[ConstraintViolation, None, None]:
@@ -138,6 +170,8 @@ class ToolConstraint(Constraint, ABC):
 
 class ToolResultConstraint(Constraint, ABC):
     """Abstract base class for constraints that validate tool execution results."""
+
+    # Subclasses must still implement cli_name and cli_code
 
     @abstractmethod
     def test_tool_result(

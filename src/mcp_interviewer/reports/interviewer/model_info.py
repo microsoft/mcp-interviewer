@@ -7,6 +7,14 @@ from ..base import BaseReport
 class ModelInfoReport(BaseReport):
     """Report for model information."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "model-info"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "MI"
+
     def __init__(self, scorecard: ServerScoreCard):
         """Initialize and build the model info report."""
         super().__init__(scorecard)

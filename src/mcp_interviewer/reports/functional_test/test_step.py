@@ -14,6 +14,14 @@ from ..utils import count_scores, format_score
 class TestStepReport(BaseReport):
     """Report for a single test step."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "test-step"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "TSTEP"
+
     def __init__(
         self,
         scorecard: ServerScoreCard,
@@ -100,11 +108,17 @@ class TestStepReport(BaseReport):
 
     def _build(self):
         """Build the test step report."""
+        # Create a collapsible section for each step
+        step_title = f"Step {self.step_index + 1}: {self.step.tool_name}"
 
-        self.add_title(
-            f"Step {self.step_index + 1}: {self.step.tool_name} ",
-            4,
-        )
+        # Add the title first
+        self.add_title(step_title, 4)
+
+        # Start collapsible section if enabled
+        if self._options.use_collapsible:
+            self.add_text("<details>")
+            self.add_text("<summary>Toggle step details</summary>")
+            self.add_blank_line()
 
         if self.include_evaluations:
             passes, total = count_scores(self.step)
@@ -217,6 +231,10 @@ class TestStepReport(BaseReport):
                             self.add_text(
                                 f"- {format_score(field_value.score)} **{field_name.replace('_', ' ').title()}**: {field_value.justification}"
                             )
+
+        # End collapsible section if enabled
+        if self._options.use_collapsible:
+            self.add_text("</details>")
 
         self.add_blank_line()
 

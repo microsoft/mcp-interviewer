@@ -9,6 +9,14 @@ from ..base import BaseReport
 class ToolsReport(BaseReport):
     """Report for tools information."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "tools"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "T"
+
     def __init__(self, scorecard: ServerScoreCard):
         """Initialize and build the tools report."""
         super().__init__(scorecard)
@@ -20,17 +28,24 @@ class ToolsReport(BaseReport):
 
     def add_available_tools(self) -> "ToolsReport":
         """Add list of available tools with full details."""
-        self.add_title("Tools", 2)
+        self.start_collapsible("Tools", 2)
 
         if not self._scorecard.tools:
             self.add_text("_No tools available_")
             self.add_blank_line()
+            self.end_collapsible()
             return self
 
         for i, tool in enumerate(self._scorecard.tools):
             # Add anchor for linking
             self.add_text(f'<a id="tool-{i}"></a>')
             self.add_title(f"{tool.name}", 3)
+
+            # Start collapsible for tool details
+            if self._options.use_collapsible:
+                self.add_text("<details>")
+                self.add_text("<summary>Toggle tool details</summary>")
+                self.add_blank_line()
 
             # Link to scorecard
             self.add_text(f"[→ View evaluation scorecard](#tool-scorecard-{i})")
@@ -55,4 +70,10 @@ class ToolsReport(BaseReport):
             else:
                 self.add_text("_No Output Schema_")
 
+            # End collapsible for tool details
+            if self._options.use_collapsible:
+                self.add_text("</details>")
+                self.add_blank_line()
+
+        self.end_collapsible()
         return self

@@ -83,16 +83,16 @@ class MCPInterviewer:
         self,
         client: Client,
         model: str,
-        should_score_tool: bool = True,
-        should_score_functional_test: bool = True,
+        should_score_tool: bool = False,
+        should_score_functional_test: bool = False,
     ):
         """Initialize the MCP Interviewer.
 
         Args:
             client: OpenAI client (sync or async) for LLM-based evaluation
             model: Model name to use for evaluation (e.g., "gpt-4", "gpt-3.5-turbo")
-            should_score_tool: Whether to perform expensive LLM scoring of tools (default: True)
-            should_score_functional_test: Whether to perform expensive LLM scoring of functional tests (default: True)
+            should_score_tool: Whether to perform expensive LLM scoring of tools (default: False)
+            should_score_functional_test: Whether to perform expensive LLM scoring of functional tests (default: False)
         """
         self._client = client
         self._model = model

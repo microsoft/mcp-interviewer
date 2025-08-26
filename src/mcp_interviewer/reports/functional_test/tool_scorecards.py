@@ -8,6 +8,14 @@ from ..utils import count_scores, format_score
 class ToolScorecardsReport(BaseReport):
     """Report for tool evaluation scorecards."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "tool-scorecards"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "TSC"
+
     def __init__(self, scorecard: ServerScoreCard):
         """Initialize and build the tool scorecards report."""
         super().__init__(scorecard)

@@ -8,6 +8,14 @@ from .test_step import TestStepReport
 class FailedTestsReport(BaseReport):
     """Report for failed test steps."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "failed-tests"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "FAIL"
+
     def __init__(self, scorecard: ServerScoreCard, detailed: bool = False):
         """Initialize and build the failed tests report."""
         super().__init__(scorecard)

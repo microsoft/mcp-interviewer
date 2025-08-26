@@ -1,5 +1,6 @@
 """Interviewer information report generation."""
 
+import sys
 from datetime import datetime
 
 from ... import __version__
@@ -10,6 +11,14 @@ from ..base import BaseReport
 class InterviewerInfoReport(BaseReport):
     """Report for MCP Interviewer information including model, server launch params, date and version."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "interviewer-info"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "II"
+
     def __init__(self, scorecard: ServerScoreCard):
         """Initialize and build the interviewer info report."""
         super().__init__(scorecard)
@@ -17,7 +26,7 @@ class InterviewerInfoReport(BaseReport):
 
     def _build(self):
         """Build the interviewer info section."""
-        self.add_title("Interviewer Parameters", 2)
+        self.start_collapsible("Interviewer Parameters", 2)
 
         self.add_title("Metadata", 4)
         # Add date and version
@@ -30,8 +39,17 @@ class InterviewerInfoReport(BaseReport):
         self.add_text(f"**Evaluation Model:** {self._scorecard.model}")
         self.add_blank_line()
 
+        # Add CLI command from sys.argv
+        if sys.argv:
+            self.add_title("CLI Command", 4)
+            cli_command = " ".join(sys.argv)
+            self.add_code_block(cli_command, "bash")
+            self.add_blank_line()
+
         # Add server launch parameters
         self.add_launch_parameters()
+
+        self.end_collapsible()
 
     def add_launch_parameters(self) -> "InterviewerInfoReport":
         """Add launch parameters section."""

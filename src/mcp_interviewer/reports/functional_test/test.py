@@ -9,6 +9,14 @@ from .test_step import TestStepReport
 class FunctionalTestReport(BaseReport):
     """Report for functional test results."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "functional-tests"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "FT"
+
     def __init__(self, scorecard: ServerScoreCard, include_evaluations: bool = True):
         """Initialize and build the functional test report.
 
@@ -24,7 +32,7 @@ class FunctionalTestReport(BaseReport):
     def _build(self):
         """Build the functional test results section."""
         # Check if scoring was disabled
-        self.add_title("Functional Test Results", 2)
+        self.start_collapsible("Functional Test Results", 2)
 
         test = self._scorecard.functional_test_scorecard
 
@@ -64,3 +72,5 @@ class FunctionalTestReport(BaseReport):
         else:
             self.add_text("_No test steps available_")
             self.add_blank_line()
+
+        self.end_collapsible()

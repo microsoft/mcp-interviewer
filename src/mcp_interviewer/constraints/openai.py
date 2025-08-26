@@ -29,6 +29,16 @@ class OpenAIToolCountConstraint(Constraint):
     - Recommended: Less than 20 tools for optimal performance
     """
 
+    @classmethod
+    def cli_name(cls) -> str:
+        """Return the CLI-friendly name for this constraint."""
+        return "openai-tool-count"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        """Return the shorthand code for this constraint."""
+        return "OTC"
+
     def test(
         self, server: ServerScoreCard
     ) -> Generator[ConstraintViolation, None, None]:
@@ -60,6 +70,16 @@ class OpenAIToolNameLengthConstraint(ToolConstraint):
     OpenAI requires tool names to be at most 64 characters long.
     """
 
+    @classmethod
+    def cli_name(cls) -> str:
+        """Return the CLI-friendly name for this constraint."""
+        return "openai-name-length"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        """Return the shorthand code for this constraint."""
+        return "ONL"
+
     def test_tool(self, tool: Tool) -> Generator[ConstraintViolation, None, None]:
         """Test if the tool name meets length requirements.
 
@@ -83,6 +103,16 @@ class OpenAIToolNamePatternConstraint(ToolConstraint):
     - Can contain letters, numbers, and underscores
     - Must be at least 1 character long
     """
+
+    @classmethod
+    def cli_name(cls) -> str:
+        """Return the CLI-friendly name for this constraint."""
+        return "openai-name-pattern"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        """Return the shorthand code for this constraint."""
+        return "ONP"
 
     pattern = re.compile(r"^[a-zA-Z_]+[a-zA-Z0-9_]*$")
 
@@ -110,6 +140,16 @@ class OpenAIToolResultTokenLengthConstraint(ToolResultConstraint):
     This constraint checks that tool results fit within these limits
     for various model families.
     """
+
+    @classmethod
+    def cli_name(cls) -> str:
+        """Return the CLI-friendly name for this constraint."""
+        return "openai-token-length"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        """Return the shorthand code for this constraint."""
+        return "OTL"
 
     def test_tool_result(
         self, result: CallToolResult
@@ -150,6 +190,16 @@ class OpenAIConstraints(Constraint):
     This class provides a convenient way to apply all OpenAI-related
     constraints at once when validating an MCP server for OpenAI compatibility.
     """
+
+    @classmethod
+    def cli_name(cls) -> str:
+        """Return the CLI-friendly name for all OpenAI constraints."""
+        return "openai-all"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        """Return the shorthand code for all OpenAI constraints."""
+        return "OA"
 
     def __init__(self):
         """Initialize with all OpenAI-specific constraints."""

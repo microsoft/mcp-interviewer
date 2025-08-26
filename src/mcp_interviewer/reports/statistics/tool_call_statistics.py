@@ -12,6 +12,14 @@ from ..base import BaseReport
 class ToolCallStatisticsReport(BaseReport):
     """Report for analyzing tool call outputs."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "tool-call-stats"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "TCS"
+
     def __init__(self, scorecard: ServerScoreCard):
         """Initialize and build the tool output analysis report."""
         super().__init__(scorecard)
@@ -56,6 +64,7 @@ class ToolCallStatisticsReport(BaseReport):
         """Build the tool output analysis section."""
         tokenizer = encoding_for_model("gpt-4o")
 
+        # Never collapse this section - always show the statistics
         self.add_title("Tool Call Statistics", 2)
         self.add_table_header(["Metric", "Total", "Average", "Min", "Max"])
 
@@ -168,3 +177,5 @@ class ToolCallStatisticsReport(BaseReport):
         self.add_stats_table_row("Elicitation requests", elicitation_requests_per_step)
         self.add_stats_table_row("List roots requests", list_roots_requests_per_step)
         self.add_stats_table_row("Logging requests", logging_requests_per_step)
+
+        # No end_collapsible since we never start one

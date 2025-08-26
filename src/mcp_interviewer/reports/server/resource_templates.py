@@ -9,6 +9,14 @@ from ..base import BaseReport
 class ResourceTemplatesReport(BaseReport):
     """Report for resource templates information."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "resource-templates"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "RT"
+
     def __init__(self, scorecard: ServerScoreCard):
         """Initialize and build the resource templates report."""
         super().__init__(scorecard)
@@ -16,17 +24,24 @@ class ResourceTemplatesReport(BaseReport):
 
     def _build(self):
         """Build the resource templates section."""
-        self.add_title("Resource Templates", 2)
+        self.start_collapsible("Resource Templates", 2)
 
         if not self._scorecard.resource_templates:
             self.add_text("_No resource templates available_")
             self.add_blank_line()
+            self.end_collapsible()
             return
 
         for i, template in enumerate(self._scorecard.resource_templates):
             # Add anchor for linking
             self.add_text(f'<a id="resource-template-{i}"></a>')
             self.add_title(f"{template.name}", 3)
+
+            # Start collapsible for template details
+            if self._options.use_collapsible:
+                self.add_text("<details>")
+                self.add_text("<summary>Toggle template details</summary>")
+                self.add_blank_line()
 
             # Template URI pattern
             self.add_text(f"**URI Template:** `{template.uriTemplate}`")
@@ -47,3 +62,10 @@ class ResourceTemplatesReport(BaseReport):
                 self.add_text("**Annotations:**")
                 self.add_code_block(json.dumps(template.annotations, indent=2), "json")
                 self.add_blank_line()
+
+            # End collapsible for template details
+            if self._options.use_collapsible:
+                self.add_text("</details>")
+                self.add_blank_line()
+
+        self.end_collapsible()

@@ -7,6 +7,14 @@ from ..base import BaseReport
 class CapabilitiesReport(BaseReport):
     """Report for server capabilities and feature counts."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "capabilities"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "CAP"
+
     def __init__(self, scorecard: ServerScoreCard):
         """Initialize and build the capabilities report."""
         super().__init__(scorecard)
@@ -18,6 +26,7 @@ class CapabilitiesReport(BaseReport):
 
     def add_capabilities_table(self) -> "CapabilitiesReport":
         """Add capabilities summary table with counts."""
+        # Never collapse this section - always show the table
         self.add_title("Server Capabilities", 2)
 
         capabilities = self._scorecard.initialize_result.capabilities
@@ -97,4 +106,5 @@ class CapabilitiesReport(BaseReport):
                 self.add_table_row([f"{feature} (experimental)", "✅", "", details_str])
 
         self.add_blank_line()
+        # No end_collapsible since we never start one
         return self

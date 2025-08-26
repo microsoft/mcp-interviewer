@@ -8,6 +8,14 @@ from ..utils import count_scores
 class ScoreSummaryReport(BaseReport):
     """Report for score summaries."""
 
+    @classmethod
+    def cli_name(cls) -> str:
+        return "score-summary"
+
+    @classmethod
+    def cli_code(cls) -> str:
+        return "SCORE"
+
     def __init__(self, scorecard: ServerScoreCard, detailed: bool = False):
         """Initialize and build the score summary report."""
         super().__init__(scorecard)
