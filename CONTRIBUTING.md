@@ -33,3 +33,37 @@ uv run poe fix
 
 To format the code and fix any fixable errors (e.g. import sorting).
 
+## Contributing New Statistics
+
+To add new statistics to the MCP Interviewer, create new classes in `src/mcp_interviewer/statistics/`:
+
+1. Inherit from `Statistic` base class (or `FunctionalTestStepStatistic` for test-specific stats)
+2. Implement the `compute()` method that yields `StatisticValue` instances
+3. Focus on data analysis and calculation logic
+4. Return structured data that report classes can format for display
+5. Let the report classes handle formatting and presentation
+
+Statistics modules are responsible for data computation and aggregation, while report classes handle the visual formatting and markdown generation.
+
+## Contributing New Constraints
+
+To add new constraint validation rules, create a new class in `src/mcp_interviewer/constraints/`:
+
+1. Inherit from `Constraint` base class
+2. Implement required classmethods: `cli_name()` and `cli_code()`
+3. Implement the `test()` method that yields `ConstraintViolation` instances
+4. Set appropriate severity levels (WARNING or CRITICAL)
+
+Constraints can be selected via the CLI using either their full name or shorthand code.
+
+## Contributing New Reports
+
+To add new report sections, create a new class in `src/mcp_interviewer/reports/`:
+
+1. Inherit from `BaseReport`
+2. Implement required classmethods: `cli_name()` and `cli_code()` 
+3. Use the report building utilities (`add_title()`, `add_text()`, `start_collapsible()`, etc.)
+4. Reports are responsible for formatting and presentation, not data computation
+
+Reports can be included in custom report compositions via the `--reports` CLI flag using either their full name or shorthand code.
+

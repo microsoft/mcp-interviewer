@@ -1,88 +1,100 @@
 # mcp-interviewer
 
-A CLI tool to evaluate an Model Context Protocol (MCP) servers' readiness for agentic use-cases. Inspects server capabilities and statistics, performs LLM-as-a-judge functional testing of tools, and generates a report.
+A CLI tool to evaluate a Model Context Protocol (MCP) servers' readiness for agentic use-cases. 
 
-## How is this for?
-
-### Server Developers
-
-If you are an MCP Server Developer, the `mcp-interviewer` can help you validate the functionality of your server and alert you to any potential issues for downstream clients consuming your server.
-
-### Users
-
-Before using an MCP Server, you can interview it to see how it behaves with your LLM.
+Inspects server capabilities and statistics, performs LLM-as-a-judge functional testing of tools, and generates a report.
 
 ## Quick Start
 
-Easy one-liner with `uvx`:
+```bash
+# Test any MCP server with one command
+uvx --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git" mcp-interviewer \
+  --model gpt-4o "npx -y @modelcontextprotocol/server-everything"
+```
+
+Generates `mcp-scorecard.md` and `mcp-scorecard.json` with a full evaluation report.
+
+## Installation
 
 ```bash
-uvx --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git" mcp-interviewer --model gpt-4.1 "npx -y @modelcontextprotocol/server-everything"
+pip install git+ssh://git@github.com/microsoft/mcp-interviewer.git
 ```
 
-The command will save three files:
-
-```
-./mcp-scorecard.md
-./mcp-scorecard-short.md
-./mcp-scorecard.json
-```
-
-Open the `mcp-scorecard.md` to read the report on the MCP server.
-
-## Detailed Usage
-
-### CLI
+## Common Examples
 
 ```bash
-usage: mcp-interviewer [-h] [--remote-connection-type {sse,streamable_http}] --model MODEL [--client CLIENT] [--out-dir OUT_DIR]
-                       [--log-level {DEBUG,INFO,WARN,ERROR}] [--headers [HEADERS ...]] [--timeout TIMEOUT] [--sse-read-timeout SSE_READ_TIMEOUT]
-                       [--no-score-tools] [--no-score-test] [--no-score]
-                       server_params
+# Basic evaluation (fast, no LLM scoring)
+mcp-interviewer --model gpt-4o "uvx mcp-server-fetch"
 
-positional arguments:
-  server_params         Either the shell command to execute, or the url to connect to.
+# Full evaluation with LLM scoring (detailed but slower)
+mcp-interviewer --model gpt-4o --score "uvx mcp-server-fetch"
 
-options:
-  -h, --help            show this help message and exit
-  --remote-connection-type {sse,streamable_http}
-                        If MCP server is remote, whether to use streamable_http or sse.
-  --model MODEL
-  --client CLIENT       Import path to a parameter-less callable that returns an OpenAI or AsyncOpenAI compatible object
-  --out-dir, -o OUT_DIR
-  --log-level {DEBUG,INFO,WARN,ERROR}
-  --headers [HEADERS ...]
-                        Remote MCP connection headers in KEY=VALUE format
-  --timeout TIMEOUT     Remote MCP connection timeout
-  --sse-read-timeout SSE_READ_TIMEOUT
-                        Remote MCP connection read timeout
-  --no-score-tools      Skip LLM scoring of tools (will still generate test plan)
-  --no-score-test       Skip LLM scoring of functional tests (will still execute tests)
-  --no-score            Skip all LLM scoring operations (equivalent to --no-score-tools --no-score-test)
+# Quick summary report
+mcp-interviewer --model gpt-4o --short "uvx mcp-server-fetch"
+
+# Custom report with specific sections
+mcp-interviewer --model gpt-4o --reports SI TS FT CV "uvx mcp-server-fetch"
+
+# Check only specific constraints
+mcp-interviewer --model gpt-4o --select OTC ONL "uvx mcp-server-fetch"
+
+# Test remote servers
+mcp-interviewer --model gpt-4o "https://my-mcp-server.com/sse"
 ```
 
-e.g. 
+## Report Sections
 
-```bash
-mcp-interviewer --model gpt-4.1 "uvx mcp-server-fetch"
-```
+Use `--reports` to customize output. Available sections:
 
-### Python API
+- `II` - Interviewer Info (model, parameters)
+- `SI` - Server Info (name, version, capabilities)  
+- `CAP` - Capabilities (supported features)
+- `TS` - Tool Statistics (counts, patterns)
+- `TCS` - Tool Call Statistics (performance metrics)
+- `FT` - Functional Tests (tool execution results)
+- `CV` - Constraint Violations
+- `T` - Tools
+- `R` - Resources
+- `RT` - Resource Templates
+- `P` - Prompts
+
+## Constraint Validation
+
+Use `--select` to check specific constraints:
+
+- `OTC` - OpenAI tool count limit (≤128 tools)
+- `ONL` - OpenAI name length (≤64 chars)
+- `ONP` - OpenAI name pattern (a-zA-Z0-9_-)
+- `OTL` - OpenAI token length limit
+- `OA` - All OpenAI constraints
+
+## Python API
 
 ```python
 from openai import OpenAI
-from mcp_interviewer import MCPInterviewer, ServerParameters
+from mcp_interviewer import MCPInterviewer, StdioServerParameters
 
 client = OpenAI()
-model = "gpt-4.1"
-params = ServerParameters(
+params = StdioServerParameters(
     command="npx",
     args=["-y", "@modelcontextprotocol/server-everything"]
 )
 
-interviewer = MCPInterviewer(client, model)
+interviewer = MCPInterviewer(client, "gpt-4o")
 scorecard = await interviewer.score_server(params)
 ```
+
+## What Gets Evaluated?
+
+- **Tool Quality**: Names, descriptions, schemas
+- **Functional Testing**: Automated tool execution with LLM evaluation
+- **Constraint Compliance**: Platform-specific requirements (e.g., OpenAI limits)
+- **Performance Metrics**: Token usage, request counts
+- **Server Capabilities**: Resources, prompts, protocol compliance
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding new statistics, constraints, and reports.
 
 ## Trademarks 
 
