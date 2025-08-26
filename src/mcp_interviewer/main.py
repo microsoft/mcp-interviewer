@@ -98,8 +98,8 @@ async def amain(
     """Asynchronous main function to evaluate an MCP server and generate reports.
 
     Performs a complete server evaluation and saves the results in multiple formats:
-    - Full markdown report (mcp-scorecard.md) or short report based on options
-    - Raw JSON data (mcp-scorecard.json)
+    - Full markdown report (mcp-interview.md) or short report based on options
+    - Raw JSON data (mcp-interview.json)
 
     Args:
         client: OpenAI client for LLM-based evaluation
@@ -116,14 +116,14 @@ async def amain(
     interviewer = MCPInterviewer(
         client, model, should_score_tool, should_score_functional_test
     )
-    scorecard = await interviewer.score_server(params)
+    interview = await interviewer.interview_server(params)
 
     # Get constraint violations based on selected constraints
     violations = []
     constraint_classes = get_selected_constraints(selected_constraints)
     for constraint_class in constraint_classes:
         constraint = constraint_class()
-        violations.extend(list(constraint.test(scorecard)))
+        violations.extend(list(constraint.test(interview)))
 
     for violation in violations:
         if violation.severity == Severity.WARNING:
@@ -141,34 +141,34 @@ async def amain(
     # Generate the appropriate report based on options
     if custom_reports:
         # Custom report with selected components
-        path = out_dir / Path("mcp-scorecard.md")
+        path = out_dir / Path("mcp-interview.md")
         logger.info(
-            f"Saving custom scorecard with reports: {', '.join(custom_reports)} to {path}"
+            f"Saving custom interview with reports: {', '.join(custom_reports)} to {path}"
         )
         with open(path, "w") as fd:
             report = CustomReport(
-                scorecard, custom_reports, violations, options, selected_constraints
+                interview, custom_reports, violations, options, selected_constraints
             )
             fd.write(report.build())
     elif short_report:
         # Short report only
-        path = out_dir / Path("mcp-scorecard.md")
-        logger.info(f"Saving short scorecard to {path}")
+        path = out_dir / Path("mcp-interview.md")
+        logger.info(f"Saving short interview to {path}")
         with open(path, "w") as fd:
-            report = ShortReport(scorecard, violations, options, selected_constraints)
+            report = ShortReport(interview, violations, options, selected_constraints)
             fd.write(report.build())
     else:
         # Full report (default)
-        path = out_dir / Path("mcp-scorecard.md")
-        logger.info(f"Saving full scorecard to {path}")
+        path = out_dir / Path("mcp-interview.md")
+        logger.info(f"Saving full interview to {path}")
         with open(path, "w") as fd:
-            report = FullReport(scorecard, violations, options, selected_constraints)
+            report = FullReport(interview, violations, options, selected_constraints)
             fd.write(report.build())
 
-    path = out_dir / Path("mcp-scorecard.json")
-    logger.info(f"Saving scorecard json data to {path}")
+    path = out_dir / Path("mcp-interview.json")
+    logger.info(f"Saving interview json data to {path}")
     with open(path, "w") as fd:
-        fd.write(scorecard.model_dump_json(indent=2))
+        fd.write(interview.model_dump_json(indent=2))
 
 
 def main(

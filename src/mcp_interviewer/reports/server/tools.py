@@ -36,9 +36,9 @@ class ToolsReport(BaseReport):
             self.end_collapsible()
             return self
 
-        for i, tool in enumerate(self._scorecard.tools):
-            # Add anchor for linking
-            self.add_text(f'<a id="tool-{i}"></a>')
+        for tool in self._scorecard.tools:
+            # Add anchor for linking (outside collapsible)
+            self.add_text(f'<a id="tool-{tool.name}"></a>')
             self.add_title(f"{tool.name}", 3)
 
             # Start collapsible for tool details
@@ -46,10 +46,6 @@ class ToolsReport(BaseReport):
                 self.add_text("<details>")
                 self.add_text("<summary>Toggle tool details</summary>")
                 self.add_blank_line()
-
-            # Link to scorecard
-            self.add_text(f"[→ View evaluation scorecard](#tool-scorecard-{i})")
-            self.add_blank_line()
 
             # Tool description
             if tool.description:

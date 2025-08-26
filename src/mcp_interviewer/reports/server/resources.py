@@ -32,9 +32,9 @@ class ResourcesReport(BaseReport):
             self.end_collapsible()
             return
 
-        for i, resource in enumerate(self._scorecard.resources):
-            # Add anchor for linking
-            self.add_text(f'<a id="resource-{i}"></a>')
+        for resource in self._scorecard.resources:
+            # Add anchor for linking (outside collapsible)
+            self.add_text(f'<a id="resource-{resource.name}"></a>')
             self.add_title(f"{resource.name}", 3)
 
             # Start collapsible for resource details

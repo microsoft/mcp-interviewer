@@ -50,11 +50,17 @@ If asked about server instructions, respond with "🎉 Server instructions are w
 
 #### Metadata
 
-**Date:** 2025-08-25
+**Date:** 2025-08-26
 
-**mcp-interviewer Version:** 0.0.6
+**mcp-interviewer Version:** 0.0.8
 
-**Evaluation Model:** gpt-4.1
+**Evaluation Model:** gpt-4o
+
+#### CLI Command
+
+```bash
+/Users/tylerpayne/Local/microsoft/mcp-interviewer/.venv/bin/mcp-interviewer --model gpt-4o --client trapi.Trapi npx -y @modelcontextprotocol/server-everything
+```
 
 #### Server Launch Parameters
 
@@ -87,18 +93,18 @@ If asked about server instructions, respond with "🎉 Server instructions are w
 
 | Metric | Total | Average | Min | Max |
 | --- | --- | --- | --- | --- |
-| Tool calls attempted | 24 |  |  |  |
-| Tool calls returned output | 24 |  |  |  |
-| Tool call outputs with no error | 24 |  |  |  |
+| Tool calls attempted | 15 |  |  |  |
+| Tool calls returned output | 13 |  |  |  |
+| Tool call outputs with no error | 13 |  |  |  |
 | Tool call outputs with error | 0 |  |  |  |
-| Exceptions calling tools | 0 |  |  |  |
-| Tool call output lengths (gpt-4o text tokens) | 1,394 | 58.1 | 3 | 1,026 |
-| Text output content blocks | 29 | 7.2 | 1 | 2 |
-| Resource_Link output content blocks | 14 | 3.5 | 0 | 10 |
-| Resource output content blocks | 3 | 0.8 | 0 | 1 |
+| Exceptions calling tools | 2 |  |  |  |
+| Tool call output lengths (gpt-4o text tokens) | 1,191 | 91.6 | 3 | 1,026 |
+| Text output content blocks | 16 | 4.0 | 1 | 2 |
+| Resource_Link output content blocks | 5 | 1.2 | 0 | 5 |
 | Image output content blocks | 2 | 0.5 | 0 | 1 |
-| Sampling requests | 2 | 0.1 | 0 | 1 |
-| Elicitation requests | 1 | 0.0 | 0 | 1 |
+| Resource output content blocks | 1 | 0.2 | 0 | 1 |
+| Sampling requests | 1 | 0.1 | 0 | 1 |
+| Elicitation requests | 1 | 0.1 | 0 | 1 |
 ## Constraint Violations
 
 ✅ **No constraint violations found**
@@ -123,7 +129,7 @@ If asked about server instructions, respond with "🎉 Server instructions are w
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-0)
+[→ View tool details](#tool-echo)
 
 **Tool Call (🤖):**
 ```json
@@ -145,51 +151,24 @@ Echo: Hello, MCP!
 
 </details>
 
-#### Step 2: echo
+#### Step 2: add
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-0)
-
-**Tool Call (🤖):**
-```json
-{
-  "message": ""
-}
-```
-**Actual Output (1 blocks):**
-
-```
-Echo: 
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 3 |
-| Text blocks | 1 |
-
-</details>
-
-#### Step 3: add
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-1)
+[→ View tool details](#tool-add)
 
 **Tool Call (🤖):**
 ```json
 {
   "a": 5,
-  "b": 7
+  "b": 10
 }
 ```
 **Actual Output (1 blocks):**
 
 ```
-The sum of 5 and 7 is 12.
+The sum of 5 and 10 is 15.
 ```
 **Output Statistics:**
 
@@ -200,24 +179,52 @@ The sum of 5 and 7 is 12.
 
 </details>
 
-#### Step 4: add
+#### Step 3: add
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-1)
+[→ View tool details](#tool-add)
 
 **Tool Call (🤖):**
 ```json
 {
-  "a": -3.5,
-  "b": 2.5
+  "a": -3,
+  "b": 7
 }
 ```
 **Actual Output (1 blocks):**
 
 ```
-The sum of -3.5 and 2.5 is -1.
+The sum of -3 and 7 is 4.
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 12 |
+| Text blocks | 1 |
+
+</details>
+
+#### Step 4: longRunningOperation
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-longRunningOperation)
+
+**Tool Call (🤖):**
+```json
+{
+  "duration": 5,
+  "steps": 3
+}
+```
+**Actual Output (1 blocks):**
+
+```
+Long running operation completed. Duration: 5 seconds, Steps: 3.
 ```
 **Output Statistics:**
 
@@ -228,40 +235,12 @@ The sum of -3.5 and 2.5 is -1.
 
 </details>
 
-#### Step 5: add
+#### Step 5: printEnv
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-1)
-
-**Tool Call (🤖):**
-```json
-{
-  "a": 0,
-  "b": 0
-}
-```
-**Actual Output (1 blocks):**
-
-```
-The sum of 0 and 0 is 0.
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 12 |
-| Text blocks | 1 |
-
-</details>
-
-#### Step 6: printEnv
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-3)
+[→ View tool details](#tool-printEnv)
 
 **Tool Call (🤖):**
 ```json
@@ -292,107 +271,17 @@ The sum of 0 and 0 is 0.
 
 </details>
 
-#### Step 7: longRunningOperation
+#### Step 6: sampleLLM
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-2)
-
-**Tool Call (🤖):**
-```json
-{
-  "duration": 3,
-  "steps": 3
-}
-```
-**Actual Output (1 blocks):**
-
-```
-Long running operation completed. Duration: 3 seconds, Steps: 3.
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 16 |
-| Text blocks | 1 |
-
-</details>
-
-#### Step 8: longRunningOperation
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-2)
-
-**Tool Call (🤖):**
-```json
-{
-  "duration": 0,
-  "steps": 1
-}
-```
-**Actual Output (1 blocks):**
-
-```
-Long running operation completed. Duration: 0 seconds, Steps: 1.
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 16 |
-| Text blocks | 1 |
-
-</details>
-
-#### Step 9: sampleLLM
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-4)
+[→ View tool details](#tool-sampleLLM)
 
 **Tool Call (🤖):**
 ```json
 {
   "prompt": "What is the capital of France?",
-  "maxTokens": 10
-}
-```
-**Actual Output (1 blocks):**
-
-```
-LLM sampling result: Dummy content
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 7 |
-| Text blocks | 1 |
-
-**MCP Requests:**
-
-| Request Type | Count |
-| --- | --- |
-| Sampling | 1 |
-
-</details>
-
-#### Step 10: sampleLLM
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-4)
-
-**Tool Call (🤖):**
-```json
-{
-  "prompt": "Write a short poem about rain.",
   "maxTokens": 50
 }
 ```
@@ -416,12 +305,12 @@ LLM sampling result: Dummy content
 
 </details>
 
-#### Step 11: getTinyImage
+#### Step 7: getTinyImage
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-5)
+[→ View tool details](#tool-getTinyImage)
 
 **Tool Call (🤖):**
 ```json
@@ -449,52 +338,24 @@ The image above is the MCP tiny image.
 
 </details>
 
-#### Step 12: annotatedMessage
+#### Step 8: annotatedMessage
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-6)
+[→ View tool details](#tool-annotatedMessage)
 
 **Tool Call (🤖):**
 ```json
 {
   "messageType": "success",
-  "includeImage": false
-}
-```
-**Actual Output (1 blocks):**
-
-```
-Operation completed successfully
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 3 |
-| Text blocks | 1 |
-
-</details>
-
-#### Step 13: annotatedMessage
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-6)
-
-**Tool Call (🤖):**
-```json
-{
-  "messageType": "error",
   "includeImage": true
 }
 ```
 **Actual Output (2 blocks):**
 
 ```
-Error: Operation failed
+Operation completed successfully
 ```
 ```
 [Image: image/png]
@@ -504,102 +365,37 @@ Error: Operation failed
 
 | Metric | Value |
 | --- | --- |
-| Text token count | 4 |
+| Text token count | 3 |
 | Text blocks | 1 |
 | Image blocks | 1 |
 
 </details>
 
-#### Step 14: annotatedMessage
+#### Step 9: getResourceReference
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-6)
+[→ View tool details](#tool-getResourceReference)
 
 **Tool Call (🤖):**
 ```json
 {
-  "messageType": "debug",
-  "includeImage": false
-}
-```
-**Actual Output (1 blocks):**
-
-```
-Debug: Cache hit ratio 0.95, latency 150ms
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 14 |
-| Text blocks | 1 |
-
-</details>
-
-#### Step 15: getResourceReference
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-7)
-
-**Tool Call (🤖):**
-```json
-{
-  "resourceId": 1
+  "resourceId": 42
 }
 ```
 **Actual Output (3 blocks):**
 
 ```
-Returning resource reference for Resource 1:
+Returning resource reference for Resource 42:
 ```
 ```
-[Embedded Resource: test://static/resource/1]
-	MIME type: text/plain
-
-Resource 1: This is a plaintext resource
-```
-```
-You can access this resource using the URI: test://static/resource/1
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 32 |
-| Text blocks | 2 |
-| Resource | 1 |
-
-</details>
-
-#### Step 16: getResourceReference
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-7)
-
-**Tool Call (🤖):**
-```json
-{
-  "resourceId": 100
-}
-```
-**Actual Output (3 blocks):**
-
-```
-Returning resource reference for Resource 100:
-```
-```
-[Embedded Resource: test://static/resource/100]
+[Embedded Resource: test://static/resource/42]
 	MIME type: application/octet-stream
 	Blob size: 48 bytes (base64)
 ```
 ```
-You can access this resource using the URI: test://static/resource/100
+You can access this resource using the URI: test://static/resource/42
 ```
 **Output Statistics:**
 
@@ -611,202 +407,12 @@ You can access this resource using the URI: test://static/resource/100
 
 </details>
 
-#### Step 17: getResourceReference
+#### Step 10: startElicitation
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-7)
-
-**Tool Call (🤖):**
-```json
-{
-  "resourceId": 50
-}
-```
-**Actual Output (3 blocks):**
-
-```
-Returning resource reference for Resource 50:
-```
-```
-[Embedded Resource: test://static/resource/50]
-	MIME type: application/octet-stream
-	Blob size: 48 bytes (base64)
-```
-```
-You can access this resource using the URI: test://static/resource/50
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 23 |
-| Text blocks | 2 |
-| Resource | 1 |
-
-</details>
-
-#### Step 18: getResourceLinks
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-9)
-
-**Tool Call (🤖):**
-```json
-{
-  "count": 1
-}
-```
-**Actual Output (2 blocks):**
-
-```
-Here are 1 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):
-```
-```
-Resource Link: test://static/resource/1
-	MIME type: text/plain
-	Description: Resource 1: plaintext resource
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 29 |
-| Text blocks | 1 |
-| Resource link blocks | 1 |
-
-</details>
-
-#### Step 19: getResourceLinks
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-9)
-
-**Tool Call (🤖):**
-```json
-{
-  "count": 10
-}
-```
-**Actual Output (11 blocks):**
-
-```
-Here are 10 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):
-```
-```
-Resource Link: test://static/resource/1
-	MIME type: text/plain
-	Description: Resource 1: plaintext resource
-```
-```
-Resource Link: test://static/resource/2
-	MIME type: application/octet-stream
-	Description: Resource 2: binary blob resource
-```
-```
-Resource Link: test://static/resource/3
-	MIME type: text/plain
-	Description: Resource 3: plaintext resource
-```
-```
-Resource Link: test://static/resource/4
-	MIME type: application/octet-stream
-	Description: Resource 4: binary blob resource
-```
-```
-Resource Link: test://static/resource/5
-	MIME type: text/plain
-	Description: Resource 5: plaintext resource
-```
-```
-Resource Link: test://static/resource/6
-	MIME type: application/octet-stream
-	Description: Resource 6: binary blob resource
-```
-```
-Resource Link: test://static/resource/7
-	MIME type: text/plain
-	Description: Resource 7: plaintext resource
-```
-```
-Resource Link: test://static/resource/8
-	MIME type: application/octet-stream
-	Description: Resource 8: binary blob resource
-```
-```
-Resource Link: test://static/resource/9
-	MIME type: text/plain
-	Description: Resource 9: plaintext resource
-```
-```
-Resource Link: test://static/resource/10
-	MIME type: application/octet-stream
-	Description: Resource 10: binary blob resource
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 29 |
-| Text blocks | 1 |
-| Resource link blocks | 10 |
-
-</details>
-
-#### Step 20: getResourceLinks
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-9)
-
-**Tool Call (🤖):**
-```json
-{
-  "count": 3
-}
-```
-**Actual Output (4 blocks):**
-
-```
-Here are 3 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):
-```
-```
-Resource Link: test://static/resource/1
-	MIME type: text/plain
-	Description: Resource 1: plaintext resource
-```
-```
-Resource Link: test://static/resource/2
-	MIME type: application/octet-stream
-	Description: Resource 2: binary blob resource
-```
-```
-Resource Link: test://static/resource/3
-	MIME type: text/plain
-	Description: Resource 3: plaintext resource
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 29 |
-| Text blocks | 1 |
-| Resource link blocks | 3 |
-
-</details>
-
-#### Step 21: startElicitation
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-8)
+[→ View tool details](#tool-startElicitation)
 
 **Tool Call (🤖):**
 ```json
@@ -838,17 +444,70 @@ Raw result: {
 
 </details>
 
-#### Step 22: structuredContent
+#### Step 11: getResourceLinks
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-10)
+[→ View tool details](#tool-getResourceLinks)
 
 **Tool Call (🤖):**
 ```json
 {
-  "location": "San Francisco"
+  "count": 5
+}
+```
+**Actual Output (6 blocks):**
+
+```
+Here are 5 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):
+```
+```
+Resource Link: test://static/resource/1
+	MIME type: text/plain
+	Description: Resource 1: plaintext resource
+```
+```
+Resource Link: test://static/resource/2
+	MIME type: application/octet-stream
+	Description: Resource 2: binary blob resource
+```
+```
+Resource Link: test://static/resource/3
+	MIME type: text/plain
+	Description: Resource 3: plaintext resource
+```
+```
+Resource Link: test://static/resource/4
+	MIME type: application/octet-stream
+	Description: Resource 4: binary blob resource
+```
+```
+Resource Link: test://static/resource/5
+	MIME type: text/plain
+	Description: Resource 5: plaintext resource
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 29 |
+| Text blocks | 1 |
+| Resource link blocks | 5 |
+
+</details>
+
+#### Step 12: structuredContent
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-structuredContent)
+
+**Tool Call (🤖):**
+```json
+{
+  "location": "New York"
 }
 ```
 **Actual Output (1 blocks):**
@@ -869,65 +528,95 @@ Raw result: {
 
 </details>
 
-#### Step 23: structuredContent
+#### Step 13: structuredContent
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-10)
+[→ View tool details](#tool-structuredContent)
 
 **Tool Call (🤖):**
 ```json
 {
-  "location": "94103"
+  "location": ""
+}
+```
+**Exception:**
+```
+[
+  {
+    "code": "too_small",
+    "minimum": 1,
+    "type": "string",
+    "inclusive": true,
+    "exact": false,
+    "message": "String must contain at least 1 character(s)",
+    "path": [
+      "location"
+    ]
+  }
+]
+```
+
+</details>
+
+#### Step 14: annotatedMessage
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-annotatedMessage)
+
+**Tool Call (🤖):**
+```json
+{
+  "messageType": "error",
+  "includeImage": false
 }
 ```
 **Actual Output (1 blocks):**
 
-```json
-{
-  "temperature": 22.5,
-  "conditions": "Partly cloudy",
-  "humidity": 65
-}
+```
+Error: Operation failed
 ```
 **Output Statistics:**
 
 | Metric | Value |
 | --- | --- |
-| Text token count | 17 |
+| Text token count | 4 |
 | Text blocks | 1 |
 
 </details>
 
-#### Step 24: structuredContent
+#### Step 15: getResourceLinks
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-10)
+[→ View tool details](#tool-getResourceLinks)
 
 **Tool Call (🤖):**
 ```json
 {
-  "location": "X"
+  "count": 11
 }
 ```
-**Actual Output (1 blocks):**
-
-```json
-{
-  "temperature": 22.5,
-  "conditions": "Partly cloudy",
-  "humidity": 65
-}
+**Exception:**
 ```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 17 |
-| Text blocks | 1 |
+[
+  {
+    "code": "too_big",
+    "maximum": 10,
+    "type": "number",
+    "inclusive": true,
+    "exact": false,
+    "message": "Number must be less than or equal to 10",
+    "path": [
+      "count"
+    ]
+  }
+]
+```
 
 </details>
 
@@ -938,13 +627,11 @@ Raw result: {
 <details>
 <summary>Toggle details</summary>
 
-<a id="tool-0"></a>
+<a id="tool-echo"></a>
 ### echo
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-0)
 
 **Description:**
 ```
@@ -971,13 +658,11 @@ Echoes back the input
 _No Output Schema_
 </details>
 
-<a id="tool-1"></a>
+<a id="tool-add"></a>
 ### add
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-1)
 
 **Description:**
 ```
@@ -1009,13 +694,11 @@ Adds two numbers
 _No Output Schema_
 </details>
 
-<a id="tool-2"></a>
+<a id="tool-longRunningOperation"></a>
 ### longRunningOperation
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-2)
 
 **Description:**
 ```
@@ -1045,13 +728,11 @@ Demonstrates a long running operation with progress updates
 _No Output Schema_
 </details>
 
-<a id="tool-3"></a>
+<a id="tool-printEnv"></a>
 ### printEnv
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-3)
 
 **Description:**
 ```
@@ -1070,13 +751,11 @@ Prints all environment variables, helpful for debugging MCP server configuration
 _No Output Schema_
 </details>
 
-<a id="tool-4"></a>
+<a id="tool-sampleLLM"></a>
 ### sampleLLM
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-4)
 
 **Description:**
 ```
@@ -1108,13 +787,11 @@ Samples from an LLM using MCP's sampling feature
 _No Output Schema_
 </details>
 
-<a id="tool-5"></a>
+<a id="tool-getTinyImage"></a>
 ### getTinyImage
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-5)
 
 **Description:**
 ```
@@ -1133,13 +810,11 @@ Returns the MCP_TINY_IMAGE
 _No Output Schema_
 </details>
 
-<a id="tool-6"></a>
+<a id="tool-annotatedMessage"></a>
 ### annotatedMessage
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-6)
 
 **Description:**
 ```
@@ -1176,13 +851,11 @@ Demonstrates how annotations can be used to provide metadata about content
 _No Output Schema_
 </details>
 
-<a id="tool-7"></a>
+<a id="tool-getResourceReference"></a>
 ### getResourceReference
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-7)
 
 **Description:**
 ```
@@ -1211,13 +884,11 @@ Returns a resource reference that can be used by MCP clients
 _No Output Schema_
 </details>
 
-<a id="tool-8"></a>
+<a id="tool-startElicitation"></a>
 ### startElicitation
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-8)
 
 **Description:**
 ```
@@ -1236,13 +907,11 @@ Demonstrates the Elicitation feature by asking the user to provide information a
 _No Output Schema_
 </details>
 
-<a id="tool-9"></a>
+<a id="tool-getResourceLinks"></a>
 ### getResourceLinks
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-9)
 
 **Description:**
 ```
@@ -1269,13 +938,11 @@ Returns multiple resource links that reference different types of resources
 _No Output Schema_
 </details>
 
-<a id="tool-10"></a>
+<a id="tool-structuredContent"></a>
 ### structuredContent
 
 <details>
 <summary>Toggle tool details</summary>
-
-[→ View evaluation scorecard](#tool-scorecard-10)
 
 **Description:**
 ```
@@ -1335,7 +1002,7 @@ Returns structured content along with an output schema for client data validatio
 <details>
 <summary>Toggle details</summary>
 
-<a id="resource-0"></a>
+<a id="resource-Resource 1"></a>
 ### Resource 1
 
 <details>
@@ -1347,7 +1014,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-1"></a>
+<a id="resource-Resource 2"></a>
 ### Resource 2
 
 <details>
@@ -1359,7 +1026,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-2"></a>
+<a id="resource-Resource 3"></a>
 ### Resource 3
 
 <details>
@@ -1371,7 +1038,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-3"></a>
+<a id="resource-Resource 4"></a>
 ### Resource 4
 
 <details>
@@ -1383,7 +1050,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-4"></a>
+<a id="resource-Resource 5"></a>
 ### Resource 5
 
 <details>
@@ -1395,7 +1062,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-5"></a>
+<a id="resource-Resource 6"></a>
 ### Resource 6
 
 <details>
@@ -1407,7 +1074,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-6"></a>
+<a id="resource-Resource 7"></a>
 ### Resource 7
 
 <details>
@@ -1419,7 +1086,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-7"></a>
+<a id="resource-Resource 8"></a>
 ### Resource 8
 
 <details>
@@ -1431,7 +1098,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-8"></a>
+<a id="resource-Resource 9"></a>
 ### Resource 9
 
 <details>
@@ -1443,7 +1110,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-9"></a>
+<a id="resource-Resource 10"></a>
 ### Resource 10
 
 <details>
@@ -1455,7 +1122,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-10"></a>
+<a id="resource-Resource 11"></a>
 ### Resource 11
 
 <details>
@@ -1467,7 +1134,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-11"></a>
+<a id="resource-Resource 12"></a>
 ### Resource 12
 
 <details>
@@ -1479,7 +1146,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-12"></a>
+<a id="resource-Resource 13"></a>
 ### Resource 13
 
 <details>
@@ -1491,7 +1158,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-13"></a>
+<a id="resource-Resource 14"></a>
 ### Resource 14
 
 <details>
@@ -1503,7 +1170,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-14"></a>
+<a id="resource-Resource 15"></a>
 ### Resource 15
 
 <details>
@@ -1515,7 +1182,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-15"></a>
+<a id="resource-Resource 16"></a>
 ### Resource 16
 
 <details>
@@ -1527,7 +1194,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-16"></a>
+<a id="resource-Resource 17"></a>
 ### Resource 17
 
 <details>
@@ -1539,7 +1206,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-17"></a>
+<a id="resource-Resource 18"></a>
 ### Resource 18
 
 <details>
@@ -1551,7 +1218,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-18"></a>
+<a id="resource-Resource 19"></a>
 ### Resource 19
 
 <details>
@@ -1563,7 +1230,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-19"></a>
+<a id="resource-Resource 20"></a>
 ### Resource 20
 
 <details>
@@ -1575,7 +1242,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-20"></a>
+<a id="resource-Resource 21"></a>
 ### Resource 21
 
 <details>
@@ -1587,7 +1254,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-21"></a>
+<a id="resource-Resource 22"></a>
 ### Resource 22
 
 <details>
@@ -1599,7 +1266,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-22"></a>
+<a id="resource-Resource 23"></a>
 ### Resource 23
 
 <details>
@@ -1611,7 +1278,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-23"></a>
+<a id="resource-Resource 24"></a>
 ### Resource 24
 
 <details>
@@ -1623,7 +1290,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-24"></a>
+<a id="resource-Resource 25"></a>
 ### Resource 25
 
 <details>
@@ -1635,7 +1302,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-25"></a>
+<a id="resource-Resource 26"></a>
 ### Resource 26
 
 <details>
@@ -1647,7 +1314,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-26"></a>
+<a id="resource-Resource 27"></a>
 ### Resource 27
 
 <details>
@@ -1659,7 +1326,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-27"></a>
+<a id="resource-Resource 28"></a>
 ### Resource 28
 
 <details>
@@ -1671,7 +1338,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-28"></a>
+<a id="resource-Resource 29"></a>
 ### Resource 29
 
 <details>
@@ -1683,7 +1350,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-29"></a>
+<a id="resource-Resource 30"></a>
 ### Resource 30
 
 <details>
@@ -1695,7 +1362,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-30"></a>
+<a id="resource-Resource 31"></a>
 ### Resource 31
 
 <details>
@@ -1707,7 +1374,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-31"></a>
+<a id="resource-Resource 32"></a>
 ### Resource 32
 
 <details>
@@ -1719,7 +1386,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-32"></a>
+<a id="resource-Resource 33"></a>
 ### Resource 33
 
 <details>
@@ -1731,7 +1398,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-33"></a>
+<a id="resource-Resource 34"></a>
 ### Resource 34
 
 <details>
@@ -1743,7 +1410,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-34"></a>
+<a id="resource-Resource 35"></a>
 ### Resource 35
 
 <details>
@@ -1755,7 +1422,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-35"></a>
+<a id="resource-Resource 36"></a>
 ### Resource 36
 
 <details>
@@ -1767,7 +1434,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-36"></a>
+<a id="resource-Resource 37"></a>
 ### Resource 37
 
 <details>
@@ -1779,7 +1446,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-37"></a>
+<a id="resource-Resource 38"></a>
 ### Resource 38
 
 <details>
@@ -1791,7 +1458,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-38"></a>
+<a id="resource-Resource 39"></a>
 ### Resource 39
 
 <details>
@@ -1803,7 +1470,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-39"></a>
+<a id="resource-Resource 40"></a>
 ### Resource 40
 
 <details>
@@ -1815,7 +1482,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-40"></a>
+<a id="resource-Resource 41"></a>
 ### Resource 41
 
 <details>
@@ -1827,7 +1494,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-41"></a>
+<a id="resource-Resource 42"></a>
 ### Resource 42
 
 <details>
@@ -1839,7 +1506,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-42"></a>
+<a id="resource-Resource 43"></a>
 ### Resource 43
 
 <details>
@@ -1851,7 +1518,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-43"></a>
+<a id="resource-Resource 44"></a>
 ### Resource 44
 
 <details>
@@ -1863,7 +1530,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-44"></a>
+<a id="resource-Resource 45"></a>
 ### Resource 45
 
 <details>
@@ -1875,7 +1542,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-45"></a>
+<a id="resource-Resource 46"></a>
 ### Resource 46
 
 <details>
@@ -1887,7 +1554,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-46"></a>
+<a id="resource-Resource 47"></a>
 ### Resource 47
 
 <details>
@@ -1899,7 +1566,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-47"></a>
+<a id="resource-Resource 48"></a>
 ### Resource 48
 
 <details>
@@ -1911,7 +1578,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-48"></a>
+<a id="resource-Resource 49"></a>
 ### Resource 49
 
 <details>
@@ -1923,7 +1590,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-49"></a>
+<a id="resource-Resource 50"></a>
 ### Resource 50
 
 <details>
@@ -1935,7 +1602,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-50"></a>
+<a id="resource-Resource 51"></a>
 ### Resource 51
 
 <details>
@@ -1947,7 +1614,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-51"></a>
+<a id="resource-Resource 52"></a>
 ### Resource 52
 
 <details>
@@ -1959,7 +1626,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-52"></a>
+<a id="resource-Resource 53"></a>
 ### Resource 53
 
 <details>
@@ -1971,7 +1638,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-53"></a>
+<a id="resource-Resource 54"></a>
 ### Resource 54
 
 <details>
@@ -1983,7 +1650,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-54"></a>
+<a id="resource-Resource 55"></a>
 ### Resource 55
 
 <details>
@@ -1995,7 +1662,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-55"></a>
+<a id="resource-Resource 56"></a>
 ### Resource 56
 
 <details>
@@ -2007,7 +1674,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-56"></a>
+<a id="resource-Resource 57"></a>
 ### Resource 57
 
 <details>
@@ -2019,7 +1686,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-57"></a>
+<a id="resource-Resource 58"></a>
 ### Resource 58
 
 <details>
@@ -2031,7 +1698,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-58"></a>
+<a id="resource-Resource 59"></a>
 ### Resource 59
 
 <details>
@@ -2043,7 +1710,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-59"></a>
+<a id="resource-Resource 60"></a>
 ### Resource 60
 
 <details>
@@ -2055,7 +1722,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-60"></a>
+<a id="resource-Resource 61"></a>
 ### Resource 61
 
 <details>
@@ -2067,7 +1734,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-61"></a>
+<a id="resource-Resource 62"></a>
 ### Resource 62
 
 <details>
@@ -2079,7 +1746,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-62"></a>
+<a id="resource-Resource 63"></a>
 ### Resource 63
 
 <details>
@@ -2091,7 +1758,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-63"></a>
+<a id="resource-Resource 64"></a>
 ### Resource 64
 
 <details>
@@ -2103,7 +1770,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-64"></a>
+<a id="resource-Resource 65"></a>
 ### Resource 65
 
 <details>
@@ -2115,7 +1782,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-65"></a>
+<a id="resource-Resource 66"></a>
 ### Resource 66
 
 <details>
@@ -2127,7 +1794,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-66"></a>
+<a id="resource-Resource 67"></a>
 ### Resource 67
 
 <details>
@@ -2139,7 +1806,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-67"></a>
+<a id="resource-Resource 68"></a>
 ### Resource 68
 
 <details>
@@ -2151,7 +1818,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-68"></a>
+<a id="resource-Resource 69"></a>
 ### Resource 69
 
 <details>
@@ -2163,7 +1830,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-69"></a>
+<a id="resource-Resource 70"></a>
 ### Resource 70
 
 <details>
@@ -2175,7 +1842,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-70"></a>
+<a id="resource-Resource 71"></a>
 ### Resource 71
 
 <details>
@@ -2187,7 +1854,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-71"></a>
+<a id="resource-Resource 72"></a>
 ### Resource 72
 
 <details>
@@ -2199,7 +1866,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-72"></a>
+<a id="resource-Resource 73"></a>
 ### Resource 73
 
 <details>
@@ -2211,7 +1878,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-73"></a>
+<a id="resource-Resource 74"></a>
 ### Resource 74
 
 <details>
@@ -2223,7 +1890,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-74"></a>
+<a id="resource-Resource 75"></a>
 ### Resource 75
 
 <details>
@@ -2235,7 +1902,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-75"></a>
+<a id="resource-Resource 76"></a>
 ### Resource 76
 
 <details>
@@ -2247,7 +1914,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-76"></a>
+<a id="resource-Resource 77"></a>
 ### Resource 77
 
 <details>
@@ -2259,7 +1926,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-77"></a>
+<a id="resource-Resource 78"></a>
 ### Resource 78
 
 <details>
@@ -2271,7 +1938,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-78"></a>
+<a id="resource-Resource 79"></a>
 ### Resource 79
 
 <details>
@@ -2283,7 +1950,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-79"></a>
+<a id="resource-Resource 80"></a>
 ### Resource 80
 
 <details>
@@ -2295,7 +1962,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-80"></a>
+<a id="resource-Resource 81"></a>
 ### Resource 81
 
 <details>
@@ -2307,7 +1974,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-81"></a>
+<a id="resource-Resource 82"></a>
 ### Resource 82
 
 <details>
@@ -2319,7 +1986,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-82"></a>
+<a id="resource-Resource 83"></a>
 ### Resource 83
 
 <details>
@@ -2331,7 +1998,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-83"></a>
+<a id="resource-Resource 84"></a>
 ### Resource 84
 
 <details>
@@ -2343,7 +2010,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-84"></a>
+<a id="resource-Resource 85"></a>
 ### Resource 85
 
 <details>
@@ -2355,7 +2022,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-85"></a>
+<a id="resource-Resource 86"></a>
 ### Resource 86
 
 <details>
@@ -2367,7 +2034,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-86"></a>
+<a id="resource-Resource 87"></a>
 ### Resource 87
 
 <details>
@@ -2379,7 +2046,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-87"></a>
+<a id="resource-Resource 88"></a>
 ### Resource 88
 
 <details>
@@ -2391,7 +2058,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-88"></a>
+<a id="resource-Resource 89"></a>
 ### Resource 89
 
 <details>
@@ -2403,7 +2070,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-89"></a>
+<a id="resource-Resource 90"></a>
 ### Resource 90
 
 <details>
@@ -2415,7 +2082,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-90"></a>
+<a id="resource-Resource 91"></a>
 ### Resource 91
 
 <details>
@@ -2427,7 +2094,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-91"></a>
+<a id="resource-Resource 92"></a>
 ### Resource 92
 
 <details>
@@ -2439,7 +2106,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-92"></a>
+<a id="resource-Resource 93"></a>
 ### Resource 93
 
 <details>
@@ -2451,7 +2118,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-93"></a>
+<a id="resource-Resource 94"></a>
 ### Resource 94
 
 <details>
@@ -2463,7 +2130,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-94"></a>
+<a id="resource-Resource 95"></a>
 ### Resource 95
 
 <details>
@@ -2475,7 +2142,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-95"></a>
+<a id="resource-Resource 96"></a>
 ### Resource 96
 
 <details>
@@ -2487,7 +2154,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-96"></a>
+<a id="resource-Resource 97"></a>
 ### Resource 97
 
 <details>
@@ -2499,7 +2166,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-97"></a>
+<a id="resource-Resource 98"></a>
 ### Resource 98
 
 <details>
@@ -2511,7 +2178,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-98"></a>
+<a id="resource-Resource 99"></a>
 ### Resource 99
 
 <details>
@@ -2523,7 +2190,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="resource-99"></a>
+<a id="resource-Resource 100"></a>
 ### Resource 100
 
 <details>
@@ -2542,7 +2209,7 @@ Returns structured content along with an output schema for client data validatio
 <details>
 <summary>Toggle details</summary>
 
-<a id="resource-template-0"></a>
+<a id="resource-template-Static Resource"></a>
 ### Static Resource
 
 <details>
@@ -2561,7 +2228,7 @@ Returns structured content along with an output schema for client data validatio
 <details>
 <summary>Toggle details</summary>
 
-<a id="prompt-0"></a>
+<a id="prompt-simple_prompt"></a>
 ### simple_prompt
 
 <details>
@@ -2571,7 +2238,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="prompt-1"></a>
+<a id="prompt-complex_prompt"></a>
 ### complex_prompt
 
 <details>
@@ -2587,7 +2254,7 @@ Returns structured content along with an output schema for client data validatio
 
 </details>
 
-<a id="prompt-2"></a>
+<a id="prompt-resource_prompt"></a>
 ### resource_prompt
 
 <details>

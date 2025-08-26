@@ -28,11 +28,12 @@ class InterviewerInfoReport(BaseReport):
         """Build the interviewer info section."""
         self.start_collapsible("Interviewer Parameters", 2)
 
-        self.add_title("Metadata", 4)
         # Add date and version
         self.add_text(f"**Date:** {datetime.now().strftime('%Y-%m-%d')}")
         self.add_blank_line()
-        self.add_text(f"**mcp-interviewer Version:** {__version__}")
+        self.add_text(
+            f"**mcp-interviewer Version:** [{__version__}](https://github.com/microsoft/mcp-interviewer)"
+        )
         self.add_blank_line()
 
         # Add model info

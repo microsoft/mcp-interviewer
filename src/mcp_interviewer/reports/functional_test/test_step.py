@@ -126,21 +126,9 @@ class TestStepReport(BaseReport):
                 self.add_text(f"Score (🤖): {passes}/{total}")
                 self.add_blank_line()
 
-        # Find the tool index for linking
-        tool_index = None
-        for i, tool in enumerate(self._scorecard.tools):
-            if tool.name == self.step.tool_name:
-                tool_index = i
-                break
-
-        # Link to tool details and scorecard if found
-        if tool_index is not None:
-            self.add_text(f"[→ View tool details](#tool-{tool_index})")
-            self.add_blank_line()
-
-        if self.include_evaluations:
-            self.add_text(f"[→ View scorecard](#tool-scorecard-{tool_index})")
-            self.add_blank_line()
+        # Link to tool details using tool name
+        self.add_text(f"[→ View tool details](#tool-{self.step.tool_name})")
+        self.add_blank_line()
 
         # Justification
         if self.include_evaluations and self.step.justification:

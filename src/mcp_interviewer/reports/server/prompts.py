@@ -30,9 +30,9 @@ class PromptsReport(BaseReport):
             self.end_collapsible()
             return
 
-        for i, prompt in enumerate(self._scorecard.prompts):
-            # Add anchor for linking
-            self.add_text(f'<a id="prompt-{i}"></a>')
+        for prompt in self._scorecard.prompts:
+            # Add anchor for linking (outside collapsible)
+            self.add_text(f'<a id="prompt-{prompt.name}"></a>')
             self.add_title(f"{prompt.name}", 3)
 
             # Start collapsible for prompt details

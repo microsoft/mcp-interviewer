@@ -12,9 +12,9 @@ uvx --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git" mcp-intervie
   --model gpt-4o "npx -y @modelcontextprotocol/server-everything"
 ```
 
-Generates `mcp-scorecard.md` and `mcp-scorecard.json` with a full evaluation report.
+Generates `mcp-interview.md` and `mcp-interview.json` with a full evaluation report.
 
-See an example report for the "@modelcontextprotocol/server-everything" reference server [here](./mcp-scorecard.md).
+See an example report for the "@modelcontextprotocol/server-everything" reference server [here](./mcp-interview.md).
 
 ## Installation
 
@@ -83,7 +83,7 @@ params = StdioServerParameters(
 )
 
 interviewer = MCPInterviewer(client, "gpt-4o")
-scorecard = await interviewer.score_server(params)
+interview = await interviewer.score_server(params)
 ```
 
 ## What Gets Evaluated?

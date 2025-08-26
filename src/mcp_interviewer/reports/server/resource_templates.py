@@ -32,9 +32,9 @@ class ResourceTemplatesReport(BaseReport):
             self.end_collapsible()
             return
 
-        for i, template in enumerate(self._scorecard.resource_templates):
-            # Add anchor for linking
-            self.add_text(f'<a id="resource-template-{i}"></a>')
+        for template in self._scorecard.resource_templates:
+            # Add anchor for linking (outside collapsible)
+            self.add_text(f'<a id="resource-template-{template.name}"></a>')
             self.add_title(f"{template.name}", 3)
 
             # Start collapsible for template details

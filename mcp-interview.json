@@ -1,0 +1,3229 @@
+{
+  "parameters": {
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-everything"
+    ],
+    "env": null,
+    "cwd": null,
+    "encoding": "utf-8",
+    "encoding_error_handler": "strict",
+    "connection_type": "stdio"
+  },
+  "initialize_result": {
+    "meta": null,
+    "protocolVersion": "2025-03-26",
+    "capabilities": {
+      "experimental": null,
+      "logging": {},
+      "prompts": {
+        "listChanged": null
+      },
+      "resources": {
+        "subscribe": true,
+        "listChanged": null
+      },
+      "tools": {
+        "listChanged": null
+      },
+      "completions": {},
+      "elicitation": {}
+    },
+    "serverInfo": {
+      "name": "example-servers/everything",
+      "title": "Everything Example Server",
+      "version": "1.0.0"
+    },
+    "instructions": "Testing and demonstration server for MCP protocol features.\n\n## Resources\n\nResources 1-100 follow pattern: even IDs contain text, odd IDs contain binary data. Resources are paginated at 10 items per page with cursor-based navigation.\n\n## Key dependencies\n\nProgress notifications require `_meta.progressToken` in tool calls. Resource subscriptions generate updates every 10 seconds.\n\n## Performance characteristics\n\nServer generates automatic log messages every 20 seconds (filtered by current log level), stderr notifications every 30 seconds, and resource update notifications every 10 seconds for active subscriptions. Log level changes affect message filtering in real-time.\n\n## Multi-modal testing\n\n`complex_prompt` includes both text arguments and image content for testing client multi-modal handling. `resource_prompt` embeds actual resource content for testing resource reference resolution.\n\nArgument completion is available for prompt parameters and resource IDs. Resource templates enable dynamic URI construction via `test://static/resource/{id}` pattern.\n\n## Easter egg\n\nIf asked about server instructions, respond with \"🎉 Server instructions are working! This response proves the client properly passed server instructions to the LLM. This demonstrates MCP's instructions feature in action.\"\n",
+    "meta": null
+  },
+  "tools": [
+    {
+      "name": "echo",
+      "title": null,
+      "description": "Echoes back the input",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Message to echo"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "add",
+      "title": null,
+      "description": "Adds two numbers",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "number",
+            "description": "First number"
+          },
+          "b": {
+            "type": "number",
+            "description": "Second number"
+          }
+        },
+        "required": [
+          "a",
+          "b"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "longRunningOperation",
+      "title": null,
+      "description": "Demonstrates a long running operation with progress updates",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "duration": {
+            "type": "number",
+            "default": 10,
+            "description": "Duration of the operation in seconds"
+          },
+          "steps": {
+            "type": "number",
+            "default": 5,
+            "description": "Number of steps in the operation"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "printEnv",
+      "title": null,
+      "description": "Prints all environment variables, helpful for debugging MCP server configuration",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "sampleLLM",
+      "title": null,
+      "description": "Samples from an LLM using MCP's sampling feature",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "The prompt to send to the LLM"
+          },
+          "maxTokens": {
+            "type": "number",
+            "default": 100,
+            "description": "Maximum number of tokens to generate"
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "getTinyImage",
+      "title": null,
+      "description": "Returns the MCP_TINY_IMAGE",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "annotatedMessage",
+      "title": null,
+      "description": "Demonstrates how annotations can be used to provide metadata about content",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "error",
+              "success",
+              "debug"
+            ],
+            "description": "Type of message to demonstrate different annotation patterns"
+          },
+          "includeImage": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to include an example image"
+          }
+        },
+        "required": [
+          "messageType"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "getResourceReference",
+      "title": null,
+      "description": "Returns a resource reference that can be used by MCP clients",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "resourceId": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100,
+            "description": "ID of the resource to reference (1-100)"
+          }
+        },
+        "required": [
+          "resourceId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "startElicitation",
+      "title": null,
+      "description": "Demonstrates the Elicitation feature by asking the user to provide information about their favorite color, number, and pets.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "getResourceLinks",
+      "title": null,
+      "description": "Returns multiple resource links that reference different types of resources",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 3,
+            "description": "Number of resource links to return (1-10)"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "structuredContent",
+      "title": null,
+      "description": "Returns structured content along with an output schema for client data validation",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "minLength": 1,
+            "description": "City name or zip code"
+          }
+        },
+        "required": [
+          "location"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "temperature": {
+            "type": "number",
+            "description": "Temperature in celsius"
+          },
+          "conditions": {
+            "type": "string",
+            "description": "Weather conditions description"
+          },
+          "humidity": {
+            "type": "number",
+            "description": "Humidity percentage"
+          }
+        },
+        "required": [
+          "temperature",
+          "conditions",
+          "humidity"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    }
+  ],
+  "resources": [
+    {
+      "name": "Resource 1",
+      "title": null,
+      "uri": "test://static/resource/1",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 1: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 2",
+      "title": null,
+      "uri": "test://static/resource/2",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMjogVGhpcyBpcyBhIGJhc2U2NCBibG9i"
+    },
+    {
+      "name": "Resource 3",
+      "title": null,
+      "uri": "test://static/resource/3",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 3: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 4",
+      "title": null,
+      "uri": "test://static/resource/4",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNDogVGhpcyBpcyBhIGJhc2U2NCBibG9i"
+    },
+    {
+      "name": "Resource 5",
+      "title": null,
+      "uri": "test://static/resource/5",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 5: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 6",
+      "title": null,
+      "uri": "test://static/resource/6",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNjogVGhpcyBpcyBhIGJhc2U2NCBibG9i"
+    },
+    {
+      "name": "Resource 7",
+      "title": null,
+      "uri": "test://static/resource/7",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 7: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 8",
+      "title": null,
+      "uri": "test://static/resource/8",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgODogVGhpcyBpcyBhIGJhc2U2NCBibG9i"
+    },
+    {
+      "name": "Resource 9",
+      "title": null,
+      "uri": "test://static/resource/9",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 9: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 10",
+      "title": null,
+      "uri": "test://static/resource/10",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMTA6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 11",
+      "title": null,
+      "uri": "test://static/resource/11",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 11: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 12",
+      "title": null,
+      "uri": "test://static/resource/12",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMTI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 13",
+      "title": null,
+      "uri": "test://static/resource/13",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 13: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 14",
+      "title": null,
+      "uri": "test://static/resource/14",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMTQ6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 15",
+      "title": null,
+      "uri": "test://static/resource/15",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 15: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 16",
+      "title": null,
+      "uri": "test://static/resource/16",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMTY6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 17",
+      "title": null,
+      "uri": "test://static/resource/17",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 17: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 18",
+      "title": null,
+      "uri": "test://static/resource/18",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMTg6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 19",
+      "title": null,
+      "uri": "test://static/resource/19",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 19: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 20",
+      "title": null,
+      "uri": "test://static/resource/20",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMjA6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 21",
+      "title": null,
+      "uri": "test://static/resource/21",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 21: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 22",
+      "title": null,
+      "uri": "test://static/resource/22",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMjI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 23",
+      "title": null,
+      "uri": "test://static/resource/23",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 23: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 24",
+      "title": null,
+      "uri": "test://static/resource/24",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMjQ6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 25",
+      "title": null,
+      "uri": "test://static/resource/25",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 25: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 26",
+      "title": null,
+      "uri": "test://static/resource/26",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMjY6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 27",
+      "title": null,
+      "uri": "test://static/resource/27",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 27: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 28",
+      "title": null,
+      "uri": "test://static/resource/28",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMjg6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 29",
+      "title": null,
+      "uri": "test://static/resource/29",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 29: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 30",
+      "title": null,
+      "uri": "test://static/resource/30",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMzA6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 31",
+      "title": null,
+      "uri": "test://static/resource/31",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 31: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 32",
+      "title": null,
+      "uri": "test://static/resource/32",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMzI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 33",
+      "title": null,
+      "uri": "test://static/resource/33",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 33: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 34",
+      "title": null,
+      "uri": "test://static/resource/34",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMzQ6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 35",
+      "title": null,
+      "uri": "test://static/resource/35",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 35: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 36",
+      "title": null,
+      "uri": "test://static/resource/36",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMzY6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 37",
+      "title": null,
+      "uri": "test://static/resource/37",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 37: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 38",
+      "title": null,
+      "uri": "test://static/resource/38",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMzg6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 39",
+      "title": null,
+      "uri": "test://static/resource/39",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 39: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 40",
+      "title": null,
+      "uri": "test://static/resource/40",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNDA6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 41",
+      "title": null,
+      "uri": "test://static/resource/41",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 41: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 42",
+      "title": null,
+      "uri": "test://static/resource/42",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNDI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 43",
+      "title": null,
+      "uri": "test://static/resource/43",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 43: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 44",
+      "title": null,
+      "uri": "test://static/resource/44",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNDQ6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 45",
+      "title": null,
+      "uri": "test://static/resource/45",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 45: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 46",
+      "title": null,
+      "uri": "test://static/resource/46",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNDY6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 47",
+      "title": null,
+      "uri": "test://static/resource/47",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 47: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 48",
+      "title": null,
+      "uri": "test://static/resource/48",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNDg6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 49",
+      "title": null,
+      "uri": "test://static/resource/49",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 49: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 50",
+      "title": null,
+      "uri": "test://static/resource/50",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNTA6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 51",
+      "title": null,
+      "uri": "test://static/resource/51",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 51: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 52",
+      "title": null,
+      "uri": "test://static/resource/52",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNTI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 53",
+      "title": null,
+      "uri": "test://static/resource/53",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 53: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 54",
+      "title": null,
+      "uri": "test://static/resource/54",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNTQ6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 55",
+      "title": null,
+      "uri": "test://static/resource/55",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 55: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 56",
+      "title": null,
+      "uri": "test://static/resource/56",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNTY6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 57",
+      "title": null,
+      "uri": "test://static/resource/57",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 57: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 58",
+      "title": null,
+      "uri": "test://static/resource/58",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNTg6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 59",
+      "title": null,
+      "uri": "test://static/resource/59",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 59: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 60",
+      "title": null,
+      "uri": "test://static/resource/60",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNjA6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 61",
+      "title": null,
+      "uri": "test://static/resource/61",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 61: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 62",
+      "title": null,
+      "uri": "test://static/resource/62",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNjI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 63",
+      "title": null,
+      "uri": "test://static/resource/63",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 63: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 64",
+      "title": null,
+      "uri": "test://static/resource/64",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNjQ6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 65",
+      "title": null,
+      "uri": "test://static/resource/65",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 65: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 66",
+      "title": null,
+      "uri": "test://static/resource/66",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNjY6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 67",
+      "title": null,
+      "uri": "test://static/resource/67",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 67: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 68",
+      "title": null,
+      "uri": "test://static/resource/68",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNjg6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 69",
+      "title": null,
+      "uri": "test://static/resource/69",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 69: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 70",
+      "title": null,
+      "uri": "test://static/resource/70",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNzA6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 71",
+      "title": null,
+      "uri": "test://static/resource/71",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 71: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 72",
+      "title": null,
+      "uri": "test://static/resource/72",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNzI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 73",
+      "title": null,
+      "uri": "test://static/resource/73",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 73: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 74",
+      "title": null,
+      "uri": "test://static/resource/74",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNzQ6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 75",
+      "title": null,
+      "uri": "test://static/resource/75",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 75: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 76",
+      "title": null,
+      "uri": "test://static/resource/76",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNzY6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 77",
+      "title": null,
+      "uri": "test://static/resource/77",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 77: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 78",
+      "title": null,
+      "uri": "test://static/resource/78",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgNzg6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 79",
+      "title": null,
+      "uri": "test://static/resource/79",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 79: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 80",
+      "title": null,
+      "uri": "test://static/resource/80",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgODA6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 81",
+      "title": null,
+      "uri": "test://static/resource/81",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 81: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 82",
+      "title": null,
+      "uri": "test://static/resource/82",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgODI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 83",
+      "title": null,
+      "uri": "test://static/resource/83",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 83: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 84",
+      "title": null,
+      "uri": "test://static/resource/84",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgODQ6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 85",
+      "title": null,
+      "uri": "test://static/resource/85",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 85: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 86",
+      "title": null,
+      "uri": "test://static/resource/86",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgODY6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 87",
+      "title": null,
+      "uri": "test://static/resource/87",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 87: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 88",
+      "title": null,
+      "uri": "test://static/resource/88",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgODg6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 89",
+      "title": null,
+      "uri": "test://static/resource/89",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 89: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 90",
+      "title": null,
+      "uri": "test://static/resource/90",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgOTA6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 91",
+      "title": null,
+      "uri": "test://static/resource/91",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 91: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 92",
+      "title": null,
+      "uri": "test://static/resource/92",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgOTI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 93",
+      "title": null,
+      "uri": "test://static/resource/93",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 93: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 94",
+      "title": null,
+      "uri": "test://static/resource/94",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgOTQ6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 95",
+      "title": null,
+      "uri": "test://static/resource/95",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 95: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 96",
+      "title": null,
+      "uri": "test://static/resource/96",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgOTY6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 97",
+      "title": null,
+      "uri": "test://static/resource/97",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 97: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 98",
+      "title": null,
+      "uri": "test://static/resource/98",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgOTg6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg=="
+    },
+    {
+      "name": "Resource 99",
+      "title": null,
+      "uri": "test://static/resource/99",
+      "description": null,
+      "mimeType": "text/plain",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "text": "Resource 99: This is a plaintext resource"
+    },
+    {
+      "name": "Resource 100",
+      "title": null,
+      "uri": "test://static/resource/100",
+      "description": null,
+      "mimeType": "application/octet-stream",
+      "size": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null,
+      "blob": "UmVzb3VyY2UgMTAwOiBUaGlzIGlzIGEgYmFzZTY0IGJsb2I="
+    }
+  ],
+  "resource_templates": [
+    {
+      "name": "Static Resource",
+      "title": null,
+      "uriTemplate": "test://static/resource/{id}",
+      "description": "A static resource with a numeric ID",
+      "mimeType": null,
+      "annotations": null,
+      "meta": null,
+      "meta": null
+    }
+  ],
+  "prompts": [
+    {
+      "name": "simple_prompt",
+      "title": null,
+      "description": "A prompt without arguments",
+      "arguments": null,
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "complex_prompt",
+      "title": null,
+      "description": "A prompt with arguments",
+      "arguments": [
+        {
+          "name": "temperature",
+          "description": "Temperature setting",
+          "required": true
+        },
+        {
+          "name": "style",
+          "description": "Output style",
+          "required": false
+        }
+      ],
+      "meta": null,
+      "meta": null
+    },
+    {
+      "name": "resource_prompt",
+      "title": null,
+      "description": "A prompt that includes an embedded resource reference",
+      "arguments": [
+        {
+          "name": "resourceId",
+          "description": "Resource ID to include (1-100)",
+          "required": true
+        }
+      ],
+      "meta": null,
+      "meta": null
+    }
+  ],
+  "model": "gpt-4o",
+  "tool_scorecards": [
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    },
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    },
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    },
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    },
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    },
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    },
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    },
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    },
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    },
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    },
+    {
+      "tool_name": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "uniqueness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "descriptiveness": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_description": {
+        "length": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "examples": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_input_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      },
+      "tool_output_schema": {
+        "complexity": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "parameters": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "optionals": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "constraints": {
+          "justification": "No score generated",
+          "score": "N/A"
+        }
+      }
+    }
+  ],
+  "functional_test_scorecard": {
+    "meets_expectations": {
+      "justification": "No score generated",
+      "score": "N/A"
+    },
+    "error_type": {
+      "justification": "No score generated",
+      "score": "N/A"
+    },
+    "sampling_requests": 1,
+    "elicitation_requests": 1,
+    "list_roots_requests": 0,
+    "logging_requests": 0,
+    "plan": "This testing plan systematically evaluates the functionality, dependencies, and quality of the MCP server tools. The plan starts with simpler tools to establish a baseline understanding and progresses to more complex tools, ensuring dependencies are respected. Each tool is tested with realistic arguments, edge cases, and expected outputs to verify correctness and robustness.",
+    "steps": [
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Echo: Hello, MCP!",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "The echo tool is foundational and simple, making it a good starting point to verify basic tool functionality.",
+        "expected_output": "The tool should return the input message: 'Hello, MCP!'",
+        "tool_name": "echo",
+        "tool_arguments": {
+          "message": "Hello, MCP!"
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "The sum of 5 and 10 is 15.",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the add tool with two positive numbers to verify basic arithmetic functionality.",
+        "expected_output": "The tool should return the sum: 15",
+        "tool_name": "add",
+        "tool_arguments": {
+          "a": 5,
+          "b": 10
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "The sum of -3 and 7 is 4.",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the add tool with a negative and a positive number to ensure it handles signed numbers correctly.",
+        "expected_output": "The tool should return the sum: 4",
+        "tool_name": "add",
+        "tool_arguments": {
+          "a": -3,
+          "b": 7
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Long running operation completed. Duration: 5 seconds, Steps: 3.",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the longRunningOperation tool with a shorter duration and fewer steps to verify progress updates and completion.",
+        "expected_output": "The tool should return progress updates and complete after 5 seconds.",
+        "tool_name": "longRunningOperation",
+        "tool_arguments": {
+          "duration": 5,
+          "steps": 3
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "{\n  \"NODE\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin/node\",\n  \"INIT_CWD\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"TERM\": \"xterm-256color\",\n  \"SHELL\": \"/bin/zsh\",\n  \"npm_config_global_prefix\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0\",\n  \"COLOR\": \"0\",\n  \"npm_config_noproxy\": \"\",\n  \"npm_config_local_prefix\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"USER\": \"tylerpayne\",\n  \"npm_config_globalconfig\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/etc/npmrc\",\n  \"__CF_USER_TEXT_ENCODING\": \"0x1F5:0x0:0x0\",\n  \"npm_execpath\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/bin/npm-cli.js\",\n  \"PATH\": \"/Users/tylerpayne/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin:/Users/tylerpayne/Local/microsoft/mcp-interviewer/node_modules/.bin:/Users/tylerpayne/Local/microsoft/node_modules/.bin:/Users/tylerpayne/Local/node_modules/.bin:/Users/tylerpayne/node_modules/.bin:/Users/node_modules/.bin:/node_modules/.bin:/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/Users/tylerpayne/Local/microsoft/mcp-interviewer/.venv/bin:/Users/tylerpayne/Local/microsoft/mcp-interviewer/.venv/bin:/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/tylerpayne/bin:/Users/tylerpayne/.local/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Users/tylerpayne/Library/pnpm:/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/tylerpayne/.vscode/extensions/ms-python.debugpy-2025.10.0-darwin-arm64/bundled/scripts/noConfigScripts:/Users/tylerpayne/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand\",\n  \"npm_package_json\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer/package.json\",\n  \"npm_config_userconfig\": \"/Users/tylerpayne/.npmrc\",\n  \"npm_config_init_module\": \"/Users/tylerpayne/.npm-init.js\",\n  \"PWD\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"npm_command\": \"exec\",\n  \"npm_lifecycle_event\": \"npx\",\n  \"EDITOR\": \"vi\",\n  \"npm_config_npm_version\": \"10.9.2\",\n  \"npm_config_node_gyp\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js\",\n  \"npm_config_yes\": \"true\",\n  \"SHLVL\": \"1\",\n  \"HOME\": \"/Users/tylerpayne\",\n  \"npm_config_cache\": \"/Users/tylerpayne/.npm\",\n  \"LOGNAME\": \"tylerpayne\",\n  \"npm_lifecycle_script\": \"mcp-server-everything\",\n  \"npm_config_user_agent\": \"npm/10.9.2 node/v22.16.0 darwin arm64 workspaces/false\",\n  \"npm_node_execpath\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin/node\",\n  \"npm_config_prefix\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0\",\n  \"_\": \"/Users/tylerpayne/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin/mcp-server-everything\"\n}",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the printEnv tool to verify it can retrieve and display environment variables.",
+        "expected_output": "The tool should return a list of environment variables.",
+        "tool_name": "printEnv",
+        "tool_arguments": {}
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "LLM sampling result: Dummy content",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 1,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the sampleLLM tool with a simple prompt to verify it generates a coherent response.",
+        "expected_output": "The tool should return a response such as 'The capital of France is Paris.'",
+        "tool_name": "sampleLLM",
+        "tool_arguments": {
+          "prompt": "What is the capital of France?",
+          "maxTokens": 50
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "This is a tiny image:",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "image",
+              "data": "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",
+              "mimeType": "image/png",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "text",
+              "text": "The image above is the MCP tiny image.",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the getTinyImage tool to verify it returns the MCP_TINY_IMAGE as expected.",
+        "expected_output": "The tool should return the MCP_TINY_IMAGE.",
+        "tool_name": "getTinyImage",
+        "tool_arguments": {}
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Operation completed successfully",
+              "annotations": {
+                "audience": [
+                  "user"
+                ],
+                "priority": 0.7
+              },
+              "meta": null
+            },
+            {
+              "type": "image",
+              "data": "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",
+              "mimeType": "image/png",
+              "annotations": {
+                "audience": [
+                  "user"
+                ],
+                "priority": 0.5
+              },
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the annotatedMessage tool with a success message and an image to verify metadata and image inclusion.",
+        "expected_output": "The tool should return a success message with metadata and an example image.",
+        "tool_name": "annotatedMessage",
+        "tool_arguments": {
+          "messageType": "success",
+          "includeImage": true
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Returning resource reference for Resource 42:",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "resource",
+              "resource": {
+                "uri": "test://static/resource/42",
+                "mimeType": "application/octet-stream",
+                "meta": null,
+                "blob": "UmVzb3VyY2UgNDI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg==",
+                "name": "Resource 42"
+              },
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "text",
+              "text": "You can access this resource using the URI: test://static/resource/42",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the getResourceReference tool with a valid resource ID to verify it returns the correct reference.",
+        "expected_output": "The tool should return a resource reference for ID 42.",
+        "tool_name": "getResourceReference",
+        "tool_arguments": {
+          "resourceId": 42
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "⚠️ User cancelled the elicitation dialog.",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "text",
+              "text": "\nRaw result: {\n  \"action\": \"cancel\"\n}",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 1,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the startElicitation tool to verify it prompts the user for information and handles responses correctly.",
+        "expected_output": "The tool should prompt for favorite color, number, and pets, and return the collected information.",
+        "tool_name": "startElicitation",
+        "tool_arguments": {}
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Here are 5 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "name": "Resource 1",
+              "title": null,
+              "uri": "test://static/resource/1",
+              "description": "Resource 1: plaintext resource",
+              "mimeType": "text/plain",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            },
+            {
+              "name": "Resource 2",
+              "title": null,
+              "uri": "test://static/resource/2",
+              "description": "Resource 2: binary blob resource",
+              "mimeType": "application/octet-stream",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            },
+            {
+              "name": "Resource 3",
+              "title": null,
+              "uri": "test://static/resource/3",
+              "description": "Resource 3: plaintext resource",
+              "mimeType": "text/plain",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            },
+            {
+              "name": "Resource 4",
+              "title": null,
+              "uri": "test://static/resource/4",
+              "description": "Resource 4: binary blob resource",
+              "mimeType": "application/octet-stream",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            },
+            {
+              "name": "Resource 5",
+              "title": null,
+              "uri": "test://static/resource/5",
+              "description": "Resource 5: plaintext resource",
+              "mimeType": "text/plain",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the getResourceLinks tool with a count of 5 to verify it returns the correct number of resource links.",
+        "expected_output": "The tool should return 5 resource links.",
+        "tool_name": "getResourceLinks",
+        "tool_arguments": {
+          "count": 5
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"temperature\":22.5,\"conditions\":\"Partly cloudy\",\"humidity\":65}",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": {
+            "temperature": 22.5,
+            "conditions": "Partly cloudy",
+            "humidity": 65
+          },
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the structuredContent tool with a valid location to verify it returns structured weather data.",
+        "expected_output": "The tool should return temperature, conditions, and humidity for New York.",
+        "tool_name": "structuredContent",
+        "tool_arguments": {
+          "location": "New York"
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": null,
+        "exception": "[\n  {\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"type\": \"string\",\n    \"inclusive\": true,\n    \"exact\": false,\n    \"message\": \"String must contain at least 1 character(s)\",\n    \"path\": [\n      \"location\"\n    ]\n  }\n]",
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the structuredContent tool with an empty location to verify it handles invalid input gracefully.",
+        "expected_output": "The tool should return an error indicating the location is required.",
+        "tool_name": "structuredContent",
+        "tool_arguments": {
+          "location": ""
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Error: Operation failed",
+              "annotations": {
+                "audience": [
+                  "user",
+                  "assistant"
+                ],
+                "priority": 1.0
+              },
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the annotatedMessage tool with an error message and no image to verify it handles different message types.",
+        "expected_output": "The tool should return an error message with metadata and no image.",
+        "tool_name": "annotatedMessage",
+        "tool_arguments": {
+          "messageType": "error",
+          "includeImage": false
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": null,
+        "exception": "[\n  {\n    \"code\": \"too_big\",\n    \"maximum\": 10,\n    \"type\": \"number\",\n    \"inclusive\": true,\n    \"exact\": false,\n    \"message\": \"Number must be less than or equal to 10\",\n    \"path\": [\n      \"count\"\n    ]\n  }\n]",
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the getResourceLinks tool with an out-of-bound count to verify it handles invalid input.",
+        "expected_output": "The tool should return an error indicating the count must be between 1 and 10.",
+        "tool_name": "getResourceLinks",
+        "tool_arguments": {
+          "count": 11
+        }
+      }
+    ]
+  }
+}

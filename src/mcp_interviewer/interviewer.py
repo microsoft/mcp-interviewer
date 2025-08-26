@@ -632,7 +632,7 @@ class MCPInterviewer:
         self.logging_requests += 1
         pass
 
-    async def score_server(self, params: ServerParameters) -> ServerScoreCard:
+    async def interview_server(self, params: ServerParameters) -> ServerScoreCard:
         """Perform a complete evaluation of an MCP server.
 
         This is the main entry point that orchestrates the entire evaluation process:

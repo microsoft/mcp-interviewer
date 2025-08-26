@@ -61,8 +61,7 @@ class ToolScorecardsReport(BaseReport):
         passes, total = count_scores(scorecard)
         percentage = (passes / total * 100) if total > 0 else 0
 
-        # Add anchor for linking
-        self.add_text(f'<a id="tool-scorecard-{tool_index}"></a>')
+        # Add title for the tool scorecard
         self.add_title(f"{tool.name}", 3)
 
         # Show score
@@ -70,7 +69,7 @@ class ToolScorecardsReport(BaseReport):
         self.add_blank_line()
 
         # Link to tool details
-        self.add_text(f"[→ View tool details](#tool-{tool_index})")
+        self.add_text(f"[→ View tool details](#tool-{tool.name})")
         self.add_blank_line()
 
         # Tool Name Evaluation
