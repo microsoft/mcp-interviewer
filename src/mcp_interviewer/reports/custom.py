@@ -2,40 +2,10 @@
 
 from ..constraints.base import ConstraintViolation
 from ..models import ServerScoreCard
+from . import REPORT_MAPPING, SHORTHAND_REPORT_MAPPING
 from .base import BaseReport, BaseReportOptions
 from .functional_test import FunctionalTestReport
-from .interviewer import (
-    ConstraintViolationsReport,
-    InterviewerInfoReport,
-)
-from .server import (
-    CapabilitiesReport,
-    PromptsReport,
-    ResourcesReport,
-    ResourceTemplatesReport,
-    ServerInfoReport,
-    ToolsReport,
-)
-from .statistics import ToolCallStatisticsReport, ToolStatisticsReport
-
-# Available report classes
-REPORT_CLASSES = [
-    InterviewerInfoReport,
-    ServerInfoReport,
-    CapabilitiesReport,
-    ToolStatisticsReport,
-    ToolCallStatisticsReport,
-    FunctionalTestReport,
-    ConstraintViolationsReport,
-    ToolsReport,
-    ResourcesReport,
-    ResourceTemplatesReport,
-    PromptsReport,
-]
-
-# Build mappings from class methods - no instantiation needed!
-REPORT_MAPPING = {cls.cli_name(): cls for cls in REPORT_CLASSES}
-SHORTHAND_REPORT_MAPPING = {cls.cli_code(): cls.cli_name() for cls in REPORT_CLASSES}
+from .interviewer import ConstraintViolationsReport
 
 
 class CustomReport(BaseReport):
@@ -105,16 +75,11 @@ class CustomReport(BaseReport):
                 )
             # Special handling for FunctionalTestReport
             elif report_class == FunctionalTestReport:
-                self.add_report(report_class(self._scorecard, include_evaluations=True))
+                self.add_report(
+                    report_class(
+                        self._scorecard,
+                        include_evaluations=self._options.score_functional_test,
+                    )
+                )
             else:
                 self.add_report(report_class(self._scorecard))
-
-
-def get_available_reports() -> list[str]:
-    """Get list of available report names for CLI help."""
-    return sorted(REPORT_MAPPING.keys())
-
-
-def get_shorthand_codes() -> dict[str, str]:
-    """Get mapping of shorthand codes to report names."""
-    return SHORTHAND_REPORT_MAPPING

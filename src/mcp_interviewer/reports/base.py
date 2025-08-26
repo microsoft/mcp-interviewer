@@ -12,6 +12,8 @@ class BaseReportOptions:
     """Options for configuring report generation."""
 
     use_collapsible: bool = True
+    score_tools: bool = False
+    score_functional_test: bool = False
 
 
 class BaseReport(ABC):

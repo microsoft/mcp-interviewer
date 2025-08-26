@@ -28,6 +28,7 @@ class InterviewerInfoReport(BaseReport):
         """Build the interviewer info section."""
         self.start_collapsible("Interviewer Parameters", 2)
 
+        self.add_title("Metadata", 4)
         # Add date and version
         self.add_text(f"**Date:** {datetime.now().strftime('%Y-%m-%d')}")
         self.add_blank_line()
@@ -43,7 +44,7 @@ class InterviewerInfoReport(BaseReport):
         # Add CLI command from sys.argv
         if sys.argv:
             self.add_title("CLI Command", 4)
-            cli_command = " ".join(sys.argv)
+            cli_command = "mcp-interviewer" + " ".join(sys.argv[1:])
             self.add_code_block(cli_command, "bash")
             self.add_blank_line()
 

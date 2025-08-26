@@ -52,11 +52,6 @@ def cli():
         help="Enable all LLM scoring operations (equivalent to --score-tools --score-test)",
     )
     parser.add_argument(
-        "--short",
-        action="store_true",
-        help="Generate short report instead of full report",
-    )
-    parser.add_argument(
         "--reports",
         nargs="+",
         help="Specify which reports to include (in order). Can use full names (e.g., interviewer-info, server-info) or shorthand codes (e.g., II, SI, CAP, TS, TCS, FT, CV, T, R, RT, P)",
@@ -150,7 +145,6 @@ def cli():
         out_dir=args.out_dir,
         should_score_tool=should_score_tool,
         should_score_functional_test=should_score_functional_test,
-        short_report=args.short,
         custom_reports=args.reports,
         no_collapse=args.no_collapse,
         selected_constraints=args.select,

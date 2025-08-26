@@ -37,20 +37,24 @@ class ToolScorecardsReport(BaseReport):
                 scoring_disabled = True
 
         if scoring_disabled:
-            self.add_title("Tool Scorecards", 2)
+            self.start_collapsible("Tool Scorecards", 2)
             self.add_text("_Tool scoring disabled - no evaluations generated_")
             self.add_blank_line()
+            self.end_collapsible()
             return
         else:
-            self.add_title("Tool Scorecards (🤖)", 2)
+            self.start_collapsible("Tool Scorecards (🤖)", 2)
 
         if not self._scorecard.tool_scorecards:
             self.add_text("_No tool evaluations available_")
             self.add_blank_line()
+            self.end_collapsible()
             return
 
-        for i, tool_scorecard in enumerate(self._scorecard.tool_scorecards):
+        for i in range(len(self._scorecard.tool_scorecards)):
             self.add_tool_scorecard(i)
+
+        self.end_collapsible()
 
     def add_tool_scorecard(self, tool_index: int) -> "ToolScorecardsReport":
         """Add a detailed scorecard for a specific tool."""
@@ -72,9 +76,20 @@ class ToolScorecardsReport(BaseReport):
         self.add_text(f"[→ View tool details](#tool-{tool.name})")
         self.add_blank_line()
 
+        # Start collapsible section for scorecard details
+        if self._options.use_collapsible:
+            self.add_text("<details>")
+            self.add_text("<summary>Toggle scorecard details</summary>")
+            self.add_blank_line()
+
         # Tool Name Evaluation
-        self.add_text("**Tool Name (🤖):**")
-        self.add_blank_line()
+        if self._options.use_collapsible:
+            self.add_text("<details>")
+            self.add_text("<summary>Tool Name (🤖)</summary>")
+            self.add_blank_line()
+        else:
+            self.add_text("**Tool Name (🤖):**")
+            self.add_blank_line()
         self.add_table_header(["Aspect", "Score", "Justification"])
         self.add_table_row(
             [
@@ -99,9 +114,19 @@ class ToolScorecardsReport(BaseReport):
         )
         self.add_blank_line()
 
+        # End collapsible for Tool Name
+        if self._options.use_collapsible:
+            self.add_text("</details>")
+            self.add_blank_line()
+
         # Tool Description Evaluation
-        self.add_text("**Tool Description (🤖):**")
-        self.add_blank_line()
+        if self._options.use_collapsible:
+            self.add_text("<details>")
+            self.add_text("<summary>Tool Description (🤖)</summary>")
+            self.add_blank_line()
+        else:
+            self.add_text("**Tool Description (🤖):**")
+            self.add_blank_line()
         self.add_table_header(["Aspect", "Score", "Justification"])
         self.add_table_row(
             [
@@ -126,9 +151,19 @@ class ToolScorecardsReport(BaseReport):
         )
         self.add_blank_line()
 
+        # End collapsible for Tool Description
+        if self._options.use_collapsible:
+            self.add_text("</details>")
+            self.add_blank_line()
+
         # Input Schema Evaluation
-        self.add_text("**Input Schema (🤖):**")
-        self.add_blank_line()
+        if self._options.use_collapsible:
+            self.add_text("<details>")
+            self.add_text("<summary>Input Schema (🤖)</summary>")
+            self.add_blank_line()
+        else:
+            self.add_text("**Input Schema (🤖):**")
+            self.add_blank_line()
         self.add_table_header(["Aspect", "Score", "Justification"])
         self.add_table_row(
             [
@@ -160,10 +195,20 @@ class ToolScorecardsReport(BaseReport):
         )
         self.add_blank_line()
 
+        # End collapsible for Input Schema
+        if self._options.use_collapsible:
+            self.add_text("</details>")
+            self.add_blank_line()
+
         # Output Schema Evaluation (if exists)
         if scorecard.tool_output_schema:
-            self.add_text("**Output Schema (🤖):**")
-            self.add_blank_line()
+            if self._options.use_collapsible:
+                self.add_text("<details>")
+                self.add_text("<summary>Output Schema (🤖)</summary>")
+                self.add_blank_line()
+            else:
+                self.add_text("**Output Schema (🤖):**")
+                self.add_blank_line()
             self.add_table_header(["Aspect", "Score", "Justification"])
             self.add_table_row(
                 [
@@ -193,6 +238,16 @@ class ToolScorecardsReport(BaseReport):
                     scorecard.tool_output_schema.constraints.justification,
                 ]
             )
+            self.add_blank_line()
+
+            # End collapsible for Output Schema
+            if self._options.use_collapsible:
+                self.add_text("</details>")
+                self.add_blank_line()
+
+        # End collapsible section for entire scorecard
+        if self._options.use_collapsible:
+            self.add_text("</details>")
             self.add_blank_line()
 
         return self
