@@ -1,8 +1,19 @@
 # mcp-interviewer
 
-A CLI tool to evaluate a Model Context Protocol (MCP) servers' readiness for agentic use-cases. 
+LLM-driven testing for MCP servers: generates functional tests, executes tool calls, and validates server design best practices.
 
-Inspects server capabilities and statistics, performs LLM-as-a-judge functional testing of tools, and generates a report.
+The MCP Interviewer generates a Markdown report capturing the following information:
+
+- Server capabilities (e.g resource subscriptions, prompt lists changing)
+- Schemas of server tools, resources, resource templates, and prompts
+- Schema statistics (e.g. tool name lengths, tool input schema depths)
+- LLM-generated functional test plan and outputs
+- Functional test output statistics (e.g. tool call result lengths)
+- Warnings and errors for common constraints (e.g. context window lengths, number of tools)
+- LLM-as-a-judge evaluation of functional test outputs
+- LLM-as-a-judge evaluation of static tool schemas
+
+
 
 ## Quick Start
 
@@ -85,14 +96,6 @@ params = StdioServerParameters(
 interviewer = MCPInterviewer(client, "gpt-4o")
 interview = await interviewer.score_server(params)
 ```
-
-## What Gets Evaluated?
-
-- **Tool Quality**: Names, descriptions, schemas
-- **Functional Testing**: Automated tool execution with LLM evaluation
-- **Constraint Compliance**: Platform-specific requirements (e.g., OpenAI limits)
-- **Performance Metrics**: Token usage, request counts
-- **Server Capabilities**: Resources, prompts, protocol compliance
 
 ## Contributing
 
