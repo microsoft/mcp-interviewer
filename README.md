@@ -14,6 +14,8 @@ uvx --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git" mcp-intervie
 
 Generates `mcp-scorecard.md` and `mcp-scorecard.json` with a full evaluation report.
 
+See an example report for the "@modelcontextprotocol/server-everything" reference server [here](./mcp-scorecard.md).
+
 ## Installation
 
 ```bash
