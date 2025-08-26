@@ -25,25 +25,15 @@ uv sync --all-extras --all-groups
 pre-commit install
 ```
 
-Before committing (or if precommit gives you ruff errors), you can run 
+Before committing (or if precommit gives you ruff errors), you can format the code and fix any fixable errors (e.g. import sorting) via:
 
 ```bash
 uv run poe fix
 ```
 
-To format the code and fix any fixable errors (e.g. import sorting).
+## Project Structure
 
-## Contributing New Statistics
-
-To add new statistics to the MCP Interviewer, create new classes in `src/mcp_interviewer/statistics/`:
-
-1. Inherit from `Statistic` base class (or `FunctionalTestStepStatistic` for test-specific stats)
-2. Implement the `compute()` method that yields `StatisticValue` instances
-3. Focus on data analysis and calculation logic
-4. Return structured data that report classes can format for display
-5. Let the report classes handle formatting and presentation
-
-Statistics modules are responsible for data computation and aggregation, while report classes handle the visual formatting and markdown generation.
+### Constraints
 
 ## Contributing New Constraints
 
@@ -56,6 +46,22 @@ To add new constraint validation rules, create a new class in `src/mcp_interview
 
 Constraints can be selected via the CLI using either their full name or shorthand code.
 
+### Statistics
+
+#### Contributing New Statistics
+
+To add new statistics to the MCP Interviewer, create new classes in `src/mcp_interviewer/statistics/`:
+
+1. Inherit from `Statistic` base class (or `FunctionalTestStepStatistic` for test-specific stats)
+2. Implement the `compute()` method that yields `StatisticValue` instances
+3. Focus on data analysis and calculation logic
+4. Return structured data that report classes can format for display
+5. Let the report classes handle formatting and presentation
+
+Statistics modules are responsible for data computation and aggregation, while report classes handle the visual formatting and markdown generation.
+
+### Reports
+
 ## Contributing New Reports
 
 To add new report sections, create a new class in `src/mcp_interviewer/reports/`:
@@ -66,4 +72,3 @@ To add new report sections, create a new class in `src/mcp_interviewer/reports/`
 4. Reports are responsible for formatting and presentation, not data computation
 
 Reports can be included in custom report compositions via the `--reports` CLI flag using either their full name or shorthand code.
-
