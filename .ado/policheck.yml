@@ -12,7 +12,7 @@ steps:
   - task: PoliCheck@2
     inputs:
       targetType: 'F'
-      targetArgument: '.'
+      targetArgument: '$(Build.SourcesDirectory)'
       
   - task: PostAnalysis@2
     inputs:
