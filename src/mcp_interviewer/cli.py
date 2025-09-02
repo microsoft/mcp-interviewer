@@ -37,19 +37,19 @@ def cli():
         help="Remote MCP connection read timeout",
     )
     parser.add_argument(
-        "--score-tools",
+        "--judge-tools",
         action="store_true",
-        help="Enable LLM scoring of tools (generates evaluation scores)",
+        help="Enable experimental LLM judging of tools (generates evaluation scores)",
     )
     parser.add_argument(
-        "--score-test",
+        "--judge-test",
         action="store_true",
-        help="Enable LLM scoring of functional tests (generates evaluation scores)",
+        help="Enable experimental LLM judging of functional tests (generates evaluation scores)",
     )
     parser.add_argument(
-        "--score",
+        "--judge",
         action="store_true",
-        help="Enable all LLM scoring operations (equivalent to --score-tools --score-test)",
+        help="Enable all experimental LLM judging operations (equivalent to --judge-tools --judge-test)",
     )
     parser.add_argument(
         "--reports",
@@ -134,17 +134,17 @@ def cli():
 
     from .main import main
 
-    # Handle the --score flag which enables scoring operations (disabled by default)
-    should_score_tool = args.score or args.score_tools
-    should_score_functional_test = args.score or args.score_test
+    # Handle the --judge flag which enables experimental judging operations (disabled by default)
+    should_judge_tool = args.judge or args.judge_tools
+    should_judge_functional_test = args.judge or args.judge_test
 
     main(
         client,
         args.model,
         params,
         out_dir=args.out_dir,
-        should_score_tool=should_score_tool,
-        should_score_functional_test=should_score_functional_test,
+        should_judge_tool=should_judge_tool,
+        should_judge_functional_test=should_judge_functional_test,
         custom_reports=args.reports,
         no_collapse=args.no_collapse,
         selected_constraints=args.select,

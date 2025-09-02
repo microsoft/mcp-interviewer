@@ -35,7 +35,7 @@ uv run poe fix
 
 ### Constraints
 
-## Contributing New Constraints
+#### Contributing New Constraints
 
 To add new constraint validation rules, create a new class in `src/mcp_interviewer/constraints/`:
 
@@ -62,7 +62,7 @@ Statistics modules are responsible for data computation and aggregation, while r
 
 ### Reports
 
-## Contributing New Reports
+#### Contributing New Reports
 
 To add new report sections, create a new class in `src/mcp_interviewer/reports/`:
 

@@ -1580,65 +1580,65 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'echo' is concise and adheres to a short length, making it easy to remember and use.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name 'echo' is commonly used in programming contexts but is unique enough within the scope of this tool's functionality.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name 'echo' accurately describes the tool's purpose of echoing back the input.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is concise and provides sufficient information about the tool's functionality.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description mentions the tool echoes back the input, which aligns with the 'message' parameter in the schema.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not provide any examples of usage, which would improve clarity and usability.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The input schema is simple and easy to understand, with only one required parameter.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The schema defines a single parameter, 'message', which is clearly described and aligns with the tool's purpose.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "The schema does not include any optional parameters, which is appropriate for a tool with such a straightforward function.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema enforces constraints such as requiring the 'message' parameter and disallowing additional properties, ensuring proper input validation.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is not explicitly defined in the provided information, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema is not explicitly defined in the provided information, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "optionals": {
-          "justification": "The output schema is not explicitly defined in the provided information, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The output schema is not explicitly defined in the provided information, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         }
       }
@@ -1646,65 +1646,65 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'add' is concise and appropriately short for its purpose.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name 'add' is very generic and likely to conflict with other tools or functions in a broader context.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name 'add' clearly describes the tool's functionality of adding two numbers.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is concise and to the point, providing a clear understanding of the tool's purpose.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description mentions that the tool adds two numbers, which aligns with the parameters 'a' and 'b' in the schema.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not provide any examples of how the tool can be used.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The input schema is simple and easy to understand, with only two required parameters.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The schema defines two parameters, 'a' and 'b', which are clearly described and required.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "The schema does not include any optional parameters, which is appropriate for a simple addition tool.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema enforces constraints such as requiring both 'a' and 'b' and disallowing additional properties, ensuring input validity.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is not provided, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema is not provided, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "optionals": {
-          "justification": "The output schema is not provided, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The output schema is not provided, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         }
       }
@@ -1712,65 +1712,65 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'longRunningOperation' is concise and does not exceed a reasonable length.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name appears unique and unlikely to conflict with other tools, as it describes a specific functionality.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name clearly conveys the purpose of the tool, which is to handle long-running operations.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is concise and provides enough information without being overly verbose.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description mentions progress updates and aligns with the parameters in the schema (duration and steps).",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not provide any examples or use cases to illustrate how the tool might be used.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The schema is simple and easy to understand, with only two parameters (duration and steps).",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The schema defines clear parameters with descriptions, types, and default values.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "Both parameters have default values, making them optional for the user to specify.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema does not define constraints (e.g., minimum or maximum values) for the parameters, which could lead to invalid or nonsensical inputs.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is not provided, so its complexity cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema is not provided, so the parameters cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "optionals": {
-          "justification": "The output schema is not provided, so optional fields cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The output schema is not provided, so constraints cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         }
       }
@@ -1778,65 +1778,65 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'printEnv' is concise and adheres to a reasonable length for a tool name.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name 'printEnv' is unique enough to convey its purpose without ambiguity.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name clearly describes the tool's functionality, which is to print environment variables.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is concise and provides sufficient information about the tool's purpose.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description does not mention parameters, which is acceptable as the tool does not require any input parameters.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not provide any examples of usage, which would be helpful for understanding the tool's application.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The input schema is simple and appropriate for a tool that does not require any input parameters.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The schema correctly defines no input parameters, aligning with the tool's functionality.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "There are no optional parameters, which is consistent with the tool's design.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema enforces no additional properties, ensuring that the tool does not accept unexpected inputs.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is not provided, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema is not provided, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "optionals": {
-          "justification": "The output schema is not provided, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The output schema is not provided, so it cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         }
       }
@@ -1844,65 +1844,65 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'sampleLLM' is concise and adheres to a reasonable length for a tool name.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name 'sampleLLM' is generic and does not stand out as unique, as it could apply to many tools related to LLM sampling.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name 'sampleLLM' is descriptive enough to convey the tool's purpose of sampling from an LLM.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is concise and provides a clear understanding of the tool's functionality without being overly verbose.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description mentions the use of MCP's sampling feature, which aligns with the tool's functionality and parameters.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not provide any examples of how the tool can be used, which would improve clarity and usability.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The input schema is simple and easy to understand, with only two parameters: 'prompt' and 'maxTokens'.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The schema clearly defines the required and optional parameters, including their types and descriptions.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "The schema includes a default value for the optional 'maxTokens' parameter, which is a good practice.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema does not specify constraints for the 'maxTokens' parameter, such as a minimum or maximum value, which could lead to misuse.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is not provided, so its complexity cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema is not provided, so the parameters cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "optionals": {
-          "justification": "The output schema is not provided, so optional parameters cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The output schema is not provided, so constraints cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         }
       }
@@ -1910,65 +1910,65 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'getTinyImage' is concise and appropriately short.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name 'getTinyImage' appears unique and unlikely to conflict with other tool names.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name 'getTinyImage' does not provide enough context about what 'MCP_TINY_IMAGE' is or its purpose.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is short and to the point, which is appropriate for a tool description.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description does not explain the parameters or inputs required by the tool.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not provide any examples of usage or outputs.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The input schema is simple and does not introduce unnecessary complexity.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The input schema does not define any parameters, which limits the tool's functionality and flexibility.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "There are no optional parameters to evaluate since the schema does not define any parameters.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema explicitly disallows additional properties, which enforces strict input validation.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is not provided, so complexity cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema is not provided, so parameters cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "optionals": {
-          "justification": "The output schema is not provided, so optional parameters cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The output schema is not provided, so constraints cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         }
       }
@@ -1976,65 +1976,65 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'annotatedMessage' is concise and adheres to a reasonable length for a tool name.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name appears unique and does not conflict with common tool names, making it easily distinguishable.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name effectively conveys the purpose of the tool, which is related to annotations and messages.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is concise and provides sufficient information without being overly verbose.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description mentions the use of annotations and metadata, which aligns with the parameters in the schema.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not provide any examples or use cases to illustrate the tool's functionality.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The schema is straightforward, with only two properties and clear constraints, making it easy to understand.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The schema defines parameters ('messageType' and 'includeImage') that are relevant and well-documented.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "The 'includeImage' parameter is optional with a default value, providing flexibility without overcomplicating the schema.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema includes constraints such as 'enum' for 'messageType' and 'required' fields, ensuring valid input.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is not provided, so its complexity cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema is not provided, so the parameters cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "optionals": {
-          "justification": "The output schema is not provided, so optional fields cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The output schema is not provided, so constraints cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         }
       }
@@ -2042,65 +2042,65 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'getResourceReference' is concise and within a reasonable length for a tool name.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name appears unique and specific to the functionality of returning a resource reference.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name clearly describes the purpose of the tool, which is to get a resource reference.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is concise and provides enough information about the tool's purpose.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description mentions that the tool returns a resource reference and is intended for MCP clients, aligning with the input schema.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not provide any examples of how the tool might be used or what the output looks like.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The input schema is simple and easy to understand, with only one required parameter.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The schema defines a single parameter, 'resourceId', with clear constraints and a description.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "The schema does not include any optional parameters, which is appropriate for this tool.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema includes clear constraints for 'resourceId' (minimum: 1, maximum: 100), ensuring valid input.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is not provided, so complexity cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema is not provided, so parameters cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "optionals": {
-          "justification": "The output schema is not provided, so optional parameters cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The output schema is not provided, so constraints cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         }
       }
@@ -2108,65 +2108,65 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'startElicitation' is concise and does not exceed a reasonable length.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name 'startElicitation' appears unique and is unlikely to conflict with other tools.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name 'startElicitation' is descriptive and gives a clear indication of the tool's purpose, which is to initiate an elicitation process.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is concise and provides sufficient information about the tool's functionality without being overly verbose.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description does not explicitly mention the parameters or inputs required by the tool, which could lead to ambiguity.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not provide any examples of how the tool might be used, which would help clarify its functionality.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The input schema is simple and does not introduce unnecessary complexity.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The input schema does not define any parameters, which contradicts the tool's purpose of eliciting information about the user's favorite color, number, and pets.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "The schema does not define any parameters, so the concept of optional fields is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema does not define any constraints, which could lead to a lack of validation for the expected inputs.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is not provided, so its complexity cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema is not provided, so the presence or absence of parameters cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "optionals": {
-          "justification": "The output schema is not provided, so the concept of optional fields is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The output schema is not provided, so the presence of constraints cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         }
       }
@@ -2174,65 +2174,65 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'getResourceLinks' is concise and within a reasonable length for a tool name.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name appears unique and does not conflict with common tool names, making it easily identifiable.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name clearly conveys the purpose of the tool, which is to retrieve resource links.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is concise and provides sufficient information about the tool's functionality.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description mentions that the tool returns multiple resource links and references different types of resources, aligning with the input schema.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not provide any examples of the types of resource links or use cases, which would improve clarity.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The input schema is simple and easy to understand, with only one parameter ('count') and clear constraints.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The schema defines the 'count' parameter with clear properties, including type, range, and default value.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "The schema includes a default value for the 'count' parameter, making it optional for users to specify.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema enforces constraints on the 'count' parameter, such as a minimum of 1 and a maximum of 10, ensuring valid input.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is not provided, so its complexity cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema is not provided, so the parameters cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "optionals": {
-          "justification": "The output schema is not provided, so optional properties cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "constraints": {
-          "justification": "The output schema is not provided, so constraints cannot be evaluated.",
+          "justification": "No score generated",
           "score": "N/A"
         }
       }
@@ -2240,113 +2240,113 @@
     {
       "tool_name": {
         "length": {
-          "justification": "The name 'structuredContent' is concise and adheres to a reasonable length for a tool name.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "uniqueness": {
-          "justification": "The name 'structuredContent' is unique enough to distinguish it from generic tool names, though it could be more specific.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "descriptiveness": {
-          "justification": "The name 'structuredContent' provides a clear indication of the tool's purpose, which is to handle structured data.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_description": {
         "length": {
-          "justification": "The description is concise and provides sufficient information about the tool's functionality without being overly verbose.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The description mentions that the tool returns structured content and includes an output schema for client data validation, which aligns with the provided schemas.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "examples": {
-          "justification": "The description does not include any examples to illustrate the tool's usage or output, which would improve clarity.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_input_schema": {
         "complexity": {
-          "justification": "The input schema is simple and easy to understand, requiring only a 'location' field with clear constraints.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The input schema defines a single required parameter ('location') with a clear description and constraints.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "The schema does not include optional parameters, which is appropriate given the simplicity of the tool's functionality.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema includes appropriate constraints, such as 'minLength: 1' for the 'location' field, ensuring valid input.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       },
       "tool_output_schema": {
         "complexity": {
-          "justification": "The output schema is straightforward, with three well-defined properties: 'temperature', 'conditions', and 'humidity'.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "parameters": {
-          "justification": "The output schema includes all necessary parameters to describe weather data, each with clear descriptions.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "optionals": {
-          "justification": "The schema does not include optional properties, which is appropriate for the tool's purpose of providing complete weather data.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "constraints": {
-          "justification": "The schema enforces constraints such as requiring all properties and disallowing additional properties, ensuring data consistency.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         }
       }
     }
   ],
   "functional_test_scorecard": {
     "meets_expectations": {
-      "justification": "The majority of tools executed successfully without errors. Most tools returned the expected outputs, and the server demonstrated robust functionality across foundational, arithmetic, long-running, and complex tools. Only a few tools encountered errors, which were handled gracefully.",
-      "score": "pass"
+      "justification": "No score generated",
+      "score": "N/A"
     },
     "error_type": {
-      "justification": "No critical authentication or connection errors were observed during the evaluation. Errors encountered were limited to specific tools and were related to invalid inputs or edge cases, which were appropriately managed by the server.",
+      "justification": "No score generated",
       "score": "N/A"
     },
     "sampling_requests": 1,
     "elicitation_requests": 1,
     "list_roots_requests": 0,
     "logging_requests": 0,
-    "plan": "This testing plan systematically evaluates the functionality, dependencies, and quality of the MCP server tools. The plan starts with foundational tools, progresses to more complex ones, and includes realistic arguments, edge cases, and expected outputs. Dependencies are respected, and tools are tested in a logical sequence to ensure comprehensive coverage.",
+    "plan": "This testing plan systematically evaluates the functionality, dependencies, and quality of the MCP server tools. The plan starts with simpler tools to establish a baseline and progresses to more complex tools, ensuring dependencies are respected. Each tool is tested with realistic arguments, edge cases, and expected outputs to verify correctness and robustness.",
     "steps": [
       {
         "error_handling": {
-          "justification": "The tool call did not produce any errors, and the isError flag is set to False.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred, so error type evaluation is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool call explicitly returned a response without any silent failures.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output is relevant to the input parameters, as it echoes the provided message.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output is clear, well-structured, and includes the expected echoed message.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output adheres to the expected schema, with content properly structured in the TextContent format.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The actual output does not exactly match the expected output. The expected output was 'Hello, MCP!', but the actual output prepended 'Echo: ' to the message.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -2359,15 +2359,14 @@
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "The echo tool is foundational and has no dependencies. Testing it first ensures basic functionality of the server.",
+        "justification": "The echo tool is foundational and simple. Testing it first ensures the server can handle basic input and output correctly.",
         "expected_output": "The tool should return the input message: 'Hello, MCP!'",
         "tool_name": "echo",
         "tool_arguments": {
@@ -2376,32 +2375,32 @@
       },
       {
         "error_handling": {
-          "justification": "The tool call did not produce any errors, and the isError flag is set to False.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred during the tool call, so error type evaluation is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool call explicitly returned a result without any indication of silent failure.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output is relevant to the input parameters and matches the expected operation of summing the two numbers.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output is clear, accurate, and provides the correct sum of the input parameters (5 + 10 = 15).",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output does not strictly adhere to the expected schema. The result is embedded in a text field instead of being returned as a structured numerical value.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "Despite the schema compliance issue, the tool call meets the functional expectations by providing the correct sum in a comprehensible format.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -2414,15 +2413,14 @@
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "The add tool is simple and independent. Testing it ensures basic arithmetic functionality.",
+        "justification": "The add tool is another foundational tool. Testing it ensures basic arithmetic operations work as expected.",
         "expected_output": "The tool should return the sum: 15",
         "tool_name": "add",
         "tool_arguments": {
@@ -2432,32 +2430,32 @@
       },
       {
         "error_handling": {
-          "justification": "The tool call did not produce any errors, and the isError flag is correctly set to False.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred, so error type evaluation is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool call explicitly returned a valid response without any silent failures.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output is directly relevant to the input parameters and the expected operation (addition).",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output correctly states the sum of -3 and 7 as 4, which matches the expected result.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output adheres to the expected schema, with content provided in the correct format and no structural issues.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool call meets all expectations by providing the correct result, adhering to the schema, and handling the operation without errors.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -2470,15 +2468,14 @@
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Testing with a mix of positive and negative numbers ensures the tool handles all number types correctly.",
+        "justification": "Testing the add tool with negative numbers ensures it handles edge cases correctly.",
         "expected_output": "The tool should return the sum: 4",
         "tool_name": "add",
         "tool_arguments": {
@@ -2488,32 +2485,32 @@
       },
       {
         "error_handling": {
-          "justification": "The tool call completed without any errors, as indicated by isError=False.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred during the tool call, so error type evaluation is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "There were no silent errors; the tool provided a clear and complete response.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The tool did not provide progress updates during the operation, which was part of the expected output.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The final output was clear, accurate, and aligned with the input parameters (duration: 5 seconds, steps: 3).",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output adhered to the expected schema, with content provided in the correct format.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool did not fully meet expectations as it failed to provide progress updates during the operation.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -2526,15 +2523,14 @@
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool demonstrates long-running operations. Testing ensures progress updates and completion behavior.",
+        "justification": "This tool demonstrates long-running operations. Testing it ensures the server can handle progress updates and time-based operations.",
         "expected_output": "The tool should return progress updates and complete after 5 seconds.",
         "tool_name": "longRunningOperation",
         "tool_arguments": {
@@ -2544,85 +2540,84 @@
       },
       {
         "error_handling": {
-          "justification": "The tool call did not encounter any errors, and the output was successfully returned.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred during the tool call, so error type classification is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool call executed without any silent failures, and the output was provided as expected.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output contains a list of environment variables, which aligns with the expected functionality of the tool.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output is well-structured, complete, and provides the environment variables in a readable JSON format.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output adheres to the expected schema, providing the environment variables in a structured JSON format.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool call met all expectations by returning the environment variables as required without any issues.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
           "content": [
             {
               "type": "text",
-              "text": "{\n  \"NODE\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin/node\",\n  \"INIT_CWD\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"TERM\": \"xterm-256color\",\n  \"SHELL\": \"/bin/zsh\",\n  \"npm_config_global_prefix\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0\",\n  \"COLOR\": \"0\",\n  \"npm_config_noproxy\": \"\",\n  \"npm_config_local_prefix\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"USER\": \"tylerpayne\",\n  \"npm_config_globalconfig\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/etc/npmrc\",\n  \"__CF_USER_TEXT_ENCODING\": \"0x1F5:0x0:0x0\",\n  \"npm_execpath\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/bin/npm-cli.js\",\n  \"PATH\": \"/Users/tylerpayne/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin:/Users/tylerpayne/Local/microsoft/mcp-interviewer/node_modules/.bin:/Users/tylerpayne/Local/microsoft/node_modules/.bin:/Users/tylerpayne/Local/node_modules/.bin:/Users/tylerpayne/node_modules/.bin:/Users/node_modules/.bin:/node_modules/.bin:/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/Users/tylerpayne/Local/microsoft/mcp-interviewer/.venv/bin:/Users/tylerpayne/Local/microsoft/mcp-interviewer/.venv/bin:/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/tylerpayne/bin:/Users/tylerpayne/.local/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Users/tylerpayne/Library/pnpm:/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/tylerpayne/.vscode/extensions/ms-python.debugpy-2025.10.0-darwin-arm64/bundled/scripts/noConfigScripts:/Users/tylerpayne/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand\",\n  \"npm_package_json\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer/package.json\",\n  \"npm_config_userconfig\": \"/Users/tylerpayne/.npmrc\",\n  \"npm_config_init_module\": \"/Users/tylerpayne/.npm-init.js\",\n  \"PWD\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"npm_command\": \"exec\",\n  \"npm_lifecycle_event\": \"npx\",\n  \"EDITOR\": \"vi\",\n  \"npm_config_npm_version\": \"10.9.2\",\n  \"npm_config_node_gyp\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js\",\n  \"npm_config_yes\": \"true\",\n  \"SHLVL\": \"1\",\n  \"HOME\": \"/Users/tylerpayne\",\n  \"npm_config_cache\": \"/Users/tylerpayne/.npm\",\n  \"LOGNAME\": \"tylerpayne\",\n  \"npm_lifecycle_script\": \"mcp-server-everything\",\n  \"npm_config_user_agent\": \"npm/10.9.2 node/v22.16.0 darwin arm64 workspaces/false\",\n  \"npm_node_execpath\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin/node\",\n  \"npm_config_prefix\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0\",\n  \"_\": \"/Users/tylerpayne/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin/mcp-server-everything\"\n}",
+              "text": "{\n  \"NODE\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin/node\",\n  \"INIT_CWD\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"TERM\": \"xterm-256color\",\n  \"SHELL\": \"/bin/zsh\",\n  \"npm_config_global_prefix\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0\",\n  \"COLOR\": \"0\",\n  \"npm_config_noproxy\": \"\",\n  \"npm_config_local_prefix\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"USER\": \"tylerpayne\",\n  \"npm_config_globalconfig\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/etc/npmrc\",\n  \"__CF_USER_TEXT_ENCODING\": \"0x1F5:0x0:0x0\",\n  \"npm_execpath\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/bin/npm-cli.js\",\n  \"PATH\": \"/Users/tylerpayne/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin:/Users/tylerpayne/Local/microsoft/mcp-interviewer/node_modules/.bin:/Users/tylerpayne/Local/microsoft/node_modules/.bin:/Users/tylerpayne/Local/node_modules/.bin:/Users/tylerpayne/node_modules/.bin:/Users/node_modules/.bin:/node_modules/.bin:/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/Users/tylerpayne/Local/microsoft/mcp-interviewer/.venv/bin:/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/tylerpayne/bin:/Users/tylerpayne/.local/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Users/tylerpayne/Library/pnpm:/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/tylerpayne/.vscode/extensions/ms-python.debugpy-2025.10.0-darwin-arm64/bundled/scripts/noConfigScripts:/Users/tylerpayne/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand\",\n  \"npm_package_json\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer/package.json\",\n  \"npm_config_userconfig\": \"/Users/tylerpayne/.npmrc\",\n  \"npm_config_init_module\": \"/Users/tylerpayne/.npm-init.js\",\n  \"PWD\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"npm_command\": \"exec\",\n  \"npm_lifecycle_event\": \"npx\",\n  \"EDITOR\": \"vi\",\n  \"npm_config_npm_version\": \"10.9.2\",\n  \"npm_config_node_gyp\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js\",\n  \"npm_config_yes\": \"true\",\n  \"SHLVL\": \"1\",\n  \"HOME\": \"/Users/tylerpayne\",\n  \"npm_config_cache\": \"/Users/tylerpayne/.npm\",\n  \"LOGNAME\": \"tylerpayne\",\n  \"npm_lifecycle_script\": \"mcp-server-everything\",\n  \"npm_config_user_agent\": \"npm/10.9.2 node/v22.16.0 darwin arm64 workspaces/false\",\n  \"npm_node_execpath\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin/node\",\n  \"npm_config_prefix\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0\",\n  \"_\": \"/Users/tylerpayne/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin/mcp-server-everything\"\n}",
               "annotations": null,
               "meta": null
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool is used to debug the server's environment. Testing ensures it correctly retrieves and displays environment variables.",
+        "justification": "This tool is useful for debugging the server's environment. Testing it ensures the server can access and return environment variables.",
         "expected_output": "The tool should return a list of environment variables.",
         "tool_name": "printEnv",
         "tool_arguments": {}
       },
       {
         "error_handling": {
-          "justification": "The tool call did not produce any errors, as indicated by isError=False.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred, so no specific error type is applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool explicitly indicated no errors occurred, and there is no evidence of silent failure.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The actual output ('LLM sampling result: Dummy content') is not relevant to the input prompt ('What is the capital of France?').",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output does not provide a meaningful or accurate response to the input prompt. It is generic and unrelated to the expected answer.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output adheres to the expected schema, with content provided in the correct structure.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool's output does not meet the expectations, as it fails to provide the correct or relevant answer to the input prompt.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -2635,50 +2630,49 @@
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 1,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Testing the LLM sampling tool ensures it generates responses based on the given prompt.",
-        "expected_output": "The tool should return a response like 'The capital of France is Paris.'",
+        "justification": "Testing the LLM sampling tool ensures the server can interact with the LLM and generate responses based on prompts.",
+        "expected_output": "The tool should return a response such as 'The capital of France is Paris.'",
         "tool_name": "sampleLLM",
         "tool_arguments": {
           "prompt": "What is the capital of France?",
-          "maxTokens": 10
+          "maxTokens": 50
         }
       },
       {
         "error_handling": {
-          "justification": "The tool call did not produce any errors, and the isError flag is set to false.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred during the tool call, so error type evaluation is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool call explicitly returned output without any indication of silent failure.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output includes the expected MCP_TINY_IMAGE along with relevant text content describing the image.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output contains a valid image encoded in base64 format and descriptive text, meeting quality expectations.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output adheres to the expected schema, including meta, content, and structuredContent fields.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool call successfully returned the expected MCP_TINY_IMAGE along with appropriate descriptive text, fulfilling the requirements.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -2704,47 +2698,46 @@
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool retrieves a predefined image. Testing ensures the image is returned correctly.",
+        "justification": "This tool returns a predefined image. Testing it ensures the server can handle binary or image data.",
         "expected_output": "The tool should return the MCP_TINY_IMAGE.",
         "tool_name": "getTinyImage",
         "tool_arguments": {}
       },
       {
         "error_handling": {
-          "justification": "The tool call did not produce any errors, and the isError flag is set to false.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred during the tool call, so error type evaluation is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool call explicitly returned content and did not fail silently.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output includes a success message and an image, which aligns with the expected output based on the input parameters.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The success message is clear and the image is provided in a valid format (PNG). Both components meet quality expectations.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output adheres to the expected schema, with properly structured text and image content, including annotations and metadata.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool call meets all expectations by providing the correct success message and an example image as specified in the input parameters.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -2774,15 +2767,14 @@
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Testing this tool ensures it correctly generates annotated messages with optional images.",
+        "justification": "This tool demonstrates annotations. Testing it ensures the server can handle metadata and optional image inclusion.",
         "expected_output": "The tool should return a success message with an example image.",
         "tool_name": "annotatedMessage",
         "tool_arguments": {
@@ -2792,32 +2784,32 @@
       },
       {
         "error_handling": {
-          "justification": "The tool call did not produce any errors, and the 'isError' flag is set to False.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred during the tool call, so error type classification is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool call explicitly returned content and did not fail silently.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output is relevant to the input parameters, as it provides a reference for resource ID 42, including a URI and additional context.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output includes detailed and well-structured information, such as a URI, MIME type, and base64-encoded blob, which are appropriate for the requested resource reference.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output adheres to the expected schema, including the use of 'meta', 'content', and 'structuredContent' fields, and the data types are consistent with the schema.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool call meets the expectations by successfully returning a reference for resource ID 42, as specified in the task.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -2848,15 +2840,14 @@
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool retrieves a resource reference. Testing ensures it handles valid resource IDs correctly.",
+        "justification": "This tool provides resource references. Testing it ensures the server can handle resource lookups within the valid range.",
         "expected_output": "The tool should return a reference for resource ID 42.",
         "tool_name": "getResourceReference",
         "tool_arguments": {
@@ -2865,32 +2856,32 @@
       },
       {
         "error_handling": {
-          "justification": "The tool did not return the expected error message for an out-of-range resource ID.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No error was returned, so the error type could not be determined.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool failed silently by returning no output instead of an error message.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output was irrelevant as it did not address the expected error condition.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "No output was provided, so the quality of the output cannot be assessed.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The tool did not return any output, which violates the expected schema for error handling.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool did not meet expectations as it failed to handle the out-of-range resource ID appropriately.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": null,
         "exception": "[\n  {\n    \"code\": \"too_big\",\n    \"maximum\": 100,\n    \"type\": \"number\",\n    \"inclusive\": true,\n    \"exact\": false,\n    \"message\": \"Number must be less than or equal to 100\",\n    \"path\": [\n      \"resourceId\"\n    ]\n  }\n]",
@@ -2907,32 +2898,32 @@
       },
       {
         "error_handling": {
-          "justification": "The tool handled the user cancellation gracefully by providing a clear message indicating the dialog was cancelled.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No specific error occurred; the user explicitly cancelled the elicitation dialog.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool provided explicit feedback about the cancellation, ensuring no silent failure occurred.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output did not meet the expected behavior of prompting the user for their favorite color, number, and pets. Instead, it reported a cancellation.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output did not fulfill the expected elicitation task, and the content provided was not aligned with the intended functionality.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output adhered to the expected schema structure, including meta and content fields.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool did not meet the expectations of prompting the user for their favorite color, number, and pets due to the cancellation.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -2951,47 +2942,46 @@
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 1,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool demonstrates elicitation. Testing ensures it correctly prompts the user for input.",
+        "justification": "This tool demonstrates elicitation. Testing it ensures the server can handle interactive user input scenarios.",
         "expected_output": "The tool should prompt the user for their favorite color, number, and pets.",
         "tool_name": "startElicitation",
         "tool_arguments": {}
       },
       {
         "error_handling": {
-          "justification": "The tool call did not encounter any errors, and the isError flag is set to False.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred during the tool call, so error type classification is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool call explicitly indicated no errors, and the output aligns with the expected behavior.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output is relevant to the input parameters, providing 5 resource links as requested.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output includes a clear description, valid URIs, and appropriate metadata for each resource link. The content is well-structured and informative.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output adheres to the expected schema, including the correct structure for TextContent and ResourceLink objects.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool call met the expectations by returning exactly 5 resource links as specified in the input parameters.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -3059,15 +3049,14 @@
             }
           ],
           "structuredContent": null,
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool retrieves multiple resource links. Testing ensures it handles valid counts correctly.",
+        "justification": "This tool returns multiple resource links. Testing it ensures the server can handle requests for multiple resources.",
         "expected_output": "The tool should return 5 resource links.",
         "tool_name": "getResourceLinks",
         "tool_arguments": {
@@ -3076,35 +3065,35 @@
       },
       {
         "error_handling": {
-          "justification": "The tool did not return an error as expected when the count parameter was out of range.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "The expected error type for an out-of-range parameter is a 'Bad Request', but no error was returned.",
-          "score": "Bad Request"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool silently failed by returning 'None' instead of an appropriate error message.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output was not relevant to the input parameters, as it did not provide the expected error message.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output quality is poor because it did not meet the expected behavior of returning an error for an invalid input.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The output did not comply with the expected schema, as it returned 'None' instead of an error object.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool did not meet expectations because it failed to handle the invalid input appropriately and did not return the expected error.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": null,
-        "exception": "[\n  {\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"type\": \"number\",\n    \"inclusive\": true,\n    \"exact\": false,\n    \"message\": \"Number must be greater than or equal to 1\",\n    \"path\": [\n      \"count\"\n    ]\n  }\n]",
+        "exception": "[\n  {\n    \"code\": \"too_big\",\n    \"maximum\": 10,\n    \"type\": \"number\",\n    \"inclusive\": true,\n    \"exact\": false,\n    \"message\": \"Number must be less than or equal to 10\",\n    \"path\": [\n      \"count\"\n    ]\n  }\n]",
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
@@ -3113,37 +3102,37 @@
         "expected_output": "The tool should return an error indicating the count is out of range.",
         "tool_name": "getResourceLinks",
         "tool_arguments": {
-          "count": 0
+          "count": 11
         }
       },
       {
         "error_handling": {
-          "justification": "The tool call did not produce any errors, as indicated by isError=False.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "No errors occurred, so error type classification is not applicable.",
+          "justification": "No score generated",
           "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool call explicitly indicated no errors, ensuring no silent failures occurred.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output is directly relevant to the input parameters, providing weather data for New York as requested.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "The output includes all expected fields (temperature, conditions, humidity) with appropriate values.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The structuredContent output adheres to the expected schema for weather data.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool call met all expectations by providing accurate, relevant, and well-structured weather data for New York.",
-          "score": "pass"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": {
           "meta": null,
@@ -3160,16 +3149,15 @@
             "conditions": "Partly cloudy",
             "humidity": 65
           },
-          "isError": false,
-          "meta": null
+          "isError": false
         },
         "exception": null,
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool returns structured content. Testing ensures it retrieves weather data for a valid location.",
-        "expected_output": "The tool should return structured weather data for New York, including temperature, conditions, and humidity.",
+        "justification": "This tool returns structured content. Testing it ensures the server can handle structured data and validate output against the schema.",
+        "expected_output": "The tool should return weather data for New York, including temperature, conditions, and humidity.",
         "tool_name": "structuredContent",
         "tool_arguments": {
           "location": "New York"
@@ -3177,32 +3165,32 @@
       },
       {
         "error_handling": {
-          "justification": "The tool did not return an error as expected when provided with an invalid location parameter.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "error_type": {
-          "justification": "The invalid location parameter should have triggered a 'Bad Request' error, but no error was returned.",
-          "score": "Bad Request"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "no_silent_error": {
-          "justification": "The tool failed silently by not returning any output or error message.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_relevance": {
-          "justification": "The output was irrelevant as no response was provided, which does not align with the expected behavior of returning an error.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "output_quality": {
-          "justification": "No output was provided, so the quality of the output cannot be assessed.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "schema_compliance": {
-          "justification": "The tool did not return any output, which violates the expected schema for error handling.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "meets_expectations": {
-          "justification": "The tool did not meet expectations as it failed to handle the invalid input appropriately and did not return the expected error.",
-          "score": "fail"
+          "justification": "No score generated",
+          "score": "N/A"
         },
         "tool_output": null,
         "exception": "[\n  {\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"type\": \"string\",\n    \"inclusive\": true,\n    \"exact\": false,\n    \"message\": \"String must contain at least 1 character(s)\",\n    \"path\": [\n      \"location\"\n    ]\n  }\n]",

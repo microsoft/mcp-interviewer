@@ -20,8 +20,8 @@ async def amain(
     model: str,
     params: ServerParameters,
     out_dir=Path("."),
-    should_score_tool: bool = False,
-    should_score_functional_test: bool = False,
+    should_judge_tool: bool = False,
+    should_judge_functional_test: bool = False,
     custom_reports: list[str] | None = None,
     no_collapse: bool = False,
     selected_constraints: list[str] | None = None,
@@ -37,14 +37,14 @@ async def amain(
         model: Model name to use for evaluation (e.g., "gpt-4")
         params: ServerParameters for the MCP server to evaluate
         out_dir: Directory to save output files (default: current directory)
-        should_score_tool: Whether to perform expensive LLM scoring of tools (default: False)
-        should_score_functional_test: Whether to perform expensive LLM scoring of functional tests (default: False)
+        should_judge_tool: Whether to perform expensive experimental LLM judging of tools (default: False)
+        should_judge_functional_test: Whether to perform expensive experimental LLM judging of functional tests (default: False)
         custom_reports: List of specific report names to include
         no_collapse: If True, don't use collapsible sections in the report (default: False)
         selected_constraints: List of constraint names or codes to check (all if None)
     """
     interviewer = MCPInterviewer(
-        client, model, should_score_tool, should_score_functional_test
+        client, model, should_judge_tool, should_judge_functional_test
     )
     interview = await interviewer.interview_server(params)
 
@@ -68,8 +68,8 @@ async def amain(
     # Create report options
     options = BaseReportOptions(
         use_collapsible=not no_collapse,
-        score_tools=should_score_tool,
-        score_functional_test=should_score_functional_test,
+        score_tools=should_judge_tool,
+        score_functional_test=should_judge_functional_test,
     )
 
     # Generate the appropriate report based on options
@@ -103,8 +103,8 @@ def main(
     model: str,
     params: ServerParameters,
     out_dir=Path("."),
-    should_score_tool: bool = False,
-    should_score_functional_test: bool = False,
+    should_judge_tool: bool = False,
+    should_judge_functional_test: bool = False,
     custom_reports: list[str] | None = None,
     no_collapse: bool = False,
     selected_constraints: list[str] | None = None,
@@ -116,8 +116,8 @@ def main(
         model: Model name to use for evaluation (e.g., "gpt-4")
         params: ServerParameters for the MCP server to evaluate
         out_dir: Directory to save output files (default: current directory)
-        should_score_tool: Whether to perform expensive LLM scoring of tools (default: False)
-        should_score_functional_test: Whether to perform expensive LLM scoring of functional tests (default: False)
+        should_judge_tool: Whether to perform expensive experimental LLM judging of tools (default: False)
+        should_judge_functional_test: Whether to perform expensive experimental LLM judging of functional tests (default: False)
         custom_reports: List of specific report names to include
         no_collapse: If True, don't use collapsible sections in the report (default: False)
         selected_constraints: List of constraint names or codes to check (all if None)
@@ -128,8 +128,8 @@ def main(
             model,
             params,
             out_dir,
-            should_score_tool,
-            should_score_functional_test,
+            should_judge_tool,
+            should_judge_functional_test,
             custom_reports,
             no_collapse,
             selected_constraints,

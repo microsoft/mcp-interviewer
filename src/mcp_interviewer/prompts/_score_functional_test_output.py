@@ -11,7 +11,7 @@ from ..models import (
 from .utils import create_typed_completion
 
 
-async def score_functional_test_output(
+async def judge_functional_test_output(
     client: Client,
     model: str,
     test: FunctionalTest,

@@ -36,11 +36,11 @@ pip install git+ssh://git@github.com/microsoft/mcp-interviewer.git
 ## Common Examples
 
 ```bash
-# Basic evaluation (fast, no LLM scoring)
+# Basic evaluation (fast, no experimental LLM judging)
 mcp-interviewer --model gpt-4o "uvx mcp-server-fetch"
 
-# Full evaluation with LLM scoring (detailed but slower)
-mcp-interviewer --model gpt-4o --score "uvx mcp-server-fetch"
+# Full evaluation with experimental LLM judging (detailed but slower)
+mcp-interviewer --model gpt-4o --judge "uvx mcp-server-fetch"
 
 # Quick summary report
 mcp-interviewer --model gpt-4o --short "uvx mcp-server-fetch"

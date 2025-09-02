@@ -5,7 +5,7 @@ from ..models import Client, ToolScoreCard
 from .utils import create_typed_completion
 
 
-async def score_tool(client: Client, model: str, tool: Tool):
+async def judge_tool(client: Client, model: str, tool: Tool):
     prompt = f"""
 You are tasked with evaluating the quality of an MCP (Model Context Protocol) tool based on its name, description, and JSON schema. Analyze the provided tool information and return your evaluation as a structured JSON object.
 
