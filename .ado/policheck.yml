@@ -1,14 +1,24 @@
-- task: securedevelopmentteam.vss-secure-development-tools.build-task-policheck.PoliCheck@2  
-  displayName: 'Run PoliCheck'  
-  inputs:  
-    targetType: F  
-    optionsPE: '1|2|3|4'  
-    optionsUEPATH: '.ado\policheck_exclusions.xml'  
-    optionsRulesDBPath: '.ado\policheck_exclusions.mdb'  
+# azure-pipelines.yml
+# Manual-only pipeline on Windows
+trigger: none
+pr: none
 
-- task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2  
-  displayName: 'Policheck Break Build'  
-  inputs:  
-    GdnBreakAllTools: false  
-    GdnBreakGdnToolPoliCheck: true  
-    GdnBreakGdnToolPoliCheckSeverity: Warning  
+pool:
+  vmImage: 'windows-latest'   # Microsoft-hosted Windows image
+
+steps:
+  - checkout: self
+  - task: securedevelopmentteam.vss-secure-development-tools.build-task-policheck.PoliCheck@2  
+    displayName: 'Run PoliCheck'  
+    inputs:  
+      targetType: F  
+      optionsPE: '1|2|3|4'  
+      optionsUEPATH: '.ado\policheck_exclusions.xml'  
+      optionsRulesDBPath: '.ado\policheck_exclusions.mdb'  
+
+  - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2  
+    displayName: 'Policheck Break Build'  
+    inputs:  
+      GdnBreakAllTools: false  
+      GdnBreakGdnToolPoliCheck: true  
+      GdnBreakGdnToolPoliCheckSeverity: Warning  
