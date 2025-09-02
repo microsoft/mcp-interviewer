@@ -1,7 +1,7 @@
 name: Build
 
 permissions:
-  contents: write # Needs to write the bumped versions
+  contents: write
 
 on:
   workflow_dispatch:
@@ -9,12 +9,18 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+        
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
 
       - name: Install uv
         uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: uv sync --group dev --all-extras
@@ -24,9 +30,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11", "3.12", "3.13"]
     
     steps:
     - name: Checkout repository
@@ -38,13 +41,8 @@ jobs:
     - name: Install uv
       uses: astral-sh/setup-uv@v6
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.12
     
-    - name: Install the package
-      run: |
-        uv venv
-        uv sync --locked --all-extras --all-groups
-
     - name: Build package
       run: |
         uv build
@@ -52,64 +50,50 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: dist-python-${{ matrix.python-version }}
+        name: dist-python
         path: dist/*
-        retention-days: 7
-    
-  bump-version:
-    needs: build
+
+  tag-and-release:
+    needs: [check, build]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v5
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
         fetch-depth: 0
-    
+        
     - name: Install uv
       uses: astral-sh/setup-uv@v6
-
+      with:
+        python-version: 3.12
+    
     - name: Configure Git
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-    
-    - name: Get current version and create tag
-      id: get_version
+
+    - name: Generate SHA-256 checksums
+      shell: bash
       run: |
-        CURRENT_VERSION=$(grep -Po '(?<=^version = ")[^"]*' pyproject.toml)
-        echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-        echo "Current version: $CURRENT_VERSION"
-        
-        # Tag the current version before bumping
-        git tag "v$CURRENT_VERSION" || echo "Tag v$CURRENT_VERSION already exists"
-        git push origin "v$CURRENT_VERSION" || echo "Tag v$CURRENT_VERSION already pushed"
+        shopt -s nullglob
+        sha256sum dist/* > CHECKSUMS
     
-    - name: Calculate new version
-      id: calc_version
+    - name: Tag & Push
       run: |
-        CURRENT_VERSION="${{ steps.get_version.outputs.current_version }}"
-        
-        IFS='.' read -r major minor patch <<< "$CURRENT_VERSION"
-        patch=$((patch + 1))
-        
-        NEW_VERSION="${major}.${minor}.${patch}"
-        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-        echo "New version: $NEW_VERSION"
+        VERSION=$(uv version --short)
+        git add CHECKSUMS
+        git commit -m "chore: Add release checksums for v$VERSION"
+        git tag "v$VERSION"
+        git push origin main "v$VERSION"
+
+    - name: Release to PyPi
+      run: "echo 'TODO: RELEASE TO PYPI'"
     
-    - name: Update pyproject.toml
+    - name: Bump version
       run: |
-        sed -i 's/^version = ".*"/version = "${{ steps.calc_version.outputs.new_version }}"/' pyproject.toml
-    
-    - name: Update __init__.py
-      run: |
-        sed -i 's/^__version__ = ".*"/__version__ = "${{ steps.calc_version.outputs.new_version }}"/' src/mcp_interviewer/__init__.py
-    
-    - name: Commit version bump
-      run: |
-        uv lock
-        git add pyproject.toml uv.lock src/mcp_interviewer/__init__.py
-        git commit -m "chore: bump version to ${{ steps.calc_version.outputs.new_version }}"
+        NEW_VERSION=$(uv version --short --bump patch)
+        echo "__version__ = \"$NEW_VERSION\"" > src/mcp_interviewer/_version.py
+        git add pyproject.toml src/mcp_interviewer/_version.py
+        git commit -m "chore: bump version to $NEW_VERSION"
         git push origin main
