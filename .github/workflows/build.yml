@@ -29,6 +29,7 @@ jobs:
         run: uv run poe check
 
   build:
+    needs: check
     runs-on: ubuntu-latest
     
     steps:
