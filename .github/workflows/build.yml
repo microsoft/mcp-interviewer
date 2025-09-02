@@ -80,8 +80,8 @@ jobs:
     
     - name: Bump version
       run: |
-        NEW_VERSION=$(uv version --frozen --short --bump patch)
+        NEW_VERSION=$(uv version --no-sync --short --bump patch)
         echo "__version__ = \"$NEW_VERSION\"" > src/mcp_interviewer/_version.py
-        git add pyproject.toml src/mcp_interviewer/_version.py
+        git add pyproject.toml uv.lock src/mcp_interviewer/_version.py
         git commit -m "chore: bump version to $NEW_VERSION"
         git push origin main
