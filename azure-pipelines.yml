@@ -1,7 +1,7 @@
 # azure-pipelines.yml
 
-# Manual-only pipeline on Windows
-trigger: none
+trigger:
+  branches: { include: ["main"] }
 pr: none
 
 pool:
