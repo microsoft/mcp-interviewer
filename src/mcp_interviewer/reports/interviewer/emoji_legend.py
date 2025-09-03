@@ -23,8 +23,8 @@ class EmojiLegendReport(BaseReport):
     def _build(self):
         """Build the emoji legend section."""
         self.add_title("Legend", 2)
-        self.add_text("- ✅: Feature meets requirements")
-        self.add_text("- ❌: Feature does not meet requirements")
+        # self.add_text("- ✅: Feature meets requirements")
+        # self.add_text("- ❌: Feature does not meet requirements")
         self.add_text("- ⚪: Feature not applicable or not tested")
         self.add_text("- 🤖: AI-generated content")
         # self.add_text("- 🧮: Computed metrics and data")
