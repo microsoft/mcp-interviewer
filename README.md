@@ -1,18 +1,65 @@
 # mcp-interviewer
 
-LLM-driven testing for MCP servers: generates functional tests, executes tool calls, and validates server design best practices.
+The MCP Interviewer is a Python CLI tool that helps you ***catch MCP server issues before your agents do.***
 
-The MCP Interviewer generates a Markdown report capturing the following information:
+It does this via the following features:
 
-- Server capabilities (e.g resource subscriptions, prompt lists changing)
-- Schemas of server tools, resources, resource templates, and prompts
-- Schema statistics (e.g. tool name lengths, tool input schema depths)
-- LLM-generated functional test plan and outputs
-- Functional test output statistics (e.g. tool call result lengths)
-- Warnings and errors for common constraints (e.g. context window lengths, number of tools)
-- LLM-as-a-judge evaluation of functional test outputs
-- LLM-as-a-judge evaluation of static tool schemas
+### 🔎 Constraint checking
 
+The MCP Interviewer helps you make sure you aren't violating providers' hard constraints and warns you when you're not following recommended guidance.
+
+<details>
+
+<summary>View all supported constraints</summary>
+
+Use `--constraints [CODE ...]` to customize output.
+
+| Constraint Code | Description |
+|------------|-------------|
+| `OTC` | OpenAI tool count limit (≤128 tools) |
+| `ONL` | OpenAI name length (≤64 chars) |
+| `ONP` | OpenAI name pattern (a-zA-Z0-9_-) |
+| `OTL` | OpenAI token length limit |
+| `OA` | All OpenAI constraints |
+
+</details>
+
+### 🛠️ Functional testing
+
+MCP servers are intended to be used by LLM agents, so we test them with an LLM agent. Using your specified LLM, the interviewer generates a test plan based on the MCP server's capabilities and then executes that plan (e.g. by calling tools), collecting statistics about observed tool behavior.
+
+### 🧪 LLM evaluation
+
+***Note: this is an experimental feature. All LLM generated evaluations should be manually inspected for errors.***
+
+The interviewer can also use your specified LLM to provide structured and natural language evaluations of the server's features.
+
+
+### 📋 Reports
+
+The interviewer generates a Markdown report (and accompanying `.json` file with raw data) summarizing the interview results.
+
+<details>
+<summary>View all supported reports</summary>
+
+Use `--reports [CODE ...]` to customize output.
+
+| Report Code | Description |
+|-------------|-------------|
+| `II` | Interviewer Info (model, parameters) |
+| `SI` | Server Info (name, version, capabilities) |
+| `CAP` | Capabilities (supported features) |
+| `TS` | Tool Statistics (counts, patterns) |
+| `TCS` | Tool Call Statistics (performance metrics) |
+| `FT` | Functional Tests (tool execution results) |
+| `CV` | Constraint Violations |
+| `T` | Tools |
+| `R` | Resources |
+| `RT` | Resource Templates |
+| `P` | Prompts |
+
+
+</details>
 
 
 ## Quick Start
@@ -25,7 +72,15 @@ uvx --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git" mcp-intervie
 
 Generates `mcp-interview.md` and `mcp-interview.json` with a full evaluation report.
 
-See an example report for the "@modelcontextprotocol/server-everything" reference server [here](./mcp-interview.md).
+## Example
+
+To interview the MCP reference server, you can run the following command:
+
+```bash
+mcp-interviewer --model gpt-4o "npx -y @@modelcontextprotocol/server-everything"
+```
+
+Which will generate a report like (this)[./mcp-interview.md].
 
 ## Installation
 
@@ -33,55 +88,28 @@ See an example report for the "@modelcontextprotocol/server-everything" referenc
 pip install git+ssh://git@github.com/microsoft/mcp-interviewer.git
 ```
 
-## Common Examples
+## Usage
+
+### CLI
 
 ```bash
-# Basic evaluation (fast, no experimental LLM judging)
+# Constraint checking, functional testing, default report generation
 mcp-interviewer --model gpt-4o "uvx mcp-server-fetch"
 
-# Full evaluation with experimental LLM judging (detailed but slower)
+# Constraint checking, functional testing, LLM evaluation, default report generation
 mcp-interviewer --model gpt-4o --judge "uvx mcp-server-fetch"
 
-# Quick summary report
-mcp-interviewer --model gpt-4o --short "uvx mcp-server-fetch"
-
-# Custom report with specific sections
+# Constraint checking, functional testing, custom report generation
 mcp-interviewer --model gpt-4o --reports SI TS FT CV "uvx mcp-server-fetch"
 
-# Check only specific constraints
+# Custom constraint checking, functional testing, report generation
 mcp-interviewer --model gpt-4o --select OTC ONL "uvx mcp-server-fetch"
 
 # Test remote servers
 mcp-interviewer --model gpt-4o "https://my-mcp-server.com/sse"
 ```
 
-## Report Sections
-
-Use `--reports` to customize output. Available sections:
-
-- `II` - Interviewer Info (model, parameters)
-- `SI` - Server Info (name, version, capabilities)  
-- `CAP` - Capabilities (supported features)
-- `TS` - Tool Statistics (counts, patterns)
-- `TCS` - Tool Call Statistics (performance metrics)
-- `FT` - Functional Tests (tool execution results)
-- `CV` - Constraint Violations
-- `T` - Tools
-- `R` - Resources
-- `RT` - Resource Templates
-- `P` - Prompts
-
-## Constraint Validation
-
-Use `--select` to check specific constraints:
-
-- `OTC` - OpenAI tool count limit (≤128 tools)
-- `ONL` - OpenAI name length (≤64 chars)
-- `ONP` - OpenAI name pattern (a-zA-Z0-9_-)
-- `OTL` - OpenAI token length limit
-- `OA` - All OpenAI constraints
-
-## Python API
+### Python
 
 ```python
 from openai import OpenAI

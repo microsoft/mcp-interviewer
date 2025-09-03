@@ -2317,7 +2317,7 @@
     "elicitation_requests": 1,
     "list_roots_requests": 0,
     "logging_requests": 0,
-    "plan": "This testing plan systematically evaluates the functionality, dependencies, and quality of the MCP server tools. The plan starts with simpler tools to establish a baseline and progresses to more complex tools, ensuring dependencies are respected. Each tool is tested with realistic arguments, edge cases, and expected outputs to verify correctness and robustness.",
+    "plan": "This testing plan systematically evaluates the functionality, dependencies, and quality of the MCP server tools. The plan starts with simpler tools to establish a baseline, progresses to tools with dependencies or more complex functionality, and includes edge cases and boundary conditions to ensure robustness. Each step includes realistic arguments, expected outputs, and justifications for the test.",
     "steps": [
       {
         "error_handling": {
@@ -2366,7 +2366,7 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "The echo tool is foundational and simple. Testing it first ensures the server can handle basic input and output correctly.",
+        "justification": "The echo tool is foundational and has no dependencies. Testing it first ensures basic functionality of the server.",
         "expected_output": "The tool should return the input message: 'Hello, MCP!'",
         "tool_name": "echo",
         "tool_arguments": {
@@ -2420,7 +2420,7 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "The add tool is another foundational tool. Testing it ensures basic arithmetic operations work as expected.",
+        "justification": "The add tool is simple and independent. Testing it ensures basic arithmetic operations work correctly.",
         "expected_output": "The tool should return the sum: 15",
         "tool_name": "add",
         "tool_arguments": {
@@ -2462,7 +2462,7 @@
           "content": [
             {
               "type": "text",
-              "text": "The sum of -3 and 7 is 4.",
+              "text": "The sum of -5 and 5 is 0.",
               "annotations": null,
               "meta": null
             }
@@ -2476,11 +2476,11 @@
         "list_roots_requests": 0,
         "logging_requests": 0,
         "justification": "Testing the add tool with negative numbers ensures it handles edge cases correctly.",
-        "expected_output": "The tool should return the sum: 4",
+        "expected_output": "The tool should return the sum: 0",
         "tool_name": "add",
         "tool_arguments": {
-          "a": -3,
-          "b": 7
+          "a": -5,
+          "b": 5
         }
       },
       {
@@ -2530,7 +2530,7 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool demonstrates long-running operations. Testing it ensures the server can handle progress updates and time-based operations.",
+        "justification": "This tool demonstrates long-running operations. Testing it ensures the server handles progress updates correctly.",
         "expected_output": "The tool should return progress updates and complete after 5 seconds.",
         "tool_name": "longRunningOperation",
         "tool_arguments": {
@@ -2585,7 +2585,7 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool is useful for debugging the server's environment. Testing it ensures the server can access and return environment variables.",
+        "justification": "This tool is useful for debugging the server's environment. Testing it ensures the server can access and display environment variables.",
         "expected_output": "The tool should return a list of environment variables.",
         "tool_name": "printEnv",
         "tool_arguments": {}
@@ -2637,12 +2637,12 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Testing the LLM sampling tool ensures the server can interact with the LLM and generate responses based on prompts.",
-        "expected_output": "The tool should return a response such as 'The capital of France is Paris.'",
+        "justification": "This tool interacts with an LLM. Testing it ensures the server can generate responses based on prompts.",
+        "expected_output": "The tool should return a response like 'The capital of France is Paris.'",
         "tool_name": "sampleLLM",
         "tool_arguments": {
           "prompt": "What is the capital of France?",
-          "maxTokens": 50
+          "maxTokens": 10
         }
       },
       {
@@ -2705,7 +2705,7 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool returns a predefined image. Testing it ensures the server can handle binary or image data.",
+        "justification": "This tool retrieves a predefined image. Testing it ensures the server can handle binary data or image retrieval.",
         "expected_output": "The tool should return the MCP_TINY_IMAGE.",
         "tool_name": "getTinyImage",
         "tool_arguments": {}
@@ -2847,112 +2847,12 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool provides resource references. Testing it ensures the server can handle resource lookups within the valid range.",
-        "expected_output": "The tool should return a reference for resource ID 42.",
+        "justification": "This tool retrieves a resource reference. Testing it ensures the server can handle resource lookups.",
+        "expected_output": "The tool should return a reference to resource ID 42.",
         "tool_name": "getResourceReference",
         "tool_arguments": {
           "resourceId": 42
         }
-      },
-      {
-        "error_handling": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "error_type": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "no_silent_error": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "output_relevance": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "output_quality": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "schema_compliance": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "meets_expectations": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "tool_output": null,
-        "exception": "[\n  {\n    \"code\": \"too_big\",\n    \"maximum\": 100,\n    \"type\": \"number\",\n    \"inclusive\": true,\n    \"exact\": false,\n    \"message\": \"Number must be less than or equal to 100\",\n    \"path\": [\n      \"resourceId\"\n    ]\n  }\n]",
-        "sampling_requests": 0,
-        "elicitation_requests": 0,
-        "list_roots_requests": 0,
-        "logging_requests": 0,
-        "justification": "Testing with an out-of-range resource ID ensures the tool handles invalid inputs gracefully.",
-        "expected_output": "The tool should return an error indicating the resource ID is out of range.",
-        "tool_name": "getResourceReference",
-        "tool_arguments": {
-          "resourceId": 101
-        }
-      },
-      {
-        "error_handling": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "error_type": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "no_silent_error": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "output_relevance": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "output_quality": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "schema_compliance": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "meets_expectations": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "tool_output": {
-          "meta": null,
-          "content": [
-            {
-              "type": "text",
-              "text": "⚠️ User cancelled the elicitation dialog.",
-              "annotations": null,
-              "meta": null
-            },
-            {
-              "type": "text",
-              "text": "\nRaw result: {\n  \"action\": \"cancel\"\n}",
-              "annotations": null,
-              "meta": null
-            }
-          ],
-          "structuredContent": null,
-          "isError": false
-        },
-        "exception": null,
-        "sampling_requests": 0,
-        "elicitation_requests": 1,
-        "list_roots_requests": 0,
-        "logging_requests": 0,
-        "justification": "This tool demonstrates elicitation. Testing it ensures the server can handle interactive user input scenarios.",
-        "expected_output": "The tool should prompt the user for their favorite color, number, and pets.",
-        "tool_name": "startElicitation",
-        "tool_arguments": {}
       },
       {
         "error_handling": {
@@ -3056,7 +2956,7 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool returns multiple resource links. Testing it ensures the server can handle requests for multiple resources.",
+        "justification": "This tool retrieves multiple resource links. Testing it ensures the server can handle multiple resource lookups.",
         "expected_output": "The tool should return 5 resource links.",
         "tool_name": "getResourceLinks",
         "tool_arguments": {
@@ -3092,18 +2992,34 @@
           "justification": "No score generated",
           "score": "N/A"
         },
-        "tool_output": null,
-        "exception": "[\n  {\n    \"code\": \"too_big\",\n    \"maximum\": 10,\n    \"type\": \"number\",\n    \"inclusive\": true,\n    \"exact\": false,\n    \"message\": \"Number must be less than or equal to 10\",\n    \"path\": [\n      \"count\"\n    ]\n  }\n]",
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "⚠️ User cancelled the elicitation dialog.",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "text",
+              "text": "\nRaw result: {\n  \"action\": \"cancel\"\n}",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
         "sampling_requests": 0,
-        "elicitation_requests": 0,
+        "elicitation_requests": 1,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Testing with an out-of-range count ensures the tool handles invalid inputs gracefully.",
-        "expected_output": "The tool should return an error indicating the count is out of range.",
-        "tool_name": "getResourceLinks",
-        "tool_arguments": {
-          "count": 11
-        }
+        "justification": "This tool demonstrates elicitation. Testing it ensures the server can interactively request and process user input.",
+        "expected_output": "The tool should prompt the user for their favorite color, number, and pets.",
+        "tool_name": "startElicitation",
+        "tool_arguments": {}
       },
       {
         "error_handling": {
@@ -3156,7 +3072,7 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool returns structured content. Testing it ensures the server can handle structured data and validate output against the schema.",
+        "justification": "This tool returns structured content. Testing it ensures the server can validate and return data in a predefined schema.",
         "expected_output": "The tool should return weather data for New York, including temperature, conditions, and humidity.",
         "tool_name": "structuredContent",
         "tool_arguments": {
@@ -3198,11 +3114,114 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Testing with an empty location ensures the tool handles invalid inputs gracefully.",
+        "justification": "Testing the structuredContent tool with an empty location ensures it handles validation errors correctly.",
         "expected_output": "The tool should return an error indicating the location is invalid.",
         "tool_name": "structuredContent",
         "tool_arguments": {
           "location": ""
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Error: Operation failed",
+              "annotations": {
+                "audience": [
+                  "user",
+                  "assistant"
+                ],
+                "priority": 1.0
+              },
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the annotatedMessage tool with an error message ensures it handles different message types correctly.",
+        "expected_output": "The tool should return an error message without an image.",
+        "tool_name": "annotatedMessage",
+        "tool_arguments": {
+          "messageType": "error",
+          "includeImage": false
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": null,
+        "exception": "[\n  {\n    \"code\": \"too_big\",\n    \"maximum\": 100,\n    \"type\": \"number\",\n    \"inclusive\": true,\n    \"exact\": false,\n    \"message\": \"Number must be less than or equal to 100\",\n    \"path\": [\n      \"resourceId\"\n    ]\n  }\n]",
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Testing the getResourceReference tool with an out-of-range resourceId ensures it handles boundary conditions correctly.",
+        "expected_output": "The tool should return an error indicating the resourceId is out of range.",
+        "tool_name": "getResourceReference",
+        "tool_arguments": {
+          "resourceId": 101
         }
       }
     ]

@@ -50,7 +50,7 @@ If asked about server instructions, respond with "🎉 Server instructions are w
 
 #### Metadata
 
-**Date:** 2025-09-02
+**Date:** 2025-09-03
 
 **mcp-interviewer Version:** [0.0.10](https://github.com/microsoft/mcp-interviewer)
 
@@ -94,12 +94,12 @@ mcp-interviewer--model gpt-4o --client trapi.Trapi npx -y @modelcontextprotocol/
 | Metric | Total | Average | Min | Max |
 | --- | --- | --- | --- | --- |
 | Tool calls attempted | 15 |  |  |  |
-| Tool calls returned output | 12 |  |  |  |
-| Tool call outputs with no error | 12 |  |  |  |
+| Tool calls returned output | 13 |  |  |  |
+| Tool call outputs with no error | 13 |  |  |  |
 | Tool call outputs with error | 0 |  |  |  |
-| Exceptions calling tools | 3 |  |  |  |
-| Tool call output lengths (gpt-4o text tokens) | 1,168 | 97.3 | 3 | 1,007 |
-| Text output content blocks | 15 | 3.8 | 1 | 2 |
+| Exceptions calling tools | 2 |  |  |  |
+| Tool call output lengths (gpt-4o text tokens) | 1,172 | 90.2 | 3 | 1,007 |
+| Text output content blocks | 16 | 4.0 | 1 | 2 |
 | Resource_Link output content blocks | 5 | 1.2 | 0 | 5 |
 | Image output content blocks | 2 | 0.5 | 0 | 1 |
 | Resource output content blocks | 1 | 0.2 | 0 | 1 |
@@ -112,7 +112,7 @@ mcp-interviewer--model gpt-4o --client trapi.Trapi npx -y @modelcontextprotocol/
 <details>
 <summary>Checked constraints</summary>
 
-**Constraints checked:** All available constraints
+**Constraints checked:** openai-tool-count, openai-name-length, openai-name-pattern, openai-token-length
 
 </details>
 
@@ -124,12 +124,14 @@ mcp-interviewer--model gpt-4o --client trapi.Trapi npx -y @modelcontextprotocol/
 
 ### Test Steps
 
-#### Step 1: echo
+#### Step 1: echo ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-echo)
+
+**Reasoning (🤖):** The echo tool is foundational and has no dependencies. Testing it first ensures basic functionality of the server.
 
 **Tool Call (🤖):**
 ```json
@@ -137,6 +139,8 @@ mcp-interviewer--model gpt-4o --client trapi.Trapi npx -y @modelcontextprotocol/
   "message": "Hello, MCP!"
 }
 ```
+**Expected Output (🤖):** The tool should return the input message: 'Hello, MCP!'
+
 **Actual Output (1 blocks):**
 
 ```
@@ -151,12 +155,14 @@ Echo: Hello, MCP!
 
 </details>
 
-#### Step 2: add
+#### Step 2: add ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-add)
+
+**Reasoning (🤖):** The add tool is simple and independent. Testing it ensures basic arithmetic operations work correctly.
 
 **Tool Call (🤖):**
 ```json
@@ -165,6 +171,8 @@ Echo: Hello, MCP!
   "b": 10
 }
 ```
+**Expected Output (🤖):** The tool should return the sum: 15
+
 **Actual Output (1 blocks):**
 
 ```
@@ -179,24 +187,28 @@ The sum of 5 and 10 is 15.
 
 </details>
 
-#### Step 3: add
+#### Step 3: add ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-add)
 
+**Reasoning (🤖):** Testing the add tool with negative numbers ensures it handles edge cases correctly.
+
 **Tool Call (🤖):**
 ```json
 {
-  "a": -3,
-  "b": 7
+  "a": -5,
+  "b": 5
 }
 ```
+**Expected Output (🤖):** The tool should return the sum: 0
+
 **Actual Output (1 blocks):**
 
 ```
-The sum of -3 and 7 is 4.
+The sum of -5 and 5 is 0.
 ```
 **Output Statistics:**
 
@@ -207,12 +219,14 @@ The sum of -3 and 7 is 4.
 
 </details>
 
-#### Step 4: longRunningOperation
+#### Step 4: longRunningOperation ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-longRunningOperation)
+
+**Reasoning (🤖):** This tool demonstrates long-running operations. Testing it ensures the server handles progress updates correctly.
 
 **Tool Call (🤖):**
 ```json
@@ -221,6 +235,8 @@ The sum of -3 and 7 is 4.
   "steps": 3
 }
 ```
+**Expected Output (🤖):** The tool should return progress updates and complete after 5 seconds.
+
 **Actual Output (1 blocks):**
 
 ```
@@ -235,17 +251,21 @@ Long running operation completed. Duration: 5 seconds, Steps: 3.
 
 </details>
 
-#### Step 5: printEnv
+#### Step 5: printEnv ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-printEnv)
 
+**Reasoning (🤖):** This tool is useful for debugging the server's environment. Testing it ensures the server can access and display environment variables.
+
 **Tool Call (🤖):**
 ```json
 {}
 ```
+**Expected Output (🤖):** The tool should return a list of environment variables.
+
 **Actual Output (1 blocks):**
 
 ```json
@@ -271,20 +291,24 @@ Long running operation completed. Duration: 5 seconds, Steps: 3.
 
 </details>
 
-#### Step 6: sampleLLM
+#### Step 6: sampleLLM ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-sampleLLM)
 
+**Reasoning (🤖):** This tool interacts with an LLM. Testing it ensures the server can generate responses based on prompts.
+
 **Tool Call (🤖):**
 ```json
 {
   "prompt": "What is the capital of France?",
-  "maxTokens": 50
+  "maxTokens": 10
 }
 ```
+**Expected Output (🤖):** The tool should return a response like 'The capital of France is Paris.'
+
 **Actual Output (1 blocks):**
 
 ```
@@ -305,17 +329,21 @@ LLM sampling result: Dummy content
 
 </details>
 
-#### Step 7: getTinyImage
+#### Step 7: getTinyImage ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-getTinyImage)
 
+**Reasoning (🤖):** This tool retrieves a predefined image. Testing it ensures the server can handle binary data or image retrieval.
+
 **Tool Call (🤖):**
 ```json
 {}
 ```
+**Expected Output (🤖):** The tool should return the MCP_TINY_IMAGE.
+
 **Actual Output (3 blocks):**
 
 ```
@@ -338,12 +366,14 @@ The image above is the MCP tiny image.
 
 </details>
 
-#### Step 8: annotatedMessage
+#### Step 8: annotatedMessage ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-annotatedMessage)
+
+**Reasoning (🤖):** This tool demonstrates annotations. Testing it ensures the server can handle metadata and optional image inclusion.
 
 **Tool Call (🤖):**
 ```json
@@ -352,6 +382,8 @@ The image above is the MCP tiny image.
   "includeImage": true
 }
 ```
+**Expected Output (🤖):** The tool should return a success message with an example image.
+
 **Actual Output (2 blocks):**
 
 ```
@@ -371,12 +403,14 @@ Operation completed successfully
 
 </details>
 
-#### Step 9: getResourceReference
+#### Step 9: getResourceReference ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-getResourceReference)
+
+**Reasoning (🤖):** This tool retrieves a resource reference. Testing it ensures the server can handle resource lookups.
 
 **Tool Call (🤖):**
 ```json
@@ -384,6 +418,8 @@ Operation completed successfully
   "resourceId": 42
 }
 ```
+**Expected Output (🤖):** The tool should return a reference to resource ID 42.
+
 **Actual Output (3 blocks):**
 
 ```
@@ -407,81 +443,14 @@ You can access this resource using the URI: test://static/resource/42
 
 </details>
 
-#### Step 10: getResourceReference
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-getResourceReference)
-
-**Tool Call (🤖):**
-```json
-{
-  "resourceId": 101
-}
-```
-**Exception:**
-```
-[
-  {
-    "code": "too_big",
-    "maximum": 100,
-    "type": "number",
-    "inclusive": true,
-    "exact": false,
-    "message": "Number must be less than or equal to 100",
-    "path": [
-      "resourceId"
-    ]
-  }
-]
-```
-
-</details>
-
-#### Step 11: startElicitation
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-startElicitation)
-
-**Tool Call (🤖):**
-```json
-{}
-```
-**Actual Output (2 blocks):**
-
-```
-⚠️ User cancelled the elicitation dialog.
-```
-```
-
-Raw result: {
-  "action": "cancel"
-}
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 22 |
-| Text blocks | 2 |
-
-**MCP Requests:**
-
-| Request Type | Count |
-| --- | --- |
-| Elicitation | 1 |
-
-</details>
-
-#### Step 12: getResourceLinks
+#### Step 10: getResourceLinks ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-getResourceLinks)
+
+**Reasoning (🤖):** This tool retrieves multiple resource links. Testing it ensures the server can handle multiple resource lookups.
 
 **Tool Call (🤖):**
 ```json
@@ -489,6 +458,8 @@ Raw result: {
   "count": 5
 }
 ```
+**Expected Output (🤖):** The tool should return 5 resource links.
+
 **Actual Output (6 blocks):**
 
 ```
@@ -529,44 +500,55 @@ Resource Link: test://static/resource/5
 
 </details>
 
-#### Step 13: getResourceLinks
+#### Step 11: startElicitation ✅
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-getResourceLinks)
+[→ View tool details](#tool-startElicitation)
+
+**Reasoning (🤖):** This tool demonstrates elicitation. Testing it ensures the server can interactively request and process user input.
 
 **Tool Call (🤖):**
 ```json
-{
-  "count": 11
+{}
+```
+**Expected Output (🤖):** The tool should prompt the user for their favorite color, number, and pets.
+
+**Actual Output (2 blocks):**
+
+```
+⚠️ User cancelled the elicitation dialog.
+```
+```
+
+Raw result: {
+  "action": "cancel"
 }
 ```
-**Exception:**
-```
-[
-  {
-    "code": "too_big",
-    "maximum": 10,
-    "type": "number",
-    "inclusive": true,
-    "exact": false,
-    "message": "Number must be less than or equal to 10",
-    "path": [
-      "count"
-    ]
-  }
-]
-```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 22 |
+| Text blocks | 2 |
+
+**MCP Requests:**
+
+| Request Type | Count |
+| --- | --- |
+| Elicitation | 1 |
 
 </details>
 
-#### Step 14: structuredContent
+#### Step 12: structuredContent ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-structuredContent)
+
+**Reasoning (🤖):** This tool returns structured content. Testing it ensures the server can validate and return data in a predefined schema.
 
 **Tool Call (🤖):**
 ```json
@@ -574,6 +556,8 @@ Resource Link: test://static/resource/5
   "location": "New York"
 }
 ```
+**Expected Output (🤖):** The tool should return weather data for New York, including temperature, conditions, and humidity.
+
 **Actual Output (1 blocks):**
 
 ```json
@@ -592,12 +576,14 @@ Resource Link: test://static/resource/5
 
 </details>
 
-#### Step 15: structuredContent
+#### Step 13: structuredContent ❌
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-structuredContent)
+
+**Reasoning (🤖):** Testing the structuredContent tool with an empty location ensures it handles validation errors correctly.
 
 **Tool Call (🤖):**
 ```json
@@ -605,6 +591,8 @@ Resource Link: test://static/resource/5
   "location": ""
 }
 ```
+**Expected Output (🤖):** The tool should return an error indicating the location is invalid.
+
 **Exception:**
 ```
 [
@@ -617,6 +605,74 @@ Resource Link: test://static/resource/5
     "message": "String must contain at least 1 character(s)",
     "path": [
       "location"
+    ]
+  }
+]
+```
+
+</details>
+
+#### Step 14: annotatedMessage ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-annotatedMessage)
+
+**Reasoning (🤖):** Testing the annotatedMessage tool with an error message ensures it handles different message types correctly.
+
+**Tool Call (🤖):**
+```json
+{
+  "messageType": "error",
+  "includeImage": false
+}
+```
+**Expected Output (🤖):** The tool should return an error message without an image.
+
+**Actual Output (1 blocks):**
+
+```
+Error: Operation failed
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 4 |
+| Text blocks | 1 |
+
+</details>
+
+#### Step 15: getResourceReference ❌
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-getResourceReference)
+
+**Reasoning (🤖):** Testing the getResourceReference tool with an out-of-range resourceId ensures it handles boundary conditions correctly.
+
+**Tool Call (🤖):**
+```json
+{
+  "resourceId": 101
+}
+```
+**Expected Output (🤖):** The tool should return an error indicating the resourceId is out of range.
+
+**Exception:**
+```
+[
+  {
+    "code": "too_big",
+    "maximum": 100,
+    "type": "number",
+    "inclusive": true,
+    "exact": false,
+    "message": "Number must be less than or equal to 100",
+    "path": [
+      "resourceId"
     ]
   }
 ]
@@ -2276,7 +2332,5 @@ Returns structured content along with an output schema for client data validatio
 
 ## Legend
 
-- ✅: Feature meets requirements
-- ❌: Feature does not meet requirements
 - ⚪: Feature not applicable or not tested
 - 🤖: AI-generated content

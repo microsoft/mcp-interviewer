@@ -62,7 +62,7 @@ def cli():
         help="Don't use collapsible sections in the report",
     )
     parser.add_argument(
-        "--select",
+        "--constraints",
         nargs="+",
         help="Specify which constraint violations to check (all enabled by default). Can use full names (e.g., openai-tool-count, openai-name-length) or shorthand codes (e.g., OTC, ONL, ONP, OTL, OA)",
     )
@@ -147,7 +147,7 @@ def cli():
         should_judge_functional_test=should_judge_functional_test,
         custom_reports=args.reports,
         no_collapse=args.no_collapse,
-        selected_constraints=args.select,
+        selected_constraints=args.constraints,
     )
 
 
