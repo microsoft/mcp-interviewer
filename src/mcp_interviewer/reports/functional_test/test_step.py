@@ -110,6 +110,12 @@ class TestStepReport(BaseReport):
         """Build the test step report."""
         # Create a collapsible section for each step
         step_title = f"Step {self.step_index + 1}: {self.step.tool_name}"
+        if self.step.exception is not None:
+            step_title += " ❌"
+        elif self.step.tool_output is not None and self.step.tool_output.isError:
+            step_title += " ⚠️"
+        else:
+            step_title += " ✅"
 
         # Add the title first
         self.add_title(step_title, 4)
@@ -131,8 +137,8 @@ class TestStepReport(BaseReport):
         self.add_blank_line()
 
         # Justification
-        if self.include_evaluations and self.step.justification:
-            self.add_text(f"**Purpose (🤖):** {self.step.justification}")
+        if self.step.justification:
+            self.add_text(f"**Reasoning (🤖):** {self.step.justification}")
             self.add_blank_line()
 
         # Tool call
@@ -140,8 +146,8 @@ class TestStepReport(BaseReport):
         self.add_code_block(json.dumps(self.step.tool_arguments, indent=2), "json")
 
         # Expected output
-        if self.include_evaluations and self.step.expected_output:
-            self.add_text(f"**Expected (🤖):** {self.step.expected_output}")
+        if self.step.expected_output:
+            self.add_text(f"**Expected Output (🤖):** {self.step.expected_output}")
             self.add_blank_line()
 
         # Actual output
@@ -230,7 +236,10 @@ class TestStepReport(BaseReport):
         """Add formatted tool output with truncation."""
         if tool_output.isError:
             self.add_text("⚠️ **Error Response**")
-            self.add_blank_line()
+        else:
+            self.add_text("✅ **No Error**")
+
+        self.add_blank_line()
 
         for content in tool_output.content:
             if content.type == "text":
@@ -261,12 +270,12 @@ class TestStepReport(BaseReport):
                     text += f"\n\tSize: {len(content.data)} bytes (base64)"
                 self.add_code_block(text)
             elif content.type == "audio":
-                text = f"Audio: {content.mimeType}"
+                text = f"[Audio: {content.mimeType}]"
                 if hasattr(content, "data") and content.data:
                     text += f"\n\tSize: {len(content.data)} bytes (base64)"
                 self.add_code_block(text)
             elif content.type == "resource_link":
-                text = f"Resource Link: {content.uri}"
+                text = f"[Resource Link: {content.uri}]"
                 if content.mimeType:
                     text += f"\n\tMIME type: {content.mimeType}"
                 if content.description:
