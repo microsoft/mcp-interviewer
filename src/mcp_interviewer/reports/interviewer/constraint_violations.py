@@ -1,5 +1,6 @@
 """Constraint violations report generation."""
 
+from ...constraints import get_selected_constraints
 from ...constraints.base import ConstraintViolation, Severity
 from ...models import ServerScoreCard
 from ..base import BaseReport
@@ -25,7 +26,7 @@ class ConstraintViolationsReport(BaseReport):
         """Initialize and build the constraint violations report."""
         super().__init__(scorecard)
         self.violations = violations or []
-        self.selected_constraints = selected_constraints
+        self.selected_constraints = get_selected_constraints(selected_constraints)
         self._build()
 
     def _build(self):
@@ -62,12 +63,9 @@ class ConstraintViolationsReport(BaseReport):
             self.add_text("<summary>Checked constraints</summary>")
             self.add_blank_line()
 
-        if self.selected_constraints:
-            self.add_text(
-                f"**Constraints checked:** {', '.join(self.selected_constraints)}"
-            )
-        else:
-            self.add_text("**Constraints checked:** All available constraints")
+        self.add_text(
+            f"**Constraints checked:** {', '.join(c.cli_name() for c in self.selected_constraints)}"
+        )
         self.add_blank_line()
 
         if self._options.use_collapsible:
