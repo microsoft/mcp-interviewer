@@ -31,13 +31,12 @@ class FunctionalTestReport(BaseReport):
 
     def _build(self):
         """Build the functional test results section."""
-        # functional_test_scorecard is guaranteed to be non-None when _build() is called
-        assert self._scorecard.functional_test_scorecard is not None
+        test = self._scorecard.functional_test_scorecard
+        if test is None:
+            return
 
         # Check if scoring was disabled
         self.start_collapsible("Functional Test Results", 2)
-
-        test = self._scorecard.functional_test_scorecard
 
         # Test plan
         if self.include_evaluations and test.plan:
