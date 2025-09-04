@@ -62,6 +62,9 @@ class ToolCallStatisticsReport(BaseReport):
 
     def _build(self):
         """Build the tool output analysis section."""
+        # functional_test_scorecard is guaranteed to be non-None when _build() is called
+        assert self._scorecard.functional_test_scorecard is not None
+
         tokenizer = encoding_for_model("gpt-4o")
 
         # Never collapse this section - always show the statistics

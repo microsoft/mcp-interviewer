@@ -107,7 +107,11 @@ class ScoreSummaryReport(BaseReport):
                     ]
                 )
 
-                if self.detailed and self._scorecard.functional_test_scorecard.steps:
+                if (
+                    self.detailed
+                    and self._scorecard.functional_test_scorecard
+                    and self._scorecard.functional_test_scorecard.steps
+                ):
                     # Show individual test steps
                     for i, step in enumerate(
                         self._scorecard.functional_test_scorecard.steps

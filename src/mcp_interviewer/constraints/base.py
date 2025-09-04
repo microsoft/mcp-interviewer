@@ -198,6 +198,8 @@ class ToolResultConstraint(Constraint, ABC):
         Yields:
             ConstraintViolation: Violations from all tool results
         """
+        if server.functional_test_scorecard is None:
+            return
         for step in server.functional_test_scorecard.steps:
             if isinstance(step.tool_output, CallToolResult):
                 yield from self.test_tool_result(step.tool_output)

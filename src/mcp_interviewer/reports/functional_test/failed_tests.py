@@ -45,6 +45,9 @@ class FailedTestsReport(BaseReport):
 
     def _add_failed_test_steps(self) -> "FailedTestsReport":
         """Add a summary of failed test steps."""
+        # functional_test_scorecard is guaranteed to be non-None when _build() is called
+        assert self._scorecard.functional_test_scorecard is not None
+
         self.add_title("Failed Test Steps (🤖)", 2)
 
         for i, step in enumerate(self._scorecard.functional_test_scorecard.steps):
@@ -68,6 +71,9 @@ class FailedTestsReport(BaseReport):
 
     def _add_detailed_failed_test_steps(self) -> "FailedTestsReport":
         """Add detailed information about failed test steps."""
+        # functional_test_scorecard is guaranteed to be non-None when _build() is called
+        assert self._scorecard.functional_test_scorecard is not None
+
         self.add_title("Failed Test Steps (🤖)", 2)
 
         for i, step in enumerate(self._scorecard.functional_test_scorecard.steps):

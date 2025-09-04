@@ -61,6 +61,7 @@ class MCPInterviewer:
         self,
         client: Client,
         model: str,
+        should_run_functional_test: bool = False,
         should_judge_tool: bool = False,
         should_judge_functional_test: bool = False,
     ):
@@ -74,6 +75,7 @@ class MCPInterviewer:
         """
         self._client = client
         self._model = model
+        self._should_run_functional_test = should_run_functional_test
         self._should_judge_tool = should_judge_tool
         self._should_judge_functional_test = should_judge_functional_test
         self._request_counters = create_request_counters()
@@ -381,22 +383,29 @@ class MCPInterviewer:
                         tool_scorecards = []
 
                     # Phase 3: Functional Testing
-                    logger.info("=" * 60)
-                    logger.info("PHASE 3: Functional Testing")
-                    logger.info("=" * 60)
-                    functional_test = await self.generate_functional_test(server)
+                    if self._should_run_functional_test:
+                        logger.info("=" * 60)
+                        logger.info("PHASE 3: Functional Testing")
+                        logger.info("=" * 60)
 
-                    (
-                        functional_test_output,
-                        functional_test_step_outputs,
-                    ) = await self.execute_functional_test(session, functional_test)
+                        functional_test = await self.generate_functional_test(server)
 
-                    # Judge functional test
-                    functional_test_scorecard = await self.judge_functional_test(
-                        functional_test,
-                        functional_test_output,
-                        functional_test_step_outputs,
-                    )
+                        (
+                            functional_test_output,
+                            functional_test_step_outputs,
+                        ) = await self.execute_functional_test(session, functional_test)
+
+                        # Judge functional test
+                        functional_test_scorecard = await self.judge_functional_test(
+                            functional_test,
+                            functional_test_output,
+                            functional_test_step_outputs,
+                        )
+                    else:
+                        logger.info("=" * 60)
+                        logger.info("PHASE 3: Functional Testing - SKIPPED")
+                        logger.info("=" * 60)
+                        functional_test_scorecard = None
 
                     # Create final scorecard
                     logger.info("Creating final server scorecard")
