@@ -177,6 +177,12 @@ interviewer = MCPInterviewer(client, "gpt-4o")
 interview = await interviewer.score_server(params)
 ```
 
+## Limitations
+
+MCP Interviewer was developed for research and experimental purposes. Further testing and validation are needed before considering its application in commercial or real-world scenarios. The MCP Python SDK executes arbitrary commands on the host machine, so users should run server commands in isolated containers and use external security tools to validate MCP server safety before running MCP Interviewer. Additionally, MCP Servers may have malicious or misleading tool metadata that may cause inaccurate MCP Interviewer outputs. Users should manually examine MCP Interviewer outputs for signs of malicious manipulation.
+
+See [TRANSPARENCY.md](./TRANSPARENCY.md) for more information.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding new statistics, constraints, and reports.
