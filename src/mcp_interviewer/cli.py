@@ -18,7 +18,13 @@ def cli():
     parser.add_argument(
         "--client",
         default="openai.OpenAI",
-        help="Import path to a parameter-less callable that returns an OpenAI or AsyncOpenAI compatible object",
+        help="Import path to a callable that returns an OpenAI compatible object. Arguments can be set via the --client-kwargs option.",
+    )
+    parser.add_argument(
+        "--client-kwargs",
+        default=[],
+        nargs="+",
+        help="key=value pairs of keyword arguments to the client constructor",
     )
     parser.add_argument("--out-dir", "-o", default=".")
     parser.add_argument(
@@ -130,7 +136,22 @@ def cli():
     module = importlib.import_module(module)
     client = getattr(module, client)
 
-    client = client()
+    client_kwargs = {}
+    # Parse client_kwargs from key=value strings
+    for kwarg in args.client_kwargs:
+        if "=" not in kwarg:
+            raise ValueError(f"Client kwarg must be in key=value format: {kwarg}")
+        key, value = kwarg.split("=", 1)
+        # Try to convert value to appropriate type
+        if value.lower() in ("true", "false"):
+            value = value.lower() == "true"
+        elif value.isdigit():
+            value = int(value)
+        elif value.replace(".", "").isdigit():
+            value = float(value)
+        client_kwargs[key] = value
+
+    client = client(**client_kwargs)
 
     from .main import main
 

@@ -93,7 +93,7 @@ To interview the MCP reference server, you can run the following command:
 ```bash
 NPX_CONTAINER="docker run -i --rm node:lts npx"
 
-mcp-interviewer --model gpt-4o "$NPX_CONTAINER -y @@modelcontextprotocol/server-everything"
+mcp-interviewer --model gpt-4o "$NPX_CONTAINER -y @modelcontextprotocol/server-everything"
 ```
 
 Which will generate a report like [this](./mcp-interview.md).
@@ -122,12 +122,51 @@ mcp-interviewer --model gpt-4o --select OTC ONL "$UVX_CONTAINER mcp-server-fetch
 mcp-interviewer --model gpt-4o "https://my-mcp-server.com/sse"
 ```
 
+### Bring Your Own Models
+
+MCP Interviewer can use any Python object that mimics the chat completions API of the OpenAI Python SDK's `OpenAI` client.
+
+The CLI provides two ways of customizing your model client:
+
+1. `openai.OpenAI` keyword arguments
+
+    You can provide keyword arguments to the OpenAI client constructor via the "--client-kwargs" CLI option. For example, to connect to gpt-oss:20b running locally via Ollama:
+
+    ```bash
+    mcp-interviewer \
+      --client-kwargs \
+      "base_url=http://localhost:11434/v1" \
+      "api_key=ollama" \
+      --model "gpt-oss:20b" \
+      "docker run -i --rm node:lts npx -y @modelcontextprotocol/server-everything"
+    ```
+
+1. Import custom `openai.OpenAI`-compatible type
+
+    Define a parameterless callable the returns an OpenAI compatible type, then specify it's import path via the "--client" option:
+    ```python
+    # my_client.py
+    from openai import AzureOpenAI
+
+    def azure_client():
+      return AzureOpenAI(azure_endpoint=..., azure_ad_token_provider=...)
+    ```
+
+    ```bash
+    mcp-interviewer \
+      --client "my_client.azure_client" \
+      --model "gpt-4o_2024-11-20" \
+      "docker run -i --rm node:lts npx -y @modelcontextprotocol/server-everything"
+    ```
+
+
 ### Python
 
 ```python
 from openai import OpenAI
 from mcp_interviewer import MCPInterviewer, StdioServerParameters
 
+# Any object following the OpenAI chat completions API will work
 client = OpenAI()
 params = StdioServerParameters(
     command="docker",
