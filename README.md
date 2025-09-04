@@ -6,7 +6,9 @@ It does this via the following features:
 
 ### 🔎 Constraint checking
 
-The MCP Interviewer helps you make sure you aren't violating providers' hard constraints and warns you when you're not following recommended guidance.
+The MCP Interviewer helps avoid violating providers' hard constraints and warns you when you're not following recommended guidance.
+
+For example, OpenAI does not allow more than 128 tools in a single chat completion request, and recommends at most 20 tools.
 
 <details>
 
@@ -64,23 +66,19 @@ Use `--reports [CODE ...]` to customize output.
 
 ## Quick Start
 
+⚠️ ***mcp-interviewer arbitrarily executes the provided MCP server command in a child process. Whenever possible, run your server in a container like in the examples below to isolate the server from your host system.***
+
 ```bash
+# Command to run npx safely inside a Docker container
+NPX_CONTAINER="docker run -i --rm node:lts npx"
+
 # Test any MCP server with one command
-uvx --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git" mcp-interviewer \
-  --model gpt-4o "npx -y @modelcontextprotocol/server-everything"
+uvx mcp-interviewer \
+  --model gpt-4o \
+  "$NPX_CONTAINER -y @modelcontextprotocol/server-everything"
 ```
 
 Generates `mcp-interview.md` and `mcp-interview.json` with a full evaluation report.
-
-## Example
-
-To interview the MCP reference server, you can run the following command:
-
-```bash
-mcp-interviewer --model gpt-4o "npx -y @@modelcontextprotocol/server-everything"
-```
-
-Which will generate a report like (this)[./mcp-interview.md].
 
 ## Installation
 
@@ -88,22 +86,37 @@ Which will generate a report like (this)[./mcp-interview.md].
 pip install git+ssh://git@github.com/microsoft/mcp-interviewer.git
 ```
 
+## Example
+
+To interview the MCP reference server, you can run the following command:
+
+```bash
+NPX_CONTAINER="docker run -i --rm node:lts npx"
+
+mcp-interviewer --model gpt-4o "$NPX_CONTAINER -y @@modelcontextprotocol/server-everything"
+```
+
+Which will generate a report like [this](./mcp-interview.md).
+
 ## Usage
 
 ### CLI
 
 ```bash
+# Docker command to run uvx inside a container
+UVX_CONTAINER="docker run -i --rm ghcr.io/astral-sh/uv:python3.12-alpine uvx"
+
 # Constraint checking, functional testing, default report generation
-mcp-interviewer --model gpt-4o "uvx mcp-server-fetch"
+mcp-interviewer --model gpt-4o "$UVX_CONTAINER mcp-server-fetch"
 
 # Constraint checking, functional testing, LLM evaluation, default report generation
-mcp-interviewer --model gpt-4o --judge "uvx mcp-server-fetch"
+mcp-interviewer --model gpt-4o --judge "$UVX_CONTAINER mcp-server-fetch"
 
 # Constraint checking, functional testing, custom report generation
-mcp-interviewer --model gpt-4o --reports SI TS FT CV "uvx mcp-server-fetch"
+mcp-interviewer --model gpt-4o --reports SI TS FT CV "$UVX_CONTAINER mcp-server-fetch"
 
 # Custom constraint checking, functional testing, report generation
-mcp-interviewer --model gpt-4o --select OTC ONL "uvx mcp-server-fetch"
+mcp-interviewer --model gpt-4o --select OTC ONL "$UVX_CONTAINER mcp-server-fetch"
 
 # Test remote servers
 mcp-interviewer --model gpt-4o "https://my-mcp-server.com/sse"
@@ -117,8 +130,8 @@ from mcp_interviewer import MCPInterviewer, StdioServerParameters
 
 client = OpenAI()
 params = StdioServerParameters(
-    command="npx",
-    args=["-y", "@modelcontextprotocol/server-everything"]
+    command="docker",
+    args=["run", "-i", "--rm", "node:lts", "npx", "-y", "@modelcontextprotocol/server-everything"]
 )
 
 interviewer = MCPInterviewer(client, "gpt-4o")
