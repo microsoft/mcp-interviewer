@@ -206,4 +206,4 @@ class Server(BaseModel):
 class ServerScoreCard(Server):
     model: str
     tool_scorecards: list[ToolScoreCard]
-    functional_test_scorecard: FunctionalTestScoreCard
+    functional_test_scorecard: FunctionalTestScoreCard | None

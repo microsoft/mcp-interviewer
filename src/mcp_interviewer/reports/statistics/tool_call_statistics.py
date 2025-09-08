@@ -62,13 +62,17 @@ class ToolCallStatisticsReport(BaseReport):
 
     def _build(self):
         """Build the tool output analysis section."""
+        functional_test_scorecard = self._scorecard.functional_test_scorecard
+        if functional_test_scorecard is None:
+            return
+
         tokenizer = encoding_for_model("gpt-4o")
 
         # Never collapse this section - always show the statistics
         self.add_title("Tool Call Statistics", 2)
         self.add_table_header(["Metric", "Total", "Average", "Min", "Max"])
 
-        steps = self._scorecard.functional_test_scorecard.steps
+        steps = functional_test_scorecard.steps
 
         # Analyze tool calls
         total_attempted = len(steps)

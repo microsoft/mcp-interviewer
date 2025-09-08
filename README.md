@@ -28,7 +28,7 @@ Use `--constraints [CODE ...]` to customize output.
 
 ### 🛠️ Functional testing
 
-MCP servers are intended to be used by LLM agents, so we test them with an LLM agent. Using your specified LLM, the interviewer generates a test plan based on the MCP server's capabilities and then executes that plan (e.g. by calling tools), collecting statistics about observed tool behavior.
+MCP servers are intended to be used by LLM agents, so we can optionally test them with an LLM agent. When enabled with the `--test` flag, the interviewer uses your specified LLM to generate a test plan based on the MCP server's capabilities and then executes that plan (e.g. by calling tools), collecting statistics about observed tool behavior.
 
 ### 🧪 LLM evaluation
 
@@ -68,6 +68,8 @@ Use `--reports [CODE ...]` to customize output.
 
 ⚠️ ***mcp-interviewer arbitrarily executes the provided MCP server command in a child process. Whenever possible, run your server in a container like in the examples below to isolate the server from your host system.***
 
+🚨 ***mcp-interviewer actually invokes the server's tools, DO NOT use mcp-interviewer with admin privileges etc***
+
 ```bash
 # Command to run npx safely inside a Docker container
 NPX_CONTAINER="docker run -i --rm node:lts npx"
@@ -102,21 +104,30 @@ Which will generate a report like [this](./mcp-interview.md).
 
 ### CLI
 
+**Key Flags:**
+- `--test`: Enable functional testing (disabled by default for faster execution)
+- `--judge`: Enable experimental LLM evaluation of tools and tests
+- `--reports [CODE ...]`: Customize which report sections to include
+- `--constraints [CODE ...]`: Customize which constraints to check
+
 ```bash
 # Docker command to run uvx inside a container
 UVX_CONTAINER="docker run -i --rm ghcr.io/astral-sh/uv:python3.12-alpine uvx"
 
-# Constraint checking, functional testing, default report generation
+# Basic constraint checking and server inspection (no functional testing)
 mcp-interviewer --model gpt-4o "$UVX_CONTAINER mcp-server-fetch"
 
+# Constraint checking with functional testing and default report generation
+mcp-interviewer --model gpt-4o --test "$UVX_CONTAINER mcp-server-fetch"
+
 # Constraint checking, functional testing, LLM evaluation, default report generation
-mcp-interviewer --model gpt-4o --judge "$UVX_CONTAINER mcp-server-fetch"
+mcp-interviewer --model gpt-4o --test --judge "$UVX_CONTAINER mcp-server-fetch"
 
-# Constraint checking, functional testing, custom report generation
-mcp-interviewer --model gpt-4o --reports SI TS FT CV "$UVX_CONTAINER mcp-server-fetch"
+# Constraint checking with functional testing and custom report generation
+mcp-interviewer --model gpt-4o --test --reports SI TS FT CV "$UVX_CONTAINER mcp-server-fetch"
 
-# Custom constraint checking, functional testing, report generation
-mcp-interviewer --model gpt-4o --select OTC ONL "$UVX_CONTAINER mcp-server-fetch"
+# Custom constraint checking with functional testing and report generation
+mcp-interviewer --model gpt-4o --test --constraints OTC ONL "$UVX_CONTAINER mcp-server-fetch"
 
 # Test remote servers
 mcp-interviewer --model gpt-4o "https://my-mcp-server.com/sse"
@@ -173,8 +184,8 @@ params = StdioServerParameters(
     args=["run", "-i", "--rm", "node:lts", "npx", "-y", "@modelcontextprotocol/server-everything"]
 )
 
-interviewer = MCPInterviewer(client, "gpt-4o")
-interview = await interviewer.score_server(params)
+interviewer = MCPInterviewer(client, "gpt-4o", should_run_functional_test=True)
+interview = await interviewer.interview_server(params)
 ```
 
 ## Limitations

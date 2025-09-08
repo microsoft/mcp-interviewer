@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 
 def cli():
@@ -72,6 +73,16 @@ def cli():
         nargs="+",
         help="Specify which constraint violations to check (all enabled by default). Can use full names (e.g., openai-tool-count, openai-name-length) or shorthand codes (e.g., OTC, ONL, ONP, OTL, OA)",
     )
+    parser.add_argument(
+        "--test",
+        action="store_true",
+        help="Enable functional testing of the server",
+    )
+    parser.add_argument(
+        "--accept-risk",
+        action="store_true",
+        help="Bypass user confirmation of functional test risk.",
+    )
 
     args = parser.parse_args()
 
@@ -130,6 +141,22 @@ def cli():
 
         params = StdioServerParameters(command=params_command, args=params_args)
 
+    # Handle the --judge flag which enables experimental judging operations (disabled by default)
+    should_judge_tool = args.judge or args.judge_tools
+    should_judge_functional_test = args.judge or args.judge_test
+
+    if args.test:
+        print(
+            "🚨 MCP Interviewer will make tool call requests to your MCP server. Depending on the server's capabilities this can lead to irreversible outcomes (e.g. deleting files)."
+        )
+        accept_risk = args.accept_risk
+        while not accept_risk:
+            input_str = input("Do you accept this risk? y|[n]: ").strip().lower()
+            if not input_str or input_str == "n":
+                sys.exit(1)
+            else:
+                accept_risk = input_str == "y"
+
     import importlib
 
     module, client = args.client.rsplit(".")
@@ -155,10 +182,6 @@ def cli():
 
     from .main import main
 
-    # Handle the --judge flag which enables experimental judging operations (disabled by default)
-    should_judge_tool = args.judge or args.judge_tools
-    should_judge_functional_test = args.judge or args.judge_test
-
     main(
         client,
         args.model,
@@ -166,6 +189,7 @@ def cli():
         out_dir=args.out_dir,
         should_judge_tool=should_judge_tool,
         should_judge_functional_test=should_judge_functional_test,
+        should_run_functional_test=args.test,
         custom_reports=args.reports,
         no_collapse=args.no_collapse,
         selected_constraints=args.constraints,

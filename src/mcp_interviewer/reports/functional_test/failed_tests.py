@@ -1,6 +1,6 @@
 """Failed tests report generation."""
 
-from ...models import ServerScoreCard
+from ...models import FunctionalTestScoreCard, ServerScoreCard
 from ..base import BaseReport
 from .test_step import TestStepReport
 
@@ -20,15 +20,13 @@ class FailedTestsReport(BaseReport):
         """Initialize and build the failed tests report."""
         super().__init__(scorecard)
         self.detailed = detailed
-        if self._has_failed_tests():
-            self._build()
+        self._build(scorecard.functional_test_scorecard)
 
-    def _has_failed_tests(self) -> bool:
+    def _has_failed_tests(
+        self, functional_test_scorecard: FunctionalTestScoreCard
+    ) -> bool:
         """Check if there are any failed tests."""
-        if not self._scorecard.functional_test_scorecard:
-            return False
-
-        for step in self._scorecard.functional_test_scorecard.steps:
+        for step in functional_test_scorecard.steps:
             # Check if any evaluation criteria failed
             for field_name in step.model_fields_set:
                 field_value = getattr(step, field_name)
@@ -36,18 +34,26 @@ class FailedTestsReport(BaseReport):
                     return True
         return False
 
-    def _build(self):
+    def _build(self, functional_test_scorecard: FunctionalTestScoreCard | None):
         """Build the failed tests section."""
-        if self.detailed:
-            self._add_detailed_failed_test_steps()
-        else:
-            self._add_failed_test_steps()
+        if functional_test_scorecard is None:
+            return
 
-    def _add_failed_test_steps(self) -> "FailedTestsReport":
+        if self._has_failed_tests(functional_test_scorecard):
+            return
+
+        if self.detailed:
+            self._add_detailed_failed_test_steps(functional_test_scorecard)
+        else:
+            self._add_failed_test_steps(functional_test_scorecard)
+
+    def _add_failed_test_steps(
+        self, functional_test_scorecard: FunctionalTestScoreCard
+    ) -> "FailedTestsReport":
         """Add a summary of failed test steps."""
         self.add_title("Failed Test Steps (🤖)", 2)
 
-        for i, step in enumerate(self._scorecard.functional_test_scorecard.steps):
+        for i, step in enumerate(functional_test_scorecard.steps):
             has_failure = False
             failures = []
 
@@ -66,11 +72,13 @@ class FailedTestsReport(BaseReport):
         self.add_blank_line()
         return self
 
-    def _add_detailed_failed_test_steps(self) -> "FailedTestsReport":
+    def _add_detailed_failed_test_steps(
+        self, functional_test_scorecard: FunctionalTestScoreCard
+    ) -> "FailedTestsReport":
         """Add detailed information about failed test steps."""
         self.add_title("Failed Test Steps (🤖)", 2)
 
-        for i, step in enumerate(self._scorecard.functional_test_scorecard.steps):
+        for i, step in enumerate(functional_test_scorecard.steps):
             # Use TestStepReport with show_only_failures=True
             # This will only build the report if the step has failures
             step_report = TestStepReport(

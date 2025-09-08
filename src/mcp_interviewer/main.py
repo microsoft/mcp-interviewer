@@ -22,6 +22,7 @@ async def amain(
     out_dir=Path("."),
     should_judge_tool: bool = False,
     should_judge_functional_test: bool = False,
+    should_run_functional_test: bool = False,
     custom_reports: list[str] | None = None,
     no_collapse: bool = False,
     selected_constraints: list[str] | None = None,
@@ -39,12 +40,17 @@ async def amain(
         out_dir: Directory to save output files (default: current directory)
         should_judge_tool: Whether to perform expensive experimental LLM judging of tools (default: False)
         should_judge_functional_test: Whether to perform expensive experimental LLM judging of functional tests (default: False)
+        should_run_functional_test: Whether to run functional tests (default: False)
         custom_reports: List of specific report names to include
         no_collapse: If True, don't use collapsible sections in the report (default: False)
         selected_constraints: List of constraint names or codes to check (all if None)
     """
     interviewer = MCPInterviewer(
-        client, model, should_judge_tool, should_judge_functional_test
+        client,
+        model,
+        should_run_functional_test,
+        should_judge_tool,
+        should_judge_functional_test,
     )
     interview = await interviewer.interview_server(params)
 
@@ -105,6 +111,7 @@ def main(
     out_dir=Path("."),
     should_judge_tool: bool = False,
     should_judge_functional_test: bool = False,
+    should_run_functional_test: bool = False,
     custom_reports: list[str] | None = None,
     no_collapse: bool = False,
     selected_constraints: list[str] | None = None,
@@ -118,6 +125,7 @@ def main(
         out_dir: Directory to save output files (default: current directory)
         should_judge_tool: Whether to perform expensive experimental LLM judging of tools (default: False)
         should_judge_functional_test: Whether to perform expensive experimental LLM judging of functional tests (default: False)
+        should_run_functional_test: Whether to run functional tests (default: False)
         custom_reports: List of specific report names to include
         no_collapse: If True, don't use collapsible sections in the report (default: False)
         selected_constraints: List of constraint names or codes to check (all if None)
@@ -130,6 +138,7 @@ def main(
             out_dir,
             should_judge_tool,
             should_judge_functional_test,
+            should_run_functional_test,
             custom_reports,
             no_collapse,
             selected_constraints,

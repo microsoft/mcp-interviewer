@@ -16,6 +16,8 @@ class FunctionalTestStepStatistic(Statistic, ABC):
     ) -> Generator[StatisticValue, None, None]: ...
 
     def compute(self, server: ServerScoreCard) -> Generator[StatisticValue, None, None]:
+        if server.functional_test_scorecard is None:
+            return
         for step in server.functional_test_scorecard.steps:
             yield from self.compute_test_step(step)
 
