@@ -10,21 +10,21 @@ MCP Interviewer was developed to help mitigate MCP server compatibility issues w
 
 ## Intended Uses
 
-MCP Interviewer is best suited for evaluating and assessing MCP servers before integration into workflows and applications. Specifically:
+MCP Interviewer is best suited for evaluating and assessing MCP servers before integration into workflows and applications. Specifically: 
 
-- Server developers validating their MCP implementations to maximize usefulness for downstream clients
-- Server consumers evaluating third-party MCP servers before incorporating them into their systems or workflows, understanding server capabilities and potential compatibility issues
+- Server developers validating their MCP implementations to maximize usefulness for downstream clients 
+- Server consumers evaluating third-party MCP servers before incorporating them into their systems or workflows, understanding server capabilities and potential compatibility issues. 
 
-MCP Interviewer is intended to be used by domain experts who are independently capable of evaluating the quality of outputs before acting on them.
+MCP Interviewer is intended to be used by domain experts who are independently capable of evaluating the quality of outputs before acting on them. 
 
 ## Out-of-Scope Uses
 
-MCP Interviewer is not well suited for:
+MCP Interviewer is not well suited for: 
 
-- Real-time monitoring or debugging of MCP servers in live environments
-- Any type of security auditing
-- Performance benchmarking under load
-- Certification or compliance validation for regulated industries
+- Real-time monitoring or debugging of MCP servers in live environments 
+- Any type of security auditing 
+- Performance benchmarking under load  
+- Certification or compliance validation for regulated industries 
 - Automated decision-making about server deployment 
 
 We do not recommend using MCP Interviewer in commercial or real-world applications without further testing and development. It is being released for research purposes. 
@@ -34,6 +34,10 @@ MCP Interviewer was not designed or evaluated for all possible downstream purpos
 Without further testing and development, MCP Interviewer should not be used in sensitive domains where inaccurate outputs could suggest actions that lead to injury or negatively impact an individual's legal, financial, or life opportunities. 
 
 We do not recommend using  MCP Interviewer in the context of high-risk decision making (e.g. in law enforcement, legal, finance, or healthcare). 
+
+## How to get Started
+
+Follow the instructions in the [README](./README.md).
 
 ## Limitations
 
@@ -49,9 +53,7 @@ MCP Interviewer inherits any biases, errors, or omissions produced by its base m
 
 MCP Interviewer can be run with any OpenAI-compatible API. Refer to your selected model’s model card to understand its capabilities and limitations. 
 
-MCP Interviewer inherits any biases, errors, or omissions characteristic of its training data, which may be amplified by any AI-generated interpretations.  
-
-There has not been a systematic effort to ensure that systems using MCP Interviewerare protected from security vulnerabilities such as indirect prompt injection attacks. Any systems using it should take proactive measures to harden their systems as appropriate. 
+There has not been a systematic effort to ensure that systems using MCP Interviewer are protected from security vulnerabilities such as indirect prompt injection attacks. Any systems using it should take proactive measures to harden their systems as appropriate. 
 
 ## Best Practices
 
@@ -117,6 +119,6 @@ This project may contain trademarks or logos for projects, products, or services
 
 ## Contact 
 
-This research was conducted by members of Microsoft Research.  We welcome feedback and collaboration from our audience. If you have suggestions, questions, or observe unexpected/offensive behavior in our technology, please contact us at mcp-interviewer@service.microsoft.com. 
+This research was conducted by members of [Microsoft Research](https://www.microsoft.com/en-us/research/).  We welcome feedback and collaboration from our audience. If you have suggestions, questions, or observe unexpected/offensive behavior in our technology, please contact us at [mcp-interviewer@service.microsoft.com](mailto:mcp-interviewer@service.microsoft.com). 
 
 If the team receives reports of undesired behavior or identifies issues independently, we will update this repository with appropriate mitigations. 
