@@ -1,7 +1,12 @@
 {
   "parameters": {
-    "command": "npx",
+    "command": "docker",
     "args": [
+      "run",
+      "-i",
+      "--rm",
+      "node:lts",
+      "npx",
       "-y",
       "@modelcontextprotocol/server-everything"
     ],
@@ -13,7 +18,7 @@
   },
   "initialize_result": {
     "meta": null,
-    "protocolVersion": "2025-03-26",
+    "protocolVersion": "2025-06-18",
     "capabilities": {
       "experimental": null,
       "logging": {},
@@ -1575,7 +1580,7 @@
       "meta": null
     }
   ],
-  "model": "gpt-4o",
+  "model": "gpt-4.1",
   "tool_scorecards": [
     {
       "tool_name": {
@@ -2313,11 +2318,11 @@
       "justification": "No score generated",
       "score": "N/A"
     },
-    "sampling_requests": 1,
+    "sampling_requests": 2,
     "elicitation_requests": 1,
     "list_roots_requests": 0,
     "logging_requests": 0,
-    "plan": "This testing plan systematically evaluates the functionality, dependencies, and quality of the MCP server tools. The plan starts with simpler tools to establish a baseline, progresses to tools with dependencies or more complex functionality, and includes edge cases and boundary conditions to ensure robustness. Each step includes realistic arguments, expected outputs, and justifications for the test.",
+    "plan": "This testing plan systematically exercises all MCP server tools, starting with foundational and stateless tools, then progressing to those with more complex outputs, annotations, or resource references. Each tool is tested with realistic, varied arguments, including edge cases where appropriate. Tools are ordered to build understanding and respect any implied dependencies. No explicit inter-tool dependencies are present, but related tools (e.g., resource reference and resource links) are tested in sequence for workflow coverage. The plan focuses on positive test cases and includes boundary and error scenario coverage where relevant.",
     "steps": [
       {
         "error_handling": {
@@ -2366,8 +2371,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "The echo tool is foundational and has no dependencies. Testing it first ensures basic functionality of the server.",
-        "expected_output": "The tool should return the input message: 'Hello, MCP!'",
+        "justification": "Echo is a foundational tool; test basic functionality with a simple string.",
+        "expected_output": "Should return the exact input message: 'Hello, MCP!'",
         "tool_name": "echo",
         "tool_arguments": {
           "message": "Hello, MCP!"
@@ -2407,7 +2412,7 @@
           "content": [
             {
               "type": "text",
-              "text": "The sum of 5 and 10 is 15.",
+              "text": "Echo: ",
               "annotations": null,
               "meta": null
             }
@@ -2420,11 +2425,120 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "The add tool is simple and independent. Testing it ensures basic arithmetic operations work correctly.",
-        "expected_output": "The tool should return the sum: 15",
+        "justification": "Test edge case: empty string input.",
+        "expected_output": "Should return an empty string.",
+        "tool_name": "echo",
+        "tool_arguments": {
+          "message": ""
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "The sum of 5 and 7 is 12.",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test normal addition of two positive numbers.",
+        "expected_output": "Should return 12.",
         "tool_name": "add",
         "tool_arguments": {
           "a": 5,
+          "b": 7
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "The sum of -3 and 10 is 7.",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test addition with a negative and a positive number.",
+        "expected_output": "Should return 7.",
+        "tool_name": "add",
+        "tool_arguments": {
+          "a": -3,
           "b": 10
         }
       },
@@ -2462,7 +2576,7 @@
           "content": [
             {
               "type": "text",
-              "text": "The sum of -5 and 5 is 0.",
+              "text": "The sum of 0 and 0 is 0.",
               "annotations": null,
               "meta": null
             }
@@ -2475,12 +2589,12 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Testing the add tool with negative numbers ensures it handles edge cases correctly.",
-        "expected_output": "The tool should return the sum: 0",
+        "justification": "Test edge case: both numbers zero.",
+        "expected_output": "Should return 0.",
         "tool_name": "add",
         "tool_arguments": {
-          "a": -5,
-          "b": 5
+          "a": 0,
+          "b": 0
         }
       },
       {
@@ -2517,7 +2631,7 @@
           "content": [
             {
               "type": "text",
-              "text": "Long running operation completed. Duration: 5 seconds, Steps: 3.",
+              "text": "Long running operation completed. Duration: 3 seconds, Steps: 3.",
               "annotations": null,
               "meta": null
             }
@@ -2530,11 +2644,11 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool demonstrates long-running operations. Testing it ensures the server handles progress updates correctly.",
-        "expected_output": "The tool should return progress updates and complete after 5 seconds.",
+        "justification": "Test basic long-running operation with short duration and steps for quick feedback.",
+        "expected_output": "Should return progress updates at each step and a final completion message after 3 seconds.",
         "tool_name": "longRunningOperation",
         "tool_arguments": {
-          "duration": 5,
+          "duration": 3,
           "steps": 3
         }
       },
@@ -2572,7 +2686,7 @@
           "content": [
             {
               "type": "text",
-              "text": "{\n  \"NODE\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin/node\",\n  \"INIT_CWD\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"TERM\": \"xterm-256color\",\n  \"SHELL\": \"/bin/zsh\",\n  \"npm_config_global_prefix\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0\",\n  \"COLOR\": \"0\",\n  \"npm_config_noproxy\": \"\",\n  \"npm_config_local_prefix\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"USER\": \"tylerpayne\",\n  \"npm_config_globalconfig\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/etc/npmrc\",\n  \"__CF_USER_TEXT_ENCODING\": \"0x1F5:0x0:0x0\",\n  \"npm_execpath\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/bin/npm-cli.js\",\n  \"PATH\": \"/Users/tylerpayne/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin:/Users/tylerpayne/Local/microsoft/mcp-interviewer/node_modules/.bin:/Users/tylerpayne/Local/microsoft/node_modules/.bin:/Users/tylerpayne/Local/node_modules/.bin:/Users/tylerpayne/node_modules/.bin:/Users/node_modules/.bin:/node_modules/.bin:/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/Users/tylerpayne/Local/microsoft/mcp-interviewer/.venv/bin:/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/tylerpayne/bin:/Users/tylerpayne/.local/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Users/tylerpayne/Library/pnpm:/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/tylerpayne/.vscode/extensions/ms-python.debugpy-2025.10.0-darwin-arm64/bundled/scripts/noConfigScripts:/Users/tylerpayne/Library/Application Support/Code/User/globalStorage/github.copilot-chat/debugCommand\",\n  \"npm_package_json\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer/package.json\",\n  \"npm_config_userconfig\": \"/Users/tylerpayne/.npmrc\",\n  \"npm_config_init_module\": \"/Users/tylerpayne/.npm-init.js\",\n  \"PWD\": \"/Users/tylerpayne/Local/microsoft/mcp-interviewer\",\n  \"npm_command\": \"exec\",\n  \"npm_lifecycle_event\": \"npx\",\n  \"EDITOR\": \"vi\",\n  \"npm_config_npm_version\": \"10.9.2\",\n  \"npm_config_node_gyp\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js\",\n  \"npm_config_yes\": \"true\",\n  \"SHLVL\": \"1\",\n  \"HOME\": \"/Users/tylerpayne\",\n  \"npm_config_cache\": \"/Users/tylerpayne/.npm\",\n  \"LOGNAME\": \"tylerpayne\",\n  \"npm_lifecycle_script\": \"mcp-server-everything\",\n  \"npm_config_user_agent\": \"npm/10.9.2 node/v22.16.0 darwin arm64 workspaces/false\",\n  \"npm_node_execpath\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin/node\",\n  \"npm_config_prefix\": \"/Users/tylerpayne/.nvm/versions/node/v22.16.0\",\n  \"_\": \"/Users/tylerpayne/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin/mcp-server-everything\"\n}",
+              "text": "Long running operation completed. Duration: 0 seconds, Steps: 1.",
               "annotations": null,
               "meta": null
             }
@@ -2585,8 +2699,63 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool is useful for debugging the server's environment. Testing it ensures the server can access and display environment variables.",
-        "expected_output": "The tool should return a list of environment variables.",
+        "justification": "Test edge case: zero duration, single step.",
+        "expected_output": "Should immediately return a single progress update and completion.",
+        "tool_name": "longRunningOperation",
+        "tool_arguments": {
+          "duration": 0,
+          "steps": 1
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "{\n  \"npm_config_user_agent\": \"npm/10.9.2 node/v22.17.0 linux arm64 workspaces/false\",\n  \"NODE_VERSION\": \"22.17.0\",\n  \"HOSTNAME\": \"dec62aa38426\",\n  \"YARN_VERSION\": \"1.22.22\",\n  \"npm_node_execpath\": \"/usr/local/bin/node\",\n  \"npm_config_noproxy\": \"\",\n  \"HOME\": \"/root\",\n  \"npm_package_json\": \"/package.json\",\n  \"npm_config_userconfig\": \"/root/.npmrc\",\n  \"npm_config_local_prefix\": \"/\",\n  \"npm_config_yes\": \"true\",\n  \"COLOR\": \"0\",\n  \"npm_config_prefix\": \"/usr/local\",\n  \"npm_config_npm_version\": \"10.9.2\",\n  \"npm_config_cache\": \"/root/.npm\",\n  \"npm_config_node_gyp\": \"/usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js\",\n  \"PATH\": \"/root/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin:/node_modules/.bin:/usr/local/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\n  \"NODE\": \"/usr/local/bin/node\",\n  \"npm_lifecycle_script\": \"mcp-server-everything\",\n  \"npm_lifecycle_event\": \"npx\",\n  \"npm_config_globalconfig\": \"/usr/local/etc/npmrc\",\n  \"npm_config_init_module\": \"/root/.npm-init.js\",\n  \"PWD\": \"/\",\n  \"npm_execpath\": \"/usr/local/lib/node_modules/npm/bin/npm-cli.js\",\n  \"npm_config_global_prefix\": \"/usr/local\",\n  \"npm_command\": \"exec\",\n  \"INIT_CWD\": \"/\",\n  \"EDITOR\": \"vi\"\n}",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test environment variable listing; useful for debugging server configuration.",
+        "expected_output": "Should return a dictionary of environment variables and their values.",
         "tool_name": "printEnv",
         "tool_arguments": {}
       },
@@ -2637,12 +2806,67 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool interacts with an LLM. Testing it ensures the server can generate responses based on prompts.",
-        "expected_output": "The tool should return a response like 'The capital of France is Paris.'",
+        "justification": "Test LLM sampling with a factual prompt and limited token output.",
+        "expected_output": "Should return a short completion, e.g., 'The capital of France is Paris.'",
         "tool_name": "sampleLLM",
         "tool_arguments": {
           "prompt": "What is the capital of France?",
           "maxTokens": 10
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "LLM sampling result: Dummy content",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 1,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test LLM with creative prompt and larger token limit.",
+        "expected_output": "Should return a short poem about rain, up to 50 tokens.",
+        "tool_name": "sampleLLM",
+        "tool_arguments": {
+          "prompt": "Write a short poem about rain.",
+          "maxTokens": 50
         }
       },
       {
@@ -2705,8 +2929,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool retrieves a predefined image. Testing it ensures the server can handle binary data or image retrieval.",
-        "expected_output": "The tool should return the MCP_TINY_IMAGE.",
+        "justification": "Test retrieval of the MCP_TINY_IMAGE resource.",
+        "expected_output": "Should return a small image object or binary data representing the tiny image.",
         "tool_name": "getTinyImage",
         "tool_arguments": {}
       },
@@ -2752,6 +2976,67 @@
                 "priority": 0.7
               },
               "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test annotation with 'success' type and no image.",
+        "expected_output": "Should return a message annotated as 'success', without an image.",
+        "tool_name": "annotatedMessage",
+        "tool_arguments": {
+          "messageType": "success",
+          "includeImage": false
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Error: Operation failed",
+              "annotations": {
+                "audience": [
+                  "user",
+                  "assistant"
+                ],
+                "priority": 1.0
+              },
+              "meta": null
             },
             {
               "type": "image",
@@ -2774,11 +3059,11 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool demonstrates annotations. Testing it ensures the server can handle metadata and optional image inclusion.",
-        "expected_output": "The tool should return a success message with an example image.",
+        "justification": "Test annotation with 'error' type and image included.",
+        "expected_output": "Should return a message annotated as 'error', with an example image attached.",
         "tool_name": "annotatedMessage",
         "tool_arguments": {
-          "messageType": "success",
+          "messageType": "error",
           "includeImage": true
         }
       },
@@ -2816,26 +3101,13 @@
           "content": [
             {
               "type": "text",
-              "text": "Returning resource reference for Resource 42:",
-              "annotations": null,
-              "meta": null
-            },
-            {
-              "type": "resource",
-              "resource": {
-                "uri": "test://static/resource/42",
-                "mimeType": "application/octet-stream",
-                "meta": null,
-                "blob": "UmVzb3VyY2UgNDI6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg==",
-                "name": "Resource 42"
+              "text": "Debug: Cache hit ratio 0.95, latency 150ms",
+              "annotations": {
+                "audience": [
+                  "assistant"
+                ],
+                "priority": 0.3
               },
-              "annotations": null,
-              "meta": null
-            },
-            {
-              "type": "text",
-              "text": "You can access this resource using the URI: test://static/resource/42",
-              "annotations": null,
               "meta": null
             }
           ],
@@ -2847,11 +3119,12 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool retrieves a resource reference. Testing it ensures the server can handle resource lookups.",
-        "expected_output": "The tool should return a reference to resource ID 42.",
-        "tool_name": "getResourceReference",
+        "justification": "Test annotation with 'debug' type, no image.",
+        "expected_output": "Should return a message annotated as 'debug', without an image.",
+        "tool_name": "annotatedMessage",
         "tool_arguments": {
-          "resourceId": 42
+          "messageType": "debug",
+          "includeImage": false
         }
       },
       {
@@ -2888,7 +3161,346 @@
           "content": [
             {
               "type": "text",
-              "text": "Here are 5 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):",
+              "text": "Returning resource reference for Resource 1:",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "resource",
+              "resource": {
+                "uri": "test://static/resource/1",
+                "mimeType": "text/plain",
+                "meta": null,
+                "text": "Resource 1: This is a plaintext resource",
+                "name": "Resource 1"
+              },
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "text",
+              "text": "You can access this resource using the URI: test://static/resource/1",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test resource reference with minimum valid ID.",
+        "expected_output": "Should return a reference object for resource ID 1.",
+        "tool_name": "getResourceReference",
+        "tool_arguments": {
+          "resourceId": 1
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Returning resource reference for Resource 100:",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "resource",
+              "resource": {
+                "uri": "test://static/resource/100",
+                "mimeType": "application/octet-stream",
+                "meta": null,
+                "blob": "UmVzb3VyY2UgMTAwOiBUaGlzIGlzIGEgYmFzZTY0IGJsb2I=",
+                "name": "Resource 100"
+              },
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "text",
+              "text": "You can access this resource using the URI: test://static/resource/100",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test resource reference with maximum valid ID.",
+        "expected_output": "Should return a reference object for resource ID 100.",
+        "tool_name": "getResourceReference",
+        "tool_arguments": {
+          "resourceId": 100
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Returning resource reference for Resource 50:",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "resource",
+              "resource": {
+                "uri": "test://static/resource/50",
+                "mimeType": "application/octet-stream",
+                "meta": null,
+                "blob": "UmVzb3VyY2UgNTA6IFRoaXMgaXMgYSBiYXNlNjQgYmxvYg==",
+                "name": "Resource 50"
+              },
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "text",
+              "text": "You can access this resource using the URI: test://static/resource/50",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test resource reference with a mid-range valid ID.",
+        "expected_output": "Should return a reference object for resource ID 50.",
+        "tool_name": "getResourceReference",
+        "tool_arguments": {
+          "resourceId": 50
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "⚠️ User cancelled the elicitation dialog.",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "type": "text",
+              "text": "\nRaw result: {\n  \"action\": \"cancel\"\n}",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 1,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test elicitation feature; should prompt user for favorite color, number, and pets.",
+        "expected_output": "Should initiate a multi-step interaction asking for color, number, and pets, and return collected responses.",
+        "tool_name": "startElicitation",
+        "tool_arguments": {}
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Here are 1 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):",
+              "annotations": null,
+              "meta": null
+            },
+            {
+              "name": "Resource 1",
+              "title": null,
+              "uri": "test://static/resource/1",
+              "description": "Resource 1: plaintext resource",
+              "mimeType": "text/plain",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            }
+          ],
+          "structuredContent": null,
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test resource links with minimum count.",
+        "expected_output": "Should return a single resource link object.",
+        "tool_name": "getResourceLinks",
+        "tool_arguments": {
+          "count": 1
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "Here are 10 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):",
               "annotations": null,
               "meta": null
             },
@@ -2946,6 +3558,61 @@
               "annotations": null,
               "meta": null,
               "type": "resource_link"
+            },
+            {
+              "name": "Resource 6",
+              "title": null,
+              "uri": "test://static/resource/6",
+              "description": "Resource 6: binary blob resource",
+              "mimeType": "application/octet-stream",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            },
+            {
+              "name": "Resource 7",
+              "title": null,
+              "uri": "test://static/resource/7",
+              "description": "Resource 7: plaintext resource",
+              "mimeType": "text/plain",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            },
+            {
+              "name": "Resource 8",
+              "title": null,
+              "uri": "test://static/resource/8",
+              "description": "Resource 8: binary blob resource",
+              "mimeType": "application/octet-stream",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            },
+            {
+              "name": "Resource 9",
+              "title": null,
+              "uri": "test://static/resource/9",
+              "description": "Resource 9: plaintext resource",
+              "mimeType": "text/plain",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            },
+            {
+              "name": "Resource 10",
+              "title": null,
+              "uri": "test://static/resource/10",
+              "description": "Resource 10: binary blob resource",
+              "mimeType": "application/octet-stream",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
             }
           ],
           "structuredContent": null,
@@ -2956,11 +3623,11 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool retrieves multiple resource links. Testing it ensures the server can handle multiple resource lookups.",
-        "expected_output": "The tool should return 5 resource links.",
+        "justification": "Test resource links with maximum count.",
+        "expected_output": "Should return an array of 10 resource link objects.",
         "tool_name": "getResourceLinks",
         "tool_arguments": {
-          "count": 5
+          "count": 10
         }
       },
       {
@@ -2997,15 +3664,42 @@
           "content": [
             {
               "type": "text",
-              "text": "⚠️ User cancelled the elicitation dialog.",
+              "text": "Here are 3 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):",
               "annotations": null,
               "meta": null
             },
             {
-              "type": "text",
-              "text": "\nRaw result: {\n  \"action\": \"cancel\"\n}",
+              "name": "Resource 1",
+              "title": null,
+              "uri": "test://static/resource/1",
+              "description": "Resource 1: plaintext resource",
+              "mimeType": "text/plain",
+              "size": null,
               "annotations": null,
-              "meta": null
+              "meta": null,
+              "type": "resource_link"
+            },
+            {
+              "name": "Resource 2",
+              "title": null,
+              "uri": "test://static/resource/2",
+              "description": "Resource 2: binary blob resource",
+              "mimeType": "application/octet-stream",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
+            },
+            {
+              "name": "Resource 3",
+              "title": null,
+              "uri": "test://static/resource/3",
+              "description": "Resource 3: plaintext resource",
+              "mimeType": "text/plain",
+              "size": null,
+              "annotations": null,
+              "meta": null,
+              "type": "resource_link"
             }
           ],
           "structuredContent": null,
@@ -3013,13 +3707,15 @@
         },
         "exception": null,
         "sampling_requests": 0,
-        "elicitation_requests": 1,
+        "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool demonstrates elicitation. Testing it ensures the server can interactively request and process user input.",
-        "expected_output": "The tool should prompt the user for their favorite color, number, and pets.",
-        "tool_name": "startElicitation",
-        "tool_arguments": {}
+        "justification": "Test resource links with default count.",
+        "expected_output": "Should return an array of 3 resource link objects.",
+        "tool_name": "getResourceLinks",
+        "tool_arguments": {
+          "count": 3
+        }
       },
       {
         "error_handling": {
@@ -3072,11 +3768,69 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "This tool returns structured content. Testing it ensures the server can validate and return data in a predefined schema.",
-        "expected_output": "The tool should return weather data for New York, including temperature, conditions, and humidity.",
+        "justification": "Test structured content with a city name.",
+        "expected_output": "Should return an object with temperature, conditions, and humidity for San Francisco, matching the output schema.",
         "tool_name": "structuredContent",
         "tool_arguments": {
-          "location": "New York"
+          "location": "San Francisco"
+        }
+      },
+      {
+        "error_handling": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "error_type": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "no_silent_error": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_relevance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "output_quality": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "schema_compliance": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "meets_expectations": {
+          "justification": "No score generated",
+          "score": "N/A"
+        },
+        "tool_output": {
+          "meta": null,
+          "content": [
+            {
+              "type": "text",
+              "text": "{\"temperature\":22.5,\"conditions\":\"Partly cloudy\",\"humidity\":65}",
+              "annotations": null,
+              "meta": null
+            }
+          ],
+          "structuredContent": {
+            "temperature": 22.5,
+            "conditions": "Partly cloudy",
+            "humidity": 65
+          },
+          "isError": false
+        },
+        "exception": null,
+        "sampling_requests": 0,
+        "elicitation_requests": 0,
+        "list_roots_requests": 0,
+        "logging_requests": 0,
+        "justification": "Test structured content with a zip code.",
+        "expected_output": "Should return an object with temperature, conditions, and humidity for zip code 94103, matching the output schema.",
+        "tool_name": "structuredContent",
+        "tool_arguments": {
+          "location": "94103"
         }
       },
       {
@@ -3114,114 +3868,11 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Testing the structuredContent tool with an empty location ensures it handles validation errors correctly.",
-        "expected_output": "The tool should return an error indicating the location is invalid.",
+        "justification": "Test edge case: empty location string (should fail validation).",
+        "expected_output": "Should return an error or validation failure due to minLength constraint.",
         "tool_name": "structuredContent",
         "tool_arguments": {
           "location": ""
-        }
-      },
-      {
-        "error_handling": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "error_type": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "no_silent_error": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "output_relevance": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "output_quality": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "schema_compliance": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "meets_expectations": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "tool_output": {
-          "meta": null,
-          "content": [
-            {
-              "type": "text",
-              "text": "Error: Operation failed",
-              "annotations": {
-                "audience": [
-                  "user",
-                  "assistant"
-                ],
-                "priority": 1.0
-              },
-              "meta": null
-            }
-          ],
-          "structuredContent": null,
-          "isError": false
-        },
-        "exception": null,
-        "sampling_requests": 0,
-        "elicitation_requests": 0,
-        "list_roots_requests": 0,
-        "logging_requests": 0,
-        "justification": "Testing the annotatedMessage tool with an error message ensures it handles different message types correctly.",
-        "expected_output": "The tool should return an error message without an image.",
-        "tool_name": "annotatedMessage",
-        "tool_arguments": {
-          "messageType": "error",
-          "includeImage": false
-        }
-      },
-      {
-        "error_handling": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "error_type": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "no_silent_error": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "output_relevance": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "output_quality": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "schema_compliance": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "meets_expectations": {
-          "justification": "No score generated",
-          "score": "N/A"
-        },
-        "tool_output": null,
-        "exception": "[\n  {\n    \"code\": \"too_big\",\n    \"maximum\": 100,\n    \"type\": \"number\",\n    \"inclusive\": true,\n    \"exact\": false,\n    \"message\": \"Number must be less than or equal to 100\",\n    \"path\": [\n      \"resourceId\"\n    ]\n  }\n]",
-        "sampling_requests": 0,
-        "elicitation_requests": 0,
-        "list_roots_requests": 0,
-        "logging_requests": 0,
-        "justification": "Testing the getResourceReference tool with an out-of-range resourceId ensures it handles boundary conditions correctly.",
-        "expected_output": "The tool should return an error indicating the resourceId is out of range.",
-        "tool_name": "getResourceReference",
-        "tool_arguments": {
-          "resourceId": 101
         }
       }
     ]

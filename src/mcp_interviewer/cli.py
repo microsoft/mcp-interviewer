@@ -15,7 +15,10 @@ def cli():
         default="streamable_http",
         help="If MCP server is remote, whether to use streamable_http or sse.",
     )
-    parser.add_argument("--model", required=True)
+    parser.add_argument(
+        "--model",
+        help="Model name for LLM-based evaluation (required when using --test or --judge)",
+    )
     parser.add_argument(
         "--client",
         default="openai.OpenAI",
@@ -83,6 +86,11 @@ def cli():
         action="store_true",
         help="Bypass user confirmation of functional test risk.",
     )
+    parser.add_argument(
+        "--fail-on-warnings",
+        action="store_true",
+        help="Return non-zero exit code if any constraint violations with WARNING severity are encountered.",
+    )
 
     args = parser.parse_args()
 
@@ -145,6 +153,13 @@ def cli():
     should_judge_tool = args.judge or args.judge_tools
     should_judge_functional_test = args.judge or args.judge_test
 
+    # Check if model is required but not provided
+    requires_llm = args.test or should_judge_tool or should_judge_functional_test
+    if requires_llm and not args.model:
+        parser.error(
+            "--model is required when using --test, --judge, --judge-tools, or --judge-test"
+        )
+
     if args.test:
         print(
             "🚨 MCP Interviewer will make tool call requests to your MCP server. Depending on the server's capabilities this can lead to irreversible outcomes (e.g. deleting files)."
@@ -157,32 +172,36 @@ def cli():
             else:
                 accept_risk = input_str == "y"
 
-    import importlib
+    # Only initialize client if LLM features are needed
+    if requires_llm:
+        import importlib
 
-    module, client = args.client.rsplit(".")
-    module = importlib.import_module(module)
-    client = getattr(module, client)
+        module, client = args.client.rsplit(".")
+        module = importlib.import_module(module)
+        client = getattr(module, client)
 
-    client_kwargs = {}
-    # Parse client_kwargs from key=value strings
-    for kwarg in args.client_kwargs:
-        if "=" not in kwarg:
-            raise ValueError(f"Client kwarg must be in key=value format: {kwarg}")
-        key, value = kwarg.split("=", 1)
-        # Try to convert value to appropriate type
-        if value.lower() in ("true", "false"):
-            value = value.lower() == "true"
-        elif value.isdigit():
-            value = int(value)
-        elif value.replace(".", "").isdigit():
-            value = float(value)
-        client_kwargs[key] = value
+        client_kwargs = {}
+        # Parse client_kwargs from key=value strings
+        for kwarg in args.client_kwargs:
+            if "=" not in kwarg:
+                raise ValueError(f"Client kwarg must be in key=value format: {kwarg}")
+            key, value = kwarg.split("=", 1)
+            # Try to convert value to appropriate type
+            if value.lower() in ("true", "false"):
+                value = value.lower() == "true"
+            elif value.isdigit():
+                value = int(value)
+            elif value.replace(".", "").isdigit():
+                value = float(value)
+            client_kwargs[key] = value
 
-    client = client(**client_kwargs)
+        client = client(**client_kwargs)
+    else:
+        client = None
 
     from .main import main
 
-    main(
+    exit_code = main(
         client,
         args.model,
         params,
@@ -193,7 +212,10 @@ def cli():
         custom_reports=args.reports,
         no_collapse=args.no_collapse,
         selected_constraints=args.constraints,
+        fail_on_warnings=args.fail_on_warnings,
     )
+
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":

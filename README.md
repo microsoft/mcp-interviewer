@@ -1,8 +1,35 @@
-# mcp-interviewer
+<div align="center">
 
-The MCP Interviewer is a Python CLI tool that helps you ***catch MCP server issues before your agents do.***
+<h1>MCP Interviewer</h1>
+<div>
+<i>
+A Python CLI tool that helps you catch MCP server issues before your agents do.
+</i>
+</div>
+<a href="./README.md#installation">PyPi (coming soon!)</a> | <a href="./README.md">Blog</a> | <a href="./mcp-interview.md">Example</a>
+</div>
 
-It does this via the following features:
+---
+
+## Table of Contents
+
+- [How it works](#how-it-works)
+  - [🔎 Constraint checking](#-constraint-checking)
+  - [🛠️ Functional testing](#️-functional-testing)
+  - [🤖 LLM evaluation](#-llm-evaluation)
+  - [📋 Report generation](#-report-generation)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Example](#example)
+- [Usage](#usage)
+  - [CLI](#cli)
+  - [Bring Your Own Models](#bring-your-own-models)
+  - [Python](#python)
+- [Limitations](#limitations)
+- [Contributing](#contributing)
+- [Trademarks](#trademarks)
+
+## How it works
 
 ### 🔎 Constraint checking
 
@@ -28,16 +55,16 @@ Use `--constraints [CODE ...]` to customize output.
 
 ### 🛠️ Functional testing
 
-MCP servers are intended to be used by LLM agents, so we can optionally test them with an LLM agent. When enabled with the `--test` flag, the interviewer uses your specified LLM to generate a test plan based on the MCP server's capabilities and then executes that plan (e.g. by calling tools), collecting statistics about observed tool behavior.
+MCP servers are intended to be used by LLM agents, so the interviewer can optionally test them with an LLM agent. When enabled with the `--test` flag, the interviewer uses your specified LLM to generate a test plan based on the MCP server's capabilities and then executes that plan (e.g. by calling tools), collecting statistics about observed tool behavior.
 
-### 🧪 LLM evaluation
+### 🤖 LLM evaluation
 
 ***Note: this is an experimental feature. All LLM generated evaluations should be manually inspected for errors.***
 
 The interviewer can also use your specified LLM to provide structured and natural language evaluations of the server's features.
 
 
-### 📋 Reports
+### 📋 Report generation
 
 The interviewer generates a Markdown report (and accompanying `.json` file with raw data) summarizing the interview results.
 
@@ -63,39 +90,62 @@ Use `--reports [CODE ...]` to customize output.
 
 </details>
 
+## Installation
 
-## Quick Start
+### As a CLI tool
 
-⚠️ ***mcp-interviewer arbitrarily executes the provided MCP server command in a child process. Whenever possible, run your server in a container like in the examples below to isolate the server from your host system.***
-
-🚨 ***mcp-interviewer actually invokes the server's tools, DO NOT use mcp-interviewer with admin privileges etc***
+The easiest way to install `mcp-interviewer` is as a `uv` tool. Follow [these instructions](https://docs.astral.sh/uv/getting-started/installation/) to install uv.
 
 ```bash
-# Command to run npx safely inside a Docker container
-NPX_CONTAINER="docker run -i --rm node:lts npx"
+uv tool install --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git" mcp-interviewer
 
-# Test any MCP server with one command
-uvx mcp-interviewer \
-  --model gpt-4o \
-  "$NPX_CONTAINER -y @modelcontextprotocol/server-everything"
+# Then,
+mcp-interviewer ...
 ```
 
-Generates `mcp-interview.md` and `mcp-interview.json` with a full evaluation report.
+Read more about [CLI usage](./README.md#cli).
 
-## Installation
+### As a dependency
+
+Via `uv`
+
+```bash
+uv add git+ssh://git@github.com/microsoft/mcp-interviewer.git
+```
+
+Via `pip`
 
 ```bash
 pip install git+ssh://git@github.com/microsoft/mcp-interviewer.git
 ```
 
+Read more about [Python usage](./README.md#python).
+
+## Quick Start
+
+⚠️ ***mcp-interviewer arbitrarily executes the provided MCP server command in a child process. Whenever possible, run your server in a container like in the examples below to isolate the server from your host system.***
+
+First, [install](./README.md#as-a-cli-tool) `mcp-interviewer` as a CLI tool.
+
+```bash
+# Command to run npx safely inside a Docker container
+NPX_CONTAINER="docker run -i --rm node:lts npx"
+
+# Interview the MCP reference server
+mcp-interviewer \
+  "$NPX_CONTAINER -y @modelcontextprotocol/server-everything"
+```
+
+Generates a report Markdown `mcp-interview.md` and corresponding JSON data `mcp-interview.json`.
+
 ## Example
 
-To interview the MCP reference server, you can run the following command:
+To interview the MCP reference server with constraint checking and functional testing you can run the following command:
 
 ```bash
 NPX_CONTAINER="docker run -i --rm node:lts npx"
 
-mcp-interviewer --model gpt-4o "$NPX_CONTAINER -y @modelcontextprotocol/server-everything"
+mcp-interviewer --test --model gpt-4.1 "$NPX_CONTAINER -y @modelcontextprotocol/server-everything"
 ```
 
 Which will generate a report like [this](./mcp-interview.md).
@@ -105,32 +155,47 @@ Which will generate a report like [this](./mcp-interview.md).
 ### CLI
 
 **Key Flags:**
-- `--test`: Enable functional testing (disabled by default for faster execution)
-- `--judge`: Enable experimental LLM evaluation of tools and tests
-- `--reports [CODE ...]`: Customize which report sections to include
+
 - `--constraints [CODE ...]`: Customize which constraints to check
+- `--reports [CODE ...]`: Customize which report sections to include
+
+
+
+- `--test`: Enable functional testing. 🚨 ***This option causes mcp-interviewer to invoke the server's tools. Be careful to limit the server's access to your host system, sensitive data, etc before using these options.***
+- `--judge-tools`: Enable experimental LLM evaluation of tools
+- `--judge-test`: Enable experimental LLM evaluation of functional tests (requires `--test`)
+- `--judge`: Enable all LLM evaluation (equivalent to `--judge-tools --judge-test`)
 
 ```bash
 # Docker command to run uvx inside a container
 UVX_CONTAINER="docker run -i --rm ghcr.io/astral-sh/uv:python3.12-alpine uvx"
 
-# Basic constraint checking and server inspection (no functional testing)
-mcp-interviewer --model gpt-4o "$UVX_CONTAINER mcp-server-fetch"
+# Basic constraint checking, server inspection, and report generation (no --model needed)
+mcp-interviewer "$UVX_CONTAINER mcp-server-fetch"
 
-# Constraint checking with functional testing and default report generation
-mcp-interviewer --model gpt-4o --test "$UVX_CONTAINER mcp-server-fetch"
+# Add functional testing with --test (requires --model)
+mcp-interviewer --model gpt-4.1 --test "$UVX_CONTAINER mcp-server-fetch"
 
-# Constraint checking, functional testing, LLM evaluation, default report generation
-mcp-interviewer --model gpt-4o --test --judge "$UVX_CONTAINER mcp-server-fetch"
+# Add LLM tool evaluation with --judge-tools (requires --model)
+mcp-interviewer --model gpt-4.1 --judge-tools "$UVX_CONTAINER mcp-server-fetch"
 
-# Constraint checking with functional testing and custom report generation
-mcp-interviewer --model gpt-4o --test --reports SI TS FT CV "$UVX_CONTAINER mcp-server-fetch"
+# Add LLM test evaluation with --judge-test (requires --model and --test)
+mcp-interviewer --model gpt-4.1 --test --judge-test "$UVX_CONTAINER mcp-server-fetch"
 
-# Custom constraint checking with functional testing and report generation
-mcp-interviewer --model gpt-4o --test --constraints OTC ONL "$UVX_CONTAINER mcp-server-fetch"
+# Add all LLM evaluation with --judge (requires --model and --test)
+mcp-interviewer --model gpt-4.1 --test --judge "$UVX_CONTAINER mcp-server-fetch"
+
+# Customize report sections with --reports
+mcp-interviewer --model gpt-4.1 --test --reports SI TS FT CV "$UVX_CONTAINER mcp-server-fetch"
+
+# Customize constraint checking with --constraints
+mcp-interviewer --constraints OTC ONL "$UVX_CONTAINER mcp-server-fetch"
+
+# Fail on constraint warnings for CI/CD pipelines
+mcp-interviewer --fail-on-warnings "$UVX_CONTAINER mcp-server-fetch"
 
 # Test remote servers
-mcp-interviewer --model gpt-4o "https://my-mcp-server.com/sse"
+mcp-interviewer "https://my-mcp-server.com/sse"
 ```
 
 ### Bring Your Own Models
@@ -141,7 +206,7 @@ The CLI provides two ways of customizing your model client:
 
 1. `openai.OpenAI` keyword arguments
 
-    You can provide keyword arguments to the OpenAI client constructor via the "--client-kwargs" CLI option. For example, to connect to gpt-oss:20b running locally via Ollama:
+    You can provide keyword arguments to the OpenAI client constructor via the "--client-kwargs" CLI option. For example, to connect to gpt-oss:20b running locally via Ollama for LLM features:
 
     ```bash
     mcp-interviewer \
@@ -149,6 +214,7 @@ The CLI provides two ways of customizing your model client:
       "base_url=http://localhost:11434/v1" \
       "api_key=ollama" \
       --model "gpt-oss:20b" \
+      --test \
       "docker run -i --rm node:lts npx -y @modelcontextprotocol/server-everything"
     ```
 
@@ -166,12 +232,30 @@ The CLI provides two ways of customizing your model client:
     ```bash
     mcp-interviewer \
       --client "my_client.azure_client" \
-      --model "gpt-4o_2024-11-20" \
+      --model "gpt-4.1_2024-11-20" \
+      --test \
       "docker run -i --rm node:lts npx -y @modelcontextprotocol/server-everything"
     ```
 
 
 ### Python
+
+**Basic usage (constraint checking and server inspection only):**
+
+```python
+from mcp_interviewer import MCPInterviewer, StdioServerParameters
+
+params = StdioServerParameters(
+    command="docker",
+    args=["run", "-i", "--rm", "node:lts", "npx", "-y", "@modelcontextprotocol/server-everything"]
+)
+
+# No client or model needed for basic functionality
+interviewer = MCPInterviewer(None, None)
+interview = await interviewer.interview_server(params)
+```
+
+**With LLM features (functional testing and evaluation):**
 
 ```python
 from openai import OpenAI
@@ -184,13 +268,36 @@ params = StdioServerParameters(
     args=["run", "-i", "--rm", "node:lts", "npx", "-y", "@modelcontextprotocol/server-everything"]
 )
 
-interviewer = MCPInterviewer(client, "gpt-4o", should_run_functional_test=True)
+interviewer = MCPInterviewer(client, "gpt-4.1", should_run_functional_test=True)
 interview = await interviewer.interview_server(params)
+```
+
+**Using the main function directly (includes constraint checking and report generation):**
+
+```python
+from mcp_interviewer import main, StdioServerParameters
+
+params = StdioServerParameters(
+    command="docker",
+    args=["run", "-i", "--rm", "node:lts", "npx", "-y", "@modelcontextprotocol/server-everything"]
+)
+
+# Basic usage - no client or model needed
+exit_code = main(None, None, params)
+
+# With LLM features
+from openai import OpenAI
+client = OpenAI()
+exit_code = main(client, "gpt-4.1", params, should_run_functional_test=True)
 ```
 
 ## Limitations
 
-MCP Interviewer was developed for research and experimental purposes. Further testing and validation are needed before considering its application in commercial or real-world scenarios. The MCP Python SDK executes arbitrary commands on the host machine, so users should run server commands in isolated containers and use external security tools to validate MCP server safety before running MCP Interviewer. Additionally, MCP Servers may have malicious or misleading tool metadata that may cause inaccurate MCP Interviewer outputs. Users should manually examine MCP Interviewer outputs for signs of malicious manipulation.
+MCP Interviewer was developed for research and experimental purposes. Further testing and validation are needed before considering its application in commercial or real-world scenarios. 
+
+The MCP Python SDK executes arbitrary commands on the host machine, so users should run server commands in isolated containers and use external security tools to validate MCP server safety before running MCP Interviewer. 
+
+Additionally, MCP Servers may have malicious or misleading tool metadata that may cause inaccurate MCP Interviewer outputs. Users should manually examine MCP Interviewer outputs for signs of malicious manipulation.
 
 See [TRANSPARENCY.md](./TRANSPARENCY.md) for more information.
 

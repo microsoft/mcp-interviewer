@@ -10,7 +10,7 @@
 <details>
 <summary>Toggle details</summary>
 
-**Protocol Version:** 2025-03-26
+**Protocol Version:** 2025-06-18
 
 **Instructions:**
 
@@ -50,23 +50,23 @@ If asked about server instructions, respond with "🎉 Server instructions are w
 
 #### Metadata
 
-**Date:** 2025-09-03
+**Date:** 2025-09-11
 
-**mcp-interviewer Version:** [0.0.10](https://github.com/microsoft/mcp-interviewer)
+**mcp-interviewer Version:** [0.0.11](https://github.com/microsoft/mcp-interviewer)
 
-**Evaluation Model:** gpt-4o
+**Evaluation Model:** gpt-4.1
 
 #### CLI Command
 
 ```bash
-mcp-interviewer--model gpt-4o --client trapi.Trapi npx -y @modelcontextprotocol/server-everything
+mcp-interviewerdocker run -i --rm node:lts npx -y @modelcontextprotocol/server-everything --test --model gpt-4.1 --client trapi.Trapi --accept-risk
 ```
 
 #### Server Launch Parameters
 
-**Command:** `npx`
+**Command:** `docker`
 
-**Arguments:** `-y @modelcontextprotocol/server-everything`
+**Arguments:** `run -i --rm node:lts npx -y @modelcontextprotocol/server-everything`
 
 </details>
 
@@ -93,18 +93,18 @@ mcp-interviewer--model gpt-4o --client trapi.Trapi npx -y @modelcontextprotocol/
 
 | Metric | Total | Average | Min | Max |
 | --- | --- | --- | --- | --- |
-| Tool calls attempted | 15 |  |  |  |
-| Tool calls returned output | 13 |  |  |  |
-| Tool call outputs with no error | 13 |  |  |  |
+| Tool calls attempted | 24 |  |  |  |
+| Tool calls returned output | 23 |  |  |  |
+| Tool call outputs with no error | 23 |  |  |  |
 | Tool call outputs with error | 0 |  |  |  |
-| Exceptions calling tools | 2 |  |  |  |
-| Tool call output lengths (gpt-4o text tokens) | 1,172 | 90.2 | 3 | 1,007 |
-| Text output content blocks | 16 | 4.0 | 1 | 2 |
-| Resource_Link output content blocks | 5 | 1.2 | 0 | 5 |
+| Exceptions calling tools | 1 |  |  |  |
+| Tool call output lengths (gpt-4o text tokens) | 751 | 32.7 | 3 | 404 |
+| Text output content blocks | 28 | 7.0 | 1 | 2 |
+| Resource_Link output content blocks | 14 | 3.5 | 0 | 10 |
+| Resource output content blocks | 3 | 0.8 | 0 | 1 |
 | Image output content blocks | 2 | 0.5 | 0 | 1 |
-| Resource output content blocks | 1 | 0.2 | 0 | 1 |
-| Sampling requests | 1 | 0.1 | 0 | 1 |
-| Elicitation requests | 1 | 0.1 | 0 | 1 |
+| Sampling requests | 2 | 0.1 | 0 | 1 |
+| Elicitation requests | 1 | 0.0 | 0 | 1 |
 ## Constraint Violations
 
 ✅ **No constraint violations found**
@@ -131,7 +131,7 @@ mcp-interviewer--model gpt-4o --client trapi.Trapi npx -y @modelcontextprotocol/
 
 [→ View tool details](#tool-echo)
 
-**Reasoning (🤖):** The echo tool is foundational and has no dependencies. Testing it first ensures basic functionality of the server.
+**Reasoning (🤖):** Echo is a foundational tool; test basic functionality with a simple string.
 
 **Tool Call (🤖):**
 ```json
@@ -139,9 +139,11 @@ mcp-interviewer--model gpt-4o --client trapi.Trapi npx -y @modelcontextprotocol/
   "message": "Hello, MCP!"
 }
 ```
-**Expected Output (🤖):** The tool should return the input message: 'Hello, MCP!'
+**Expected Output (🤖):** Should return the exact input message: 'Hello, MCP!'
 
 **Actual Output (1 blocks):**
+
+✅ **No Error**
 
 ```
 Echo: Hello, MCP!
@@ -155,34 +157,35 @@ Echo: Hello, MCP!
 
 </details>
 
-#### Step 2: add ✅
+#### Step 2: echo ✅
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-add)
+[→ View tool details](#tool-echo)
 
-**Reasoning (🤖):** The add tool is simple and independent. Testing it ensures basic arithmetic operations work correctly.
+**Reasoning (🤖):** Test edge case: empty string input.
 
 **Tool Call (🤖):**
 ```json
 {
-  "a": 5,
-  "b": 10
+  "message": ""
 }
 ```
-**Expected Output (🤖):** The tool should return the sum: 15
+**Expected Output (🤖):** Should return an empty string.
 
 **Actual Output (1 blocks):**
 
+✅ **No Error**
+
 ```
-The sum of 5 and 10 is 15.
+Echo: 
 ```
 **Output Statistics:**
 
 | Metric | Value |
 | --- | --- |
-| Text token count | 12 |
+| Text token count | 3 |
 | Text blocks | 1 |
 
 </details>
@@ -194,21 +197,23 @@ The sum of 5 and 10 is 15.
 
 [→ View tool details](#tool-add)
 
-**Reasoning (🤖):** Testing the add tool with negative numbers ensures it handles edge cases correctly.
+**Reasoning (🤖):** Test normal addition of two positive numbers.
 
 **Tool Call (🤖):**
 ```json
 {
-  "a": -5,
-  "b": 5
+  "a": 5,
+  "b": 7
 }
 ```
-**Expected Output (🤖):** The tool should return the sum: 0
+**Expected Output (🤖):** Should return 12.
 
 **Actual Output (1 blocks):**
 
+✅ **No Error**
+
 ```
-The sum of -5 and 5 is 0.
+The sum of 5 and 7 is 12.
 ```
 **Output Statistics:**
 
@@ -219,28 +224,98 @@ The sum of -5 and 5 is 0.
 
 </details>
 
-#### Step 4: longRunningOperation ✅
+#### Step 4: add ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-add)
+
+**Reasoning (🤖):** Test addition with a negative and a positive number.
+
+**Tool Call (🤖):**
+```json
+{
+  "a": -3,
+  "b": 10
+}
+```
+**Expected Output (🤖):** Should return 7.
+
+**Actual Output (1 blocks):**
+
+✅ **No Error**
+
+```
+The sum of -3 and 10 is 7.
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 12 |
+| Text blocks | 1 |
+
+</details>
+
+#### Step 5: add ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-add)
+
+**Reasoning (🤖):** Test edge case: both numbers zero.
+
+**Tool Call (🤖):**
+```json
+{
+  "a": 0,
+  "b": 0
+}
+```
+**Expected Output (🤖):** Should return 0.
+
+**Actual Output (1 blocks):**
+
+✅ **No Error**
+
+```
+The sum of 0 and 0 is 0.
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 12 |
+| Text blocks | 1 |
+
+</details>
+
+#### Step 6: longRunningOperation ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-longRunningOperation)
 
-**Reasoning (🤖):** This tool demonstrates long-running operations. Testing it ensures the server handles progress updates correctly.
+**Reasoning (🤖):** Test basic long-running operation with short duration and steps for quick feedback.
 
 **Tool Call (🤖):**
 ```json
 {
-  "duration": 5,
+  "duration": 3,
   "steps": 3
 }
 ```
-**Expected Output (🤖):** The tool should return progress updates and complete after 5 seconds.
+**Expected Output (🤖):** Should return progress updates at each step and a final completion message after 3 seconds.
 
 **Actual Output (1 blocks):**
 
+✅ **No Error**
+
 ```
-Long running operation completed. Duration: 5 seconds, Steps: 3.
+Long running operation completed. Duration: 3 seconds, Steps: 3.
 ```
 **Output Statistics:**
 
@@ -251,54 +326,94 @@ Long running operation completed. Duration: 5 seconds, Steps: 3.
 
 </details>
 
-#### Step 5: printEnv ✅
+#### Step 7: longRunningOperation ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-longRunningOperation)
+
+**Reasoning (🤖):** Test edge case: zero duration, single step.
+
+**Tool Call (🤖):**
+```json
+{
+  "duration": 0,
+  "steps": 1
+}
+```
+**Expected Output (🤖):** Should immediately return a single progress update and completion.
+
+**Actual Output (1 blocks):**
+
+✅ **No Error**
+
+```
+Long running operation completed. Duration: 0 seconds, Steps: 1.
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 16 |
+| Text blocks | 1 |
+
+</details>
+
+#### Step 8: printEnv ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-printEnv)
 
-**Reasoning (🤖):** This tool is useful for debugging the server's environment. Testing it ensures the server can access and display environment variables.
+**Reasoning (🤖):** Test environment variable listing; useful for debugging server configuration.
 
 **Tool Call (🤖):**
 ```json
 {}
 ```
-**Expected Output (🤖):** The tool should return a list of environment variables.
+**Expected Output (🤖):** Should return a dictionary of environment variables and their values.
 
 **Actual Output (1 blocks):**
 
+✅ **No Error**
+
 ```json
 {
-  "NODE": "/Users/tylerpayne/.nvm/versions/node/v22.16.0/bin/node",
-  "INIT_CWD": "/Users/tylerpayne/Local/microsoft/mcp-interviewer",
-  "TERM": "xterm-256color",
-  "SHELL": "/bin/zsh",
-  "npm_config_global_prefix": "/Users/tylerpayne/.nvm/versions/node/v22.16.0",
-  "COLOR": "0",
+  "npm_config_user_agent": "npm/10.9.2 node/v22.17.0 linux arm64 workspaces/false",
+  "NODE_VERSION": "22.17.0",
+  "HOSTNAME": "dec62aa38426",
+  "YARN_VERSION": "1.22.22",
+  "npm_node_execpath": "/usr/local/bin/node",
   "npm_config_noproxy": "",
-  "npm_config_local_prefix": "/Users/tylerpayne/Local/microsoft/mcp-interviewer",
-  "USER": "tylerpayne",
-  "npm_config_globalconfig": "/Users/tylerpayne/.nvm/versions/node/v22.16.0/etc/npm
-... (2594 chars truncated)
+  "HOME": "/root",
+  "npm_package_json": "/package.json",
+  "npm_config_userconfig": "/root/.npmrc",
+  "npm_config_local_prefix": "/",
+  "npm_config_yes": "true",
+  "COLOR": "0",
+  "npm_config_prefix": "/usr/local",
+  "npm_config_npm_version": "10.9.2"
+... (768 chars truncated)
 ```
 **Output Statistics:**
 
 | Metric | Value |
 | --- | --- |
-| Text token count | 1,007 |
+| Text token count | 404 |
 | Text blocks | 1 |
 
 </details>
 
-#### Step 6: sampleLLM ✅
+#### Step 9: sampleLLM ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-sampleLLM)
 
-**Reasoning (🤖):** This tool interacts with an LLM. Testing it ensures the server can generate responses based on prompts.
+**Reasoning (🤖):** Test LLM sampling with a factual prompt and limited token output.
 
 **Tool Call (🤖):**
 ```json
@@ -307,9 +422,11 @@ Long running operation completed. Duration: 5 seconds, Steps: 3.
   "maxTokens": 10
 }
 ```
-**Expected Output (🤖):** The tool should return a response like 'The capital of France is Paris.'
+**Expected Output (🤖):** Should return a short completion, e.g., 'The capital of France is Paris.'
 
 **Actual Output (1 blocks):**
+
+✅ **No Error**
 
 ```
 LLM sampling result: Dummy content
@@ -329,22 +446,64 @@ LLM sampling result: Dummy content
 
 </details>
 
-#### Step 7: getTinyImage ✅
+#### Step 10: sampleLLM ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-sampleLLM)
+
+**Reasoning (🤖):** Test LLM with creative prompt and larger token limit.
+
+**Tool Call (🤖):**
+```json
+{
+  "prompt": "Write a short poem about rain.",
+  "maxTokens": 50
+}
+```
+**Expected Output (🤖):** Should return a short poem about rain, up to 50 tokens.
+
+**Actual Output (1 blocks):**
+
+✅ **No Error**
+
+```
+LLM sampling result: Dummy content
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 7 |
+| Text blocks | 1 |
+
+**MCP Requests:**
+
+| Request Type | Count |
+| --- | --- |
+| Sampling | 1 |
+
+</details>
+
+#### Step 11: getTinyImage ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-getTinyImage)
 
-**Reasoning (🤖):** This tool retrieves a predefined image. Testing it ensures the server can handle binary data or image retrieval.
+**Reasoning (🤖):** Test retrieval of the MCP_TINY_IMAGE resource.
 
 **Tool Call (🤖):**
 ```json
 {}
 ```
-**Expected Output (🤖):** The tool should return the MCP_TINY_IMAGE.
+**Expected Output (🤖):** Should return a small image object or binary data representing the tiny image.
 
 **Actual Output (3 blocks):**
+
+✅ **No Error**
 
 ```
 This is a tiny image:
@@ -366,28 +525,64 @@ The image above is the MCP tiny image.
 
 </details>
 
-#### Step 8: annotatedMessage ✅
+#### Step 12: annotatedMessage ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-annotatedMessage)
 
-**Reasoning (🤖):** This tool demonstrates annotations. Testing it ensures the server can handle metadata and optional image inclusion.
+**Reasoning (🤖):** Test annotation with 'success' type and no image.
 
 **Tool Call (🤖):**
 ```json
 {
   "messageType": "success",
-  "includeImage": true
+  "includeImage": false
 }
 ```
-**Expected Output (🤖):** The tool should return a success message with an example image.
+**Expected Output (🤖):** Should return a message annotated as 'success', without an image.
 
-**Actual Output (2 blocks):**
+**Actual Output (1 blocks):**
+
+✅ **No Error**
 
 ```
 Operation completed successfully
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 3 |
+| Text blocks | 1 |
+
+</details>
+
+#### Step 13: annotatedMessage ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-annotatedMessage)
+
+**Reasoning (🤖):** Test annotation with 'error' type and image included.
+
+**Tool Call (🤖):**
+```json
+{
+  "messageType": "error",
+  "includeImage": true
+}
+```
+**Expected Output (🤖):** Should return a message annotated as 'error', with an example image attached.
+
+**Actual Output (2 blocks):**
+
+✅ **No Error**
+
+```
+Error: Operation failed
 ```
 ```
 [Image: image/png]
@@ -397,41 +592,120 @@ Operation completed successfully
 
 | Metric | Value |
 | --- | --- |
-| Text token count | 3 |
+| Text token count | 4 |
 | Text blocks | 1 |
 | Image blocks | 1 |
 
 </details>
 
-#### Step 9: getResourceReference ✅
+#### Step 14: annotatedMessage ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-annotatedMessage)
+
+**Reasoning (🤖):** Test annotation with 'debug' type, no image.
+
+**Tool Call (🤖):**
+```json
+{
+  "messageType": "debug",
+  "includeImage": false
+}
+```
+**Expected Output (🤖):** Should return a message annotated as 'debug', without an image.
+
+**Actual Output (1 blocks):**
+
+✅ **No Error**
+
+```
+Debug: Cache hit ratio 0.95, latency 150ms
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 14 |
+| Text blocks | 1 |
+
+</details>
+
+#### Step 15: getResourceReference ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-getResourceReference)
 
-**Reasoning (🤖):** This tool retrieves a resource reference. Testing it ensures the server can handle resource lookups.
+**Reasoning (🤖):** Test resource reference with minimum valid ID.
 
 **Tool Call (🤖):**
 ```json
 {
-  "resourceId": 42
+  "resourceId": 1
 }
 ```
-**Expected Output (🤖):** The tool should return a reference to resource ID 42.
+**Expected Output (🤖):** Should return a reference object for resource ID 1.
 
 **Actual Output (3 blocks):**
 
+✅ **No Error**
+
 ```
-Returning resource reference for Resource 42:
+Returning resource reference for Resource 1:
 ```
 ```
-[Embedded Resource: test://static/resource/42]
+[Embedded Resource: test://static/resource/1]
+	MIME type: text/plain
+
+Resource 1: This is a plaintext resource
+```
+```
+You can access this resource using the URI: test://static/resource/1
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 32 |
+| Text blocks | 2 |
+| Resource | 1 |
+
+</details>
+
+#### Step 16: getResourceReference ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-getResourceReference)
+
+**Reasoning (🤖):** Test resource reference with maximum valid ID.
+
+**Tool Call (🤖):**
+```json
+{
+  "resourceId": 100
+}
+```
+**Expected Output (🤖):** Should return a reference object for resource ID 100.
+
+**Actual Output (3 blocks):**
+
+✅ **No Error**
+
+```
+Returning resource reference for Resource 100:
+```
+```
+[Embedded Resource: test://static/resource/100]
 	MIME type: application/octet-stream
 	Blob size: 48 bytes (base64)
 ```
 ```
-You can access this resource using the URI: test://static/resource/42
+You can access this resource using the URI: test://static/resource/100
 ```
 **Output Statistics:**
 
@@ -443,79 +717,66 @@ You can access this resource using the URI: test://static/resource/42
 
 </details>
 
-#### Step 10: getResourceLinks ✅
+#### Step 17: getResourceReference ✅
 
 <details>
 <summary>Toggle step details</summary>
 
-[→ View tool details](#tool-getResourceLinks)
+[→ View tool details](#tool-getResourceReference)
 
-**Reasoning (🤖):** This tool retrieves multiple resource links. Testing it ensures the server can handle multiple resource lookups.
+**Reasoning (🤖):** Test resource reference with a mid-range valid ID.
 
 **Tool Call (🤖):**
 ```json
 {
-  "count": 5
+  "resourceId": 50
 }
 ```
-**Expected Output (🤖):** The tool should return 5 resource links.
+**Expected Output (🤖):** Should return a reference object for resource ID 50.
 
-**Actual Output (6 blocks):**
+**Actual Output (3 blocks):**
+
+✅ **No Error**
 
 ```
-Here are 5 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):
+Returning resource reference for Resource 50:
 ```
 ```
-Resource Link: test://static/resource/1
-	MIME type: text/plain
-	Description: Resource 1: plaintext resource
-```
-```
-Resource Link: test://static/resource/2
+[Embedded Resource: test://static/resource/50]
 	MIME type: application/octet-stream
-	Description: Resource 2: binary blob resource
+	Blob size: 48 bytes (base64)
 ```
 ```
-Resource Link: test://static/resource/3
-	MIME type: text/plain
-	Description: Resource 3: plaintext resource
-```
-```
-Resource Link: test://static/resource/4
-	MIME type: application/octet-stream
-	Description: Resource 4: binary blob resource
-```
-```
-Resource Link: test://static/resource/5
-	MIME type: text/plain
-	Description: Resource 5: plaintext resource
+You can access this resource using the URI: test://static/resource/50
 ```
 **Output Statistics:**
 
 | Metric | Value |
 | --- | --- |
-| Text token count | 29 |
-| Text blocks | 1 |
-| Resource link blocks | 5 |
+| Text token count | 23 |
+| Text blocks | 2 |
+| Resource | 1 |
 
 </details>
 
-#### Step 11: startElicitation ✅
+#### Step 18: startElicitation ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-startElicitation)
 
-**Reasoning (🤖):** This tool demonstrates elicitation. Testing it ensures the server can interactively request and process user input.
+**Reasoning (🤖):** Test elicitation feature; should prompt user for favorite color, number, and pets.
 
 **Tool Call (🤖):**
 ```json
 {}
 ```
-**Expected Output (🤖):** The tool should prompt the user for their favorite color, number, and pets.
+**Expected Output (🤖):** Should initiate a multi-step interaction asking for color, number, and pets, and return collected responses.
 
 **Actual Output (2 blocks):**
+
+✅ **No Error**
 
 ```
 ⚠️ User cancelled the elicitation dialog.
@@ -541,24 +802,198 @@ Raw result: {
 
 </details>
 
-#### Step 12: structuredContent ✅
+#### Step 19: getResourceLinks ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-getResourceLinks)
+
+**Reasoning (🤖):** Test resource links with minimum count.
+
+**Tool Call (🤖):**
+```json
+{
+  "count": 1
+}
+```
+**Expected Output (🤖):** Should return a single resource link object.
+
+**Actual Output (2 blocks):**
+
+✅ **No Error**
+
+```
+Here are 1 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):
+```
+```
+[Resource Link: test://static/resource/1]
+	MIME type: text/plain
+	Description: Resource 1: plaintext resource
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 29 |
+| Text blocks | 1 |
+| Resource link blocks | 1 |
+
+</details>
+
+#### Step 20: getResourceLinks ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-getResourceLinks)
+
+**Reasoning (🤖):** Test resource links with maximum count.
+
+**Tool Call (🤖):**
+```json
+{
+  "count": 10
+}
+```
+**Expected Output (🤖):** Should return an array of 10 resource link objects.
+
+**Actual Output (11 blocks):**
+
+✅ **No Error**
+
+```
+Here are 10 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):
+```
+```
+[Resource Link: test://static/resource/1]
+	MIME type: text/plain
+	Description: Resource 1: plaintext resource
+```
+```
+[Resource Link: test://static/resource/2]
+	MIME type: application/octet-stream
+	Description: Resource 2: binary blob resource
+```
+```
+[Resource Link: test://static/resource/3]
+	MIME type: text/plain
+	Description: Resource 3: plaintext resource
+```
+```
+[Resource Link: test://static/resource/4]
+	MIME type: application/octet-stream
+	Description: Resource 4: binary blob resource
+```
+```
+[Resource Link: test://static/resource/5]
+	MIME type: text/plain
+	Description: Resource 5: plaintext resource
+```
+```
+[Resource Link: test://static/resource/6]
+	MIME type: application/octet-stream
+	Description: Resource 6: binary blob resource
+```
+```
+[Resource Link: test://static/resource/7]
+	MIME type: text/plain
+	Description: Resource 7: plaintext resource
+```
+```
+[Resource Link: test://static/resource/8]
+	MIME type: application/octet-stream
+	Description: Resource 8: binary blob resource
+```
+```
+[Resource Link: test://static/resource/9]
+	MIME type: text/plain
+	Description: Resource 9: plaintext resource
+```
+```
+[Resource Link: test://static/resource/10]
+	MIME type: application/octet-stream
+	Description: Resource 10: binary blob resource
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 29 |
+| Text blocks | 1 |
+| Resource link blocks | 10 |
+
+</details>
+
+#### Step 21: getResourceLinks ✅
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-getResourceLinks)
+
+**Reasoning (🤖):** Test resource links with default count.
+
+**Tool Call (🤖):**
+```json
+{
+  "count": 3
+}
+```
+**Expected Output (🤖):** Should return an array of 3 resource link objects.
+
+**Actual Output (4 blocks):**
+
+✅ **No Error**
+
+```
+Here are 3 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):
+```
+```
+[Resource Link: test://static/resource/1]
+	MIME type: text/plain
+	Description: Resource 1: plaintext resource
+```
+```
+[Resource Link: test://static/resource/2]
+	MIME type: application/octet-stream
+	Description: Resource 2: binary blob resource
+```
+```
+[Resource Link: test://static/resource/3]
+	MIME type: text/plain
+	Description: Resource 3: plaintext resource
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 29 |
+| Text blocks | 1 |
+| Resource link blocks | 3 |
+
+</details>
+
+#### Step 22: structuredContent ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-structuredContent)
 
-**Reasoning (🤖):** This tool returns structured content. Testing it ensures the server can validate and return data in a predefined schema.
+**Reasoning (🤖):** Test structured content with a city name.
 
 **Tool Call (🤖):**
 ```json
 {
-  "location": "New York"
+  "location": "San Francisco"
 }
 ```
-**Expected Output (🤖):** The tool should return weather data for New York, including temperature, conditions, and humidity.
+**Expected Output (🤖):** Should return an object with temperature, conditions, and humidity for San Francisco, matching the output schema.
 
 **Actual Output (1 blocks):**
+
+✅ **No Error**
 
 ```json
 {
@@ -576,14 +1011,51 @@ Raw result: {
 
 </details>
 
-#### Step 13: structuredContent ❌
+#### Step 23: structuredContent ✅
 
 <details>
 <summary>Toggle step details</summary>
 
 [→ View tool details](#tool-structuredContent)
 
-**Reasoning (🤖):** Testing the structuredContent tool with an empty location ensures it handles validation errors correctly.
+**Reasoning (🤖):** Test structured content with a zip code.
+
+**Tool Call (🤖):**
+```json
+{
+  "location": "94103"
+}
+```
+**Expected Output (🤖):** Should return an object with temperature, conditions, and humidity for zip code 94103, matching the output schema.
+
+**Actual Output (1 blocks):**
+
+✅ **No Error**
+
+```json
+{
+  "temperature": 22.5,
+  "conditions": "Partly cloudy",
+  "humidity": 65
+}
+```
+**Output Statistics:**
+
+| Metric | Value |
+| --- | --- |
+| Text token count | 17 |
+| Text blocks | 1 |
+
+</details>
+
+#### Step 24: structuredContent ❌
+
+<details>
+<summary>Toggle step details</summary>
+
+[→ View tool details](#tool-structuredContent)
+
+**Reasoning (🤖):** Test edge case: empty location string (should fail validation).
 
 **Tool Call (🤖):**
 ```json
@@ -591,7 +1063,7 @@ Raw result: {
   "location": ""
 }
 ```
-**Expected Output (🤖):** The tool should return an error indicating the location is invalid.
+**Expected Output (🤖):** Should return an error or validation failure due to minLength constraint.
 
 **Exception:**
 ```
@@ -605,74 +1077,6 @@ Raw result: {
     "message": "String must contain at least 1 character(s)",
     "path": [
       "location"
-    ]
-  }
-]
-```
-
-</details>
-
-#### Step 14: annotatedMessage ✅
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-annotatedMessage)
-
-**Reasoning (🤖):** Testing the annotatedMessage tool with an error message ensures it handles different message types correctly.
-
-**Tool Call (🤖):**
-```json
-{
-  "messageType": "error",
-  "includeImage": false
-}
-```
-**Expected Output (🤖):** The tool should return an error message without an image.
-
-**Actual Output (1 blocks):**
-
-```
-Error: Operation failed
-```
-**Output Statistics:**
-
-| Metric | Value |
-| --- | --- |
-| Text token count | 4 |
-| Text blocks | 1 |
-
-</details>
-
-#### Step 15: getResourceReference ❌
-
-<details>
-<summary>Toggle step details</summary>
-
-[→ View tool details](#tool-getResourceReference)
-
-**Reasoning (🤖):** Testing the getResourceReference tool with an out-of-range resourceId ensures it handles boundary conditions correctly.
-
-**Tool Call (🤖):**
-```json
-{
-  "resourceId": 101
-}
-```
-**Expected Output (🤖):** The tool should return an error indicating the resourceId is out of range.
-
-**Exception:**
-```
-[
-  {
-    "code": "too_big",
-    "maximum": 100,
-    "type": "number",
-    "inclusive": true,
-    "exact": false,
-    "message": "Number must be less than or equal to 100",
-    "path": [
-      "resourceId"
     ]
   }
 ]

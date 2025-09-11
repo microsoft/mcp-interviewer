@@ -59,8 +59,8 @@ class MCPInterviewer:
 
     def __init__(
         self,
-        client: Client,
-        model: str,
+        client: Client | None,
+        model: str | None,
         should_run_functional_test: bool = False,
         should_judge_tool: bool = False,
         should_judge_functional_test: bool = False,
@@ -68,8 +68,8 @@ class MCPInterviewer:
         """Initialize the MCP Interviewer.
 
         Args:
-            client: OpenAI client (sync or async) for LLM-based evaluation
-            model: Model name to use for evaluation (e.g., "gpt-4o")
+            client: OpenAI client (sync or async) for LLM-based evaluation (None if not using LLM features)
+            model: Model name to use for evaluation (e.g., "gpt-4o") (None if not using LLM features)
             should_judge_tool: Whether to perform expensive experimental LLM judging of tools (default: False)
             should_judge_functional_test: Whether to perform expensive experimental LLM judging of functional tests (default: False)
         """
@@ -92,6 +92,8 @@ class MCPInterviewer:
         Raises:
             Exception: If tool judging fails
         """
+        if self._client is None or self._model is None:
+            raise ValueError("Client and model are required for tool judging")
         return await _judge_tool(
             self._client, self._model, tool, self._should_judge_tool
         )
@@ -111,6 +113,10 @@ class MCPInterviewer:
         Raises:
             Exception: If test generation fails
         """
+        if self._client is None or self._model is None:
+            raise ValueError(
+                "Client and model are required for functional test generation"
+            )
         return await generate_functional_test(self._client, self._model, server)
 
     async def execute_functional_test_step(
@@ -168,6 +174,10 @@ class MCPInterviewer:
         Raises:
             Exception: If step judging fails
         """
+        if self._client is None or self._model is None:
+            raise ValueError(
+                "Client and model are required for functional test step judging"
+            )
         return await _judge_functional_test_step(
             self._client,
             self._model,
@@ -198,6 +208,10 @@ class MCPInterviewer:
         Raises:
             Exception: If test judging fails
         """
+        if self._client is None or self._model is None:
+            raise ValueError(
+                "Client and model are required for functional test judging"
+            )
         return await _judge_functional_test(
             self._client,
             self._model,
@@ -411,7 +425,7 @@ class MCPInterviewer:
                     logger.info("Creating final server scorecard")
                     scorecard = ServerScoreCard(
                         **server.model_dump(),
-                        model=self._model,
+                        model=self._model or "N/A",
                         tool_scorecards=tool_scorecards,
                         functional_test_scorecard=functional_test_scorecard,
                     )
