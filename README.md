@@ -6,7 +6,7 @@
 A Python CLI tool that helps you catch MCP server issues before your agents do.
 </i>
 </div>
-<a href="./README.md#installation">PyPi (coming soon!)</a> | <a href="./README.md">Blog</a> | <a href="./mcp-interview.md">Example</a>
+<a href="./README.md#installation">PyPi (coming soon!)</a> | <a href="https://www.microsoft.com/en-us/research/blog/tool-space-interference-in-the-mcp-era-designing-for-agent-compatibility-at-scale/">Blog</a> | <a href="./mcp-interview.md">Example</a>
 </div>
 
 ---
