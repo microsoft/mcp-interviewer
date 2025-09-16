@@ -65,10 +65,9 @@ def num_tokens_for_tool(tool: ChatCompletionToolParam, model):
     )  # Add tokens for set name and description
 
     properties = {}
-    if function.get("parameters") is not None and "properties" in function.get(
-        "parameters", {}
-    ):
-        properties = cast(dict, function["parameters"]["properties"])
+    function_parameters = function.get("parameters")
+    if function_parameters is not None and "properties" in function_parameters:
+        properties = cast(dict, function_parameters["properties"])
 
     if len(properties) > 0:
         func_token_count += prop_init  # Add tokens for start of each property
@@ -106,7 +105,7 @@ class ToolInputSchemaTokenCount(ToolStatistic):
             type="function",
             function=FunctionDefinition(
                 name=tool.name,
-                description=tool.description,
+                description=tool.description or "",
                 parameters=tool.inputSchema,
             ),
         )
@@ -137,7 +136,7 @@ class ToolInputSchemaMaxDepthCount(ToolStatistic):
     def compute_tool(self, tool: Tool) -> Generator[StatisticValue, None, None]:
         def get_max_depth(o, depth=0):
             max_depth = depth
-            if isinstance(o, list | tuple):
+            if isinstance(o, (list, tuple)):  # noqa: UP038
                 for item in o:
                     max_depth = max(get_max_depth(item, depth + 1), max_depth)
             elif isinstance(o, dict):
