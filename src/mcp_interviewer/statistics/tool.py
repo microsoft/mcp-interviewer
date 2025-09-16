@@ -5,15 +5,15 @@ from typing import cast
 
 import tiktoken
 from mcp.types import Tool
-from openai.types.chat import ChatCompletionTool
-from openai.types.shared import FunctionDefinition
+from openai.types.chat import ChatCompletionToolParam
+from openai.types.shared_params import FunctionDefinition
 
 from .base import CompositeStatistic, ServerScoreCard, Statistic, StatisticValue
 
 logger = logging.getLogger(__name__)
 
 
-def num_tokens_for_tool(tool: ChatCompletionTool, model):
+def num_tokens_for_tool(tool: ChatCompletionToolParam, model):
     """From https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb"""
 
     # Initialize function settings to 0
@@ -54,9 +54,9 @@ def num_tokens_for_tool(tool: ChatCompletionTool, model):
 
     func_token_count = 0
     func_token_count += func_init  # Add tokens for start of each function
-    function = tool.function
-    f_name = function.name
-    f_desc = function.description or ""
+    function = tool["function"]
+    f_name = function["name"]
+    f_desc = function.get("description", "") or ""
     if f_desc.endswith("."):
         f_desc = f_desc[:-1]
     line = f_name + ":" + f_desc
@@ -65,8 +65,10 @@ def num_tokens_for_tool(tool: ChatCompletionTool, model):
     )  # Add tokens for set name and description
 
     properties = {}
-    if function.parameters is not None and "properties" in function.parameters:
-        properties = cast(dict, function.parameters["properties"])
+    if function.get("parameters") is not None and "properties" in function.get(
+        "parameters", {}
+    ):
+        properties = cast(dict, function["parameters"]["properties"])
 
     if len(properties) > 0:
         func_token_count += prop_init  # Add tokens for start of each property
@@ -100,7 +102,7 @@ class ToolStatistic(Statistic, ABC):
 
 class ToolInputSchemaTokenCount(ToolStatistic):
     def compute_tool(self, tool: Tool) -> Generator[StatisticValue, None, None]:
-        oai_tool = ChatCompletionTool(
+        oai_tool = ChatCompletionToolParam(
             type="function",
             function=FunctionDefinition(
                 name=tool.name,
