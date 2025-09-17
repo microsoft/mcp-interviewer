@@ -74,8 +74,9 @@ def num_tokens_for_tool(tool: ChatCompletionToolParam, model):
         for key in list(properties.keys()):
             func_token_count += prop_key  # Add tokens for each set property
             p_name = key
-            p_type = properties[key]["type"]
-            p_desc = properties[key]["description"]
+            p_type = properties[key].get("type", "")
+            p_desc = properties[key].get("description", "")
+
             if "enum" in properties[key].keys():
                 func_token_count += enum_init  # Add tokens if property has enum list
                 for item in properties[key]["enum"]:
