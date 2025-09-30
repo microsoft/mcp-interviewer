@@ -6,7 +6,7 @@
 A Python CLI tool that helps you catch MCP server issues before your agents do.
 </i>
 </div>
-<a href="./README.md#installation">PyPi (coming soon!)</a> | <a href="https://www.microsoft.com/en-us/research/blog/tool-space-interference-in-the-mcp-era-designing-for-agent-compatibility-at-scale/">Blog</a> | <a href="./mcp-interview.md">Example</a>
+<a href="https://pypi.org/project/mcp-interviewer/">PyPi</a> | <a href="https://www.microsoft.com/en-us/research/blog/tool-space-interference-in-the-mcp-era-designing-for-agent-compatibility-at-scale/">Blog</a> | <a href="./mcp-interview.md">Example</a>
 </div>
 
 ---
@@ -97,7 +97,7 @@ Use `--reports [CODE ...]` to customize output.
 The easiest way to install `mcp-interviewer` is as a `uv` tool. Follow [these instructions](https://docs.astral.sh/uv/getting-started/installation/) to install uv.
 
 ```bash
-uv tool install --from "git+ssh://git@github.com/microsoft/mcp-interviewer.git" mcp-interviewer
+uv tool install mcp-interviewer
 
 # Then,
 mcp-interviewer ...
@@ -110,13 +110,13 @@ Read more about [CLI usage](./README.md#cli).
 Via `uv`
 
 ```bash
-uv add git+ssh://git@github.com/microsoft/mcp-interviewer.git
+uv add mcp-interviewer
 ```
 
 Via `pip`
 
 ```bash
-pip install git+ssh://git@github.com/microsoft/mcp-interviewer.git
+pip install mcp-interviewer
 ```
 
 Read more about [Python usage](./README.md#python).
