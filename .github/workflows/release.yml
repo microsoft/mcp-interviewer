@@ -2,6 +2,7 @@ name: Release
 
 permissions:
   contents: write
+  id-token: write
 
 on:
   workflow_dispatch:
@@ -53,7 +54,7 @@ jobs:
         git push origin main "v$VERSION"
 
     - name: Release to PyPi
-      run: "echo 'TODO: RELEASE TO PYPI'"
+      uses: pypa/gh-action-pypi-publish@release/v1
     
     - name: Bump version
       run: |
