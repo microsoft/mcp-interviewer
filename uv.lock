@@ -325,6 +325,7 @@ name = "mcp-interviewer"
 version = "0.0.12"
 source = { editable = "." }
 dependencies = [
+    { name = "jsonschema" },
     { name = "mcp" },
     { name = "openai" },
     { name = "tiktoken" },
@@ -340,6 +341,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "jsonschema", specifier = ">=4.0.0" },
     { name = "mcp", specifier = ">=1.10.1" },
     { name = "openai", specifier = ">=1.93.3" },
     { name = "tiktoken", specifier = ">=0.11.0" },
