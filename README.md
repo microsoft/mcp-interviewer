@@ -94,13 +94,11 @@ Use `--reports [CODE ...]` to customize output.
 
 ### As a CLI tool
 
-The easiest way to install `mcp-interviewer` is as a `uv` tool. Follow [these instructions](https://docs.astral.sh/uv/getting-started/installation/) to install uv.
-
 ```bash
-uv tool install mcp-interviewer
+pip install mcp-interviewer
 
 # Then,
-mcp-interviewer ...
+mcp-interviewer <your mcp server command>
 ```
 
 Read more about [CLI usage](./README.md#cli).
@@ -123,7 +121,7 @@ Read more about [Python usage](./README.md#python).
 
 ## Quick Start
 
-⚠️ ***mcp-interviewer arbitrarily executes the provided MCP server command in a child process. Whenever possible, run your server in a container like in the examples below to isolate the server from your host system.***
+⚠️ ***mcp-interviewer executes the provided MCP server command in a child process. Whenever possible, run your server in a container like in the examples below to isolate the server from your host system.***
 
 First, [install](./README.md#as-a-cli-tool) `mcp-interviewer` as a CLI tool.
 
@@ -158,9 +156,6 @@ Which will generate a report like [this](./mcp-interview.md).
 
 - `--constraints [CODE ...]`: Customize which constraints to check
 - `--reports [CODE ...]`: Customize which report sections to include
-
-
-
 - `--test`: Enable functional testing. 🚨 ***This option causes mcp-interviewer to invoke the server's tools. Be careful to limit the server's access to your host system, sensitive data, etc before using these options.***
 - `--judge-tools`: Enable experimental LLM evaluation of tools
 - `--judge-test`: Enable experimental LLM evaluation of functional tests (requires `--test`)
