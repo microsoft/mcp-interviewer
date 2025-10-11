@@ -17,6 +17,7 @@ dev = [
     "pre-commit>=4.3.0",
     "pyright>=1.1.403",
     "poethepoet>=0.37.0",
+    "pytest>=8.4.2",
 ]
 
 [project.scripts]
