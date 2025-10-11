@@ -24,7 +24,8 @@ class ResourceTemplatesReport(BaseReport):
 
     def _build(self):
         """Build the resource templates section."""
-        self.start_collapsible("Resource Templates", 2)
+        self.add_title("Resource Templates", 2)
+        self.start_collapsible("Toggle details")
 
         if not self._scorecard.resource_templates:
             self.add_text("_No resource templates available_")

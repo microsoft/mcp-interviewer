@@ -37,7 +37,8 @@ class ToolScorecardsReport(BaseReport):
                 scoring_disabled = True
 
         if scoring_disabled:
-            self.start_collapsible("Tool Scorecards", 2)
+            self.add_title("Tool Scorecards", 2)
+            self.start_collapsible("Toggle details")
             self.add_text(
                 "_Experimental tool judging disabled - no evaluations generated_"
             )
@@ -45,7 +46,8 @@ class ToolScorecardsReport(BaseReport):
             self.end_collapsible()
             return
         else:
-            self.start_collapsible("Tool Scorecards (🤖)", 2)
+            self.add_title("Tool Scorecards (🤖)", 2)
+            self.start_collapsible("Toggle details")
 
         if not self._scorecard.tool_scorecards:
             self.add_text("_No tool evaluations available_")

@@ -24,7 +24,8 @@ class ResourcesReport(BaseReport):
 
     def _build(self):
         """Build the resources section."""
-        self.start_collapsible("Resources", 2)
+        self.add_title("Resources", 2)
+        self.start_collapsible("Toggle details")
 
         if not self._scorecard.resources:
             self.add_text("_No resources available_")

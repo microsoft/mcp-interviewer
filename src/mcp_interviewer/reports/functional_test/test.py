@@ -36,7 +36,8 @@ class FunctionalTestReport(BaseReport):
             return
 
         # Check if scoring was disabled
-        self.start_collapsible("Functional Test Results", 2)
+        self.add_title("Functional Test Results", 2)
+        self.start_collapsible("Toggle details")
 
         # Test plan
         if self.include_evaluations and test.plan:

@@ -26,7 +26,8 @@ class InterviewerInfoReport(BaseReport):
 
     def _build(self):
         """Build the interviewer info section."""
-        self.start_collapsible("Interviewer Parameters", 2)
+        self.add_title("Interviewer Parameters", 2)
+        self.start_collapsible("Toggle details")
 
         self.add_title("Metadata", 4)
         # Add date and version
