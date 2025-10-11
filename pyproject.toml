@@ -9,6 +9,7 @@ dependencies = [
     "openai>=1.93.3",
     "tiktoken>=0.11.0",
     "jsonschema>=4.0.0",
+    "referencing>=0.36.2",
 ]
 
 [dependency-groups]
@@ -22,6 +23,7 @@ dev = [
 
 [project.scripts]
 mcp-interviewer = "mcp_interviewer.cli:cli"
+mcp-interviewer-agent = "mcp_interviewer.agent_cli:cli"
 
 [build-system]
 requires = ["hatchling"]
@@ -51,6 +53,12 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["F", "I", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
 
 [tool.poe.tasks]
 format = "ruff format src"

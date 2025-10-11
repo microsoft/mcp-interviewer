@@ -28,7 +28,7 @@ async def generate_functional_test(
         Exception: If test generation fails
     """
     try:
-        logger.debug(f"Generating functional test for {len(server.tools)} tools")
+        logger.info(f"Generating functional test for {len(server.tools)} tools")
         test = await prompts.generate_functional_test(client, model, server)
         logger.info(f"Generated test plan with {len(test.steps)} steps")
         logger.debug(f"Test plan: {test.plan}")
