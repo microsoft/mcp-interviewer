@@ -22,7 +22,8 @@ class PromptsReport(BaseReport):
 
     def _build(self):
         """Build the prompts section."""
-        self.start_collapsible("Available Prompts", 2)
+        self.add_title("Available Prompts", 2)
+        self.start_collapsible("Toggle details")
 
         if not self._scorecard.prompts:
             self.add_text("_No prompts available_")

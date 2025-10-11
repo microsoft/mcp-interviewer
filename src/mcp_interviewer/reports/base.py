@@ -85,22 +85,27 @@ class BaseReport(ABC):
         self._lines.extend(report._lines)
         return self
 
-    def start_collapsible(self, title: str, level: int = 2) -> "BaseReport":
-        """Start a collapsible section with a title."""
-        # Always add the markdown header
-        prefix = "#" * level
-        self._lines.append(f"{prefix} {title}")
-        self._lines.append("")
+    def start_collapsible(self, summary: str) -> "BaseReport":
+        """Start a collapsible section.
 
-        # Only add details tags if use_collapsible is True
+        Args:
+            summary: The summary text shown when collapsed
+
+        Returns:
+            Self for method chaining
+        """
         if self._options.use_collapsible:
             self._lines.append("<details>")
-            self._lines.append("<summary>Toggle details</summary>")
+            self._lines.append(f"<summary>{summary}</summary>")
             self._lines.append("")
         return self
 
     def end_collapsible(self) -> "BaseReport":
-        """End a collapsible section."""
+        """End a collapsible section.
+
+        Returns:
+            Self for method chaining
+        """
         if self._options.use_collapsible:
             self._lines.append("</details>")
             self._lines.append("")

@@ -28,7 +28,8 @@ class ToolsReport(BaseReport):
 
     def add_available_tools(self) -> "ToolsReport":
         """Add list of available tools with full details."""
-        self.start_collapsible("Tools", 2)
+        self.add_title("Tools", 2)
+        self.start_collapsible("Toggle details")
 
         if not self._scorecard.tools:
             self.add_text("_No tools available_")
