@@ -166,7 +166,7 @@ def cli():
         )
         accept_risk = args.accept_risk
         while not accept_risk:
-            input_str = input("Do you accept this risk? y|[n]: ").strip().lower()
+            input_str = input("Do you accept this risk? (y|[n]): ").strip().lower()
             if not input_str or input_str == "n":
                 sys.exit(1)
             else:
