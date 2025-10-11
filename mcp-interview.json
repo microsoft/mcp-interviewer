@@ -2401,8 +2401,8 @@
     "sampling_requests": 2,
     "elicitation_requests": 1,
     "list_roots_requests": 0,
-    "logging_requests": 2,
-    "plan": "This testing plan systematically exercises all 12 MCP server tools, starting with foundational, stateless tools and progressing to those demonstrating advanced features or requiring more complex input. Tools are grouped and ordered to build understanding, with dependencies and logical relationships considered. Each tool is tested with realistic arguments, and edge cases are included where appropriate. The plan ensures coverage of normal and boundary scenarios, and anticipates expected outputs for each step.",
+    "logging_requests": 1,
+    "plan": "This testing plan systematically exercises all 12 MCP server tools, starting with foundational, stateless tools and progressing to those demonstrating advanced features or requiring more complex input. Tools are grouped and ordered to build understanding, with dependencies and logical relationships considered. Each tool is tested with realistic arguments, and edge cases are included where relevant. The plan aims for comprehensive coverage with minimal redundancy.",
     "steps": [
       {
         "error_handling": {
@@ -2450,9 +2450,9 @@
         "sampling_requests": 0,
         "elicitation_requests": 0,
         "list_roots_requests": 0,
-        "logging_requests": 2,
-        "justification": "Echo is a foundational tool with no dependencies. Testing with a simple string verifies basic echo functionality.",
-        "expected_output": "The response should be the same as the input message: 'Hello, MCP!'.",
+        "logging_requests": 1,
+        "justification": "Echo is a foundational tool; test with a standard string to verify basic echo functionality.",
+        "expected_output": "Should return the exact message sent: 'Hello, MCP!'",
         "tool_name": "echo",
         "tool_arguments": {
           "message": "Hello, MCP!"
@@ -2505,8 +2505,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Edge case: Test echo with an empty string to ensure it handles empty input gracefully.",
-        "expected_output": "The response should be an empty string.",
+        "justification": "Test echo with an empty string to check handling of edge case input.",
+        "expected_output": "Should return an empty string.",
         "tool_name": "echo",
         "tool_arguments": {
           "message": ""
@@ -2559,8 +2559,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Basic arithmetic test with two positive integers.",
-        "expected_output": "The response should be 10.",
+        "justification": "Test add with two positive integers to verify correct addition.",
+        "expected_output": "Should return 10.",
         "tool_name": "add",
         "tool_arguments": {
           "a": 3,
@@ -2614,8 +2614,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test with a negative and a floating-point number to check handling of different number types.",
-        "expected_output": "The response should be -2.5.",
+        "justification": "Test add with a negative and a floating-point number to check handling of varied numeric types.",
+        "expected_output": "Should return -2.5.",
         "tool_name": "add",
         "tool_arguments": {
           "a": -5,
@@ -2669,8 +2669,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test the long-running operation with minimal duration and steps to verify progress updates and completion.",
-        "expected_output": "Should return progress updates (e.g., 0%, 50%, 100%) over ~2 seconds, then a completion message.",
+        "justification": "Test longRunningOperation with minimal duration and steps to verify progress updates and completion.",
+        "expected_output": "Should provide progress updates (e.g., 0%, 50%, 100%) over 2 seconds, then a completion message.",
         "tool_name": "longRunningOperation",
         "tool_arguments": {
           "duration": 2,
@@ -2724,7 +2724,7 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Edge case: Zero duration and minimal steps to ensure the tool handles instant completion.",
+        "justification": "Edge case: zero duration and single step to test immediate completion.",
         "expected_output": "Should immediately return a single progress update and completion.",
         "tool_name": "longRunningOperation",
         "tool_arguments": {
@@ -2766,7 +2766,7 @@
           "content": [
             {
               "type": "text",
-              "text": "{\n  \"npm_config_user_agent\": \"npm/10.9.2 node/v22.17.0 linux arm64 workspaces/false\",\n  \"NODE_VERSION\": \"22.17.0\",\n  \"HOSTNAME\": \"1639ae8399b7\",\n  \"YARN_VERSION\": \"1.22.22\",\n  \"npm_node_execpath\": \"/usr/local/bin/node\",\n  \"npm_config_noproxy\": \"\",\n  \"HOME\": \"/root\",\n  \"npm_package_json\": \"/package.json\",\n  \"npm_config_userconfig\": \"/root/.npmrc\",\n  \"npm_config_local_prefix\": \"/\",\n  \"npm_config_yes\": \"true\",\n  \"COLOR\": \"0\",\n  \"npm_config_prefix\": \"/usr/local\",\n  \"npm_config_npm_version\": \"10.9.2\",\n  \"npm_config_cache\": \"/root/.npm\",\n  \"npm_config_node_gyp\": \"/usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js\",\n  \"PATH\": \"/root/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin:/node_modules/.bin:/usr/local/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\n  \"NODE\": \"/usr/local/bin/node\",\n  \"npm_lifecycle_script\": \"mcp-server-everything\",\n  \"npm_lifecycle_event\": \"npx\",\n  \"npm_config_globalconfig\": \"/usr/local/etc/npmrc\",\n  \"npm_config_init_module\": \"/root/.npm-init.js\",\n  \"PWD\": \"/\",\n  \"npm_execpath\": \"/usr/local/lib/node_modules/npm/bin/npm-cli.js\",\n  \"npm_config_global_prefix\": \"/usr/local\",\n  \"npm_command\": \"exec\",\n  \"INIT_CWD\": \"/\",\n  \"EDITOR\": \"vi\"\n}",
+              "text": "{\n  \"npm_config_user_agent\": \"npm/10.9.2 node/v22.17.0 linux arm64 workspaces/false\",\n  \"NODE_VERSION\": \"22.17.0\",\n  \"HOSTNAME\": \"a2ba59e0192a\",\n  \"YARN_VERSION\": \"1.22.22\",\n  \"npm_node_execpath\": \"/usr/local/bin/node\",\n  \"npm_config_noproxy\": \"\",\n  \"HOME\": \"/root\",\n  \"npm_package_json\": \"/package.json\",\n  \"npm_config_userconfig\": \"/root/.npmrc\",\n  \"npm_config_local_prefix\": \"/\",\n  \"npm_config_yes\": \"true\",\n  \"COLOR\": \"0\",\n  \"npm_config_prefix\": \"/usr/local\",\n  \"npm_config_npm_version\": \"10.9.2\",\n  \"npm_config_cache\": \"/root/.npm\",\n  \"npm_config_node_gyp\": \"/usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js\",\n  \"PATH\": \"/root/.npm/_npx/5b2dd62b9d0bddd4/node_modules/.bin:/node_modules/.bin:/usr/local/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\",\n  \"NODE\": \"/usr/local/bin/node\",\n  \"npm_lifecycle_script\": \"mcp-server-everything\",\n  \"npm_lifecycle_event\": \"npx\",\n  \"npm_config_globalconfig\": \"/usr/local/etc/npmrc\",\n  \"npm_config_init_module\": \"/root/.npm-init.js\",\n  \"PWD\": \"/\",\n  \"npm_execpath\": \"/usr/local/lib/node_modules/npm/bin/npm-cli.js\",\n  \"npm_config_global_prefix\": \"/usr/local\",\n  \"npm_command\": \"exec\",\n  \"INIT_CWD\": \"/\",\n  \"EDITOR\": \"vi\"\n}",
               "annotations": null,
               "meta": null
             }
@@ -2779,8 +2779,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Stateless tool to verify the server's environment variable reporting.",
-        "expected_output": "A dictionary/object containing all environment variables and their values.",
+        "justification": "Test printEnv to verify environment variable reporting; useful for debugging server configuration.",
+        "expected_output": "Should return a dictionary/object of environment variables and their values.",
         "tool_name": "printEnv",
         "tool_arguments": {}
       },
@@ -2832,7 +2832,7 @@
         "list_roots_requests": 0,
         "logging_requests": 0,
         "justification": "Test LLM sampling with a factual prompt and a small token limit.",
-        "expected_output": "A short LLM-generated response, likely 'Paris' or a brief sentence.",
+        "expected_output": "Should return a short LLM-generated response, e.g., 'The capital of France is Paris.'",
         "tool_name": "sampleLLM",
         "tool_arguments": {
           "prompt": "What is the capital of France?",
@@ -2886,12 +2886,11 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test LLM with a creative prompt and a larger token limit.",
-        "expected_output": "A short poem or several lines of text about the sea.",
+        "justification": "Test LLM sampling with a creative prompt and default maxTokens.",
+        "expected_output": "Should return a short haiku or poetic response about rain.",
         "tool_name": "sampleLLM",
         "tool_arguments": {
-          "prompt": "Write a short poem about the sea.",
-          "maxTokens": 50
+          "prompt": "Write a haiku about rain."
         }
       },
       {
@@ -2954,8 +2953,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test retrieval of the MCP_TINY_IMAGE resource.",
-        "expected_output": "A binary or base64-encoded image object representing the tiny image.",
+        "justification": "Test getTinyImage to verify image retrieval functionality.",
+        "expected_output": "Should return the MCP_TINY_IMAGE (likely as a base64 string or binary blob).",
         "tool_name": "getTinyImage",
         "tool_arguments": {}
       },
@@ -3001,6 +3000,18 @@
                 "priority": 0.7
               },
               "meta": null
+            },
+            {
+              "type": "image",
+              "data": "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",
+              "mimeType": "image/png",
+              "annotations": {
+                "audience": [
+                  "user"
+                ],
+                "priority": 0.5
+              },
+              "meta": null
             }
           ],
           "structuredContent": null,
@@ -3011,12 +3022,12 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test annotated message with 'success' type and no image.",
-        "expected_output": "A message object with a 'success' annotation and no image included.",
+        "justification": "Test annotatedMessage with 'success' type and image inclusion to verify annotation and image embedding.",
+        "expected_output": "Should return a message annotated as 'success' and include an example image.",
         "tool_name": "annotatedMessage",
         "tool_arguments": {
           "messageType": "success",
-          "includeImage": false
+          "includeImage": true
         }
       },
       {
@@ -3062,18 +3073,6 @@
                 "priority": 1.0
               },
               "meta": null
-            },
-            {
-              "type": "image",
-              "data": "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",
-              "mimeType": "image/png",
-              "annotations": {
-                "audience": [
-                  "user"
-                ],
-                "priority": 0.5
-              },
-              "meta": null
             }
           ],
           "structuredContent": null,
@@ -3084,12 +3083,11 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test annotated message with 'error' type and image included to verify both annotation and image embedding.",
-        "expected_output": "A message object with an 'error' annotation and an example image included.",
+        "justification": "Test annotatedMessage with 'error' type and default image inclusion (false) to check error annotation.",
+        "expected_output": "Should return a message annotated as 'error' without an image.",
         "tool_name": "annotatedMessage",
         "tool_arguments": {
-          "messageType": "error",
-          "includeImage": true
+          "messageType": "error"
         }
       },
       {
@@ -3157,8 +3155,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test resource reference with the minimum valid resource ID.",
-        "expected_output": "A resource reference object for resource ID 1.",
+        "justification": "Test getResourceReference with the minimum valid resourceId to check lower boundary.",
+        "expected_output": "Should return a resource reference object for resourceId 1.",
         "tool_name": "getResourceReference",
         "tool_arguments": {
           "resourceId": 1
@@ -3229,8 +3227,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Edge case: Test with the maximum valid resource ID.",
-        "expected_output": "A resource reference object for resource ID 100.",
+        "justification": "Test getResourceReference with the maximum valid resourceId to check upper boundary.",
+        "expected_output": "Should return a resource reference object for resourceId 100.",
         "tool_name": "getResourceReference",
         "tool_arguments": {
           "resourceId": 100
@@ -3270,7 +3268,7 @@
           "content": [
             {
               "type": "text",
-              "text": "Here are 3 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):",
+              "text": "Here are 1 resource links to resources available in this server (see full output in tool response if your client does not support resource_link yet):",
               "annotations": null,
               "meta": null
             },
@@ -3279,28 +3277,6 @@
               "title": null,
               "uri": "test://static/resource/1",
               "description": "Resource 1: plaintext resource",
-              "mimeType": "text/plain",
-              "size": null,
-              "annotations": null,
-              "meta": null,
-              "type": "resource_link"
-            },
-            {
-              "name": "Resource 2",
-              "title": null,
-              "uri": "test://static/resource/2",
-              "description": "Resource 2: binary blob resource",
-              "mimeType": "application/octet-stream",
-              "size": null,
-              "annotations": null,
-              "meta": null,
-              "type": "resource_link"
-            },
-            {
-              "name": "Resource 3",
-              "title": null,
-              "uri": "test://static/resource/3",
-              "description": "Resource 3: plaintext resource",
               "mimeType": "text/plain",
               "size": null,
               "annotations": null,
@@ -3316,11 +3292,11 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test retrieval of multiple resource links with the default count.",
-        "expected_output": "An array of 3 resource link objects, each referencing a different resource.",
+        "justification": "Test getResourceLinks with the minimum count to check lower boundary.",
+        "expected_output": "Should return a list with one resource link.",
         "tool_name": "getResourceLinks",
         "tool_arguments": {
-          "count": 3
+          "count": 1
         }
       },
       {
@@ -3480,8 +3456,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Edge case: Test with the maximum allowed count to verify upper boundary handling.",
-        "expected_output": "An array of 10 resource link objects.",
+        "justification": "Test getResourceLinks with the maximum count to check upper boundary.",
+        "expected_output": "Should return a list with ten resource links.",
         "tool_name": "getResourceLinks",
         "tool_arguments": {
           "count": 10
@@ -3538,8 +3514,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test structured content with a city name to verify normal operation.",
-        "expected_output": "An object with 'temperature', 'conditions', and 'humidity' fields for San Francisco.",
+        "justification": "Test structuredContent with a city name to verify structured weather data output.",
+        "expected_output": "Should return an object with temperature, conditions, and humidity for San Francisco.",
         "tool_name": "structuredContent",
         "tool_arguments": {
           "location": "San Francisco"
@@ -3596,8 +3572,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test structured content with a zip code to verify alternate valid input.",
-        "expected_output": "An object with 'temperature', 'conditions', and 'humidity' fields for the 94103 zip code.",
+        "justification": "Test structuredContent with a zip code to verify alternate location input.",
+        "expected_output": "Should return an object with temperature, conditions, and humidity for zip code 94103.",
         "tool_name": "structuredContent",
         "tool_arguments": {
           "location": "94103"
@@ -3650,8 +3626,8 @@
         "elicitation_requests": 0,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test listing of MCP roots to verify protocol support, even if no files are present.",
-        "expected_output": "A list (possibly empty) of root objects or a message indicating no roots are available.",
+        "justification": "Test listRoots to verify the roots protocol capability, even though no files are accessed.",
+        "expected_output": "Should return a list of current MCP roots (may be empty or contain mock roots).",
         "tool_name": "listRoots",
         "tool_arguments": {}
       },
@@ -3708,8 +3684,8 @@
         "elicitation_requests": 1,
         "list_roots_requests": 0,
         "logging_requests": 0,
-        "justification": "Test the elicitation feature to verify interactive information gathering.",
-        "expected_output": "A prompt or sequence of prompts asking for favorite color, number, and pets.",
+        "justification": "Test startElicitation to verify the elicitation protocol, prompting for user information.",
+        "expected_output": "Should prompt for favorite color, number, and pets, possibly as a multi-step interaction.",
         "tool_name": "startElicitation",
         "tool_arguments": {}
       }
