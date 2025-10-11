@@ -48,7 +48,7 @@ class ConstraintViolationsReport(BaseReport):
                 warnings += 1
             constraint_to_violations[type(violation.constraint)].append(violation)
 
-        passes = len([v for v in constraint_to_violations.values() if not v])
+        passes = sum(1 for v in constraint_to_violations.values() if not v)
 
         self.add_table_header(["❌ Errors", "⚠️ Warnings", "✅ Passes"])
         self.add_table_row(list(map(str, (errors, warnings, passes))))
