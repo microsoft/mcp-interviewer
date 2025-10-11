@@ -74,7 +74,7 @@ def cli():
     parser.add_argument(
         "--constraints",
         nargs="+",
-        help="Specify which constraint violations to check (all enabled by default). Can use full names (e.g., openai-tool-count, openai-name-length) or shorthand codes (e.g., OTC, ONL, ONP, OTL, OA)",
+        help="Specify which constraint violations to check (all enabled by default). Can use full names (e.g., openai-tool-count, openai-name-length, tool-schema-flatness) or shorthand codes (e.g., OTC, ONL, ONP, OTL, TSF, OA)",
     )
     parser.add_argument(
         "--test",

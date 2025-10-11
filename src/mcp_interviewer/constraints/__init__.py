@@ -13,6 +13,7 @@ from .openai import (
     OpenAIToolNamePatternConstraint,
     OpenAIToolResultTokenLengthConstraint,
 )
+from .tool_schema_flatness import ToolInputSchemaFlatnessConstraint
 
 
 class AllConstraints(CompositeConstraint):
@@ -26,6 +27,7 @@ class AllConstraints(CompositeConstraint):
         """Initialize with all available constraint sets."""
         super().__init__(
             OpenAIConstraints(),
+            ToolInputSchemaFlatnessConstraint(),
         )
 
 
@@ -35,6 +37,7 @@ ALL_CONSTRAINT_CLASSES = [
     OpenAIToolNameLengthConstraint,
     OpenAIToolNamePatternConstraint,
     OpenAIToolResultTokenLengthConstraint,
+    ToolInputSchemaFlatnessConstraint,
 ]
 
 # Create mappings for names and codes
