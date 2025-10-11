@@ -59,17 +59,27 @@ class ConstraintViolationsReport(BaseReport):
         for constraint, violations in sorted(
             constraint_to_violations.items(), key=lambda item: item[0].cli_code()
         ):
-            constraint_str = f"{constraint.cli_name()} ({constraint.cli_code()})"
+            constraint_prefix = f"{constraint.cli_name()} ({constraint.cli_code()})"
+
+            constraint_suffix = ""
+            for i, source in enumerate(constraint.sources()):
+                constraint_suffix += f"[[{i + 1}]]({source}) "
+            constraint_suffix = constraint_suffix.strip()
+
             if violations:
                 for violation in violations:
                     if violation.severity == Severity.CRITICAL:
-                        self.add_text(f"❌ {constraint_str}: {violation.message}")
+                        self.add_text(
+                            f"❌ {constraint_prefix}: {violation.message} {constraint_suffix}"
+                        )
                     elif violation.severity == Severity.WARNING:
-                        self.add_text(f"⚠️ {constraint_str}: {violation.message}")
+                        self.add_text(
+                            f"⚠️ {constraint_prefix}: {violation.message} {constraint_suffix}"
+                        )
 
                     self.add_blank_line()
             else:
-                self.add_text(f"✅ {constraint_str}")
+                self.add_text(f"✅ {constraint_prefix} {constraint_suffix}")
                 self.add_blank_line()
 
         self.end_collapsible()

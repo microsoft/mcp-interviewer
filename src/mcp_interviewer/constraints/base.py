@@ -11,8 +11,11 @@ from enum import StrEnum
 from typing import Any
 
 from mcp.types import CallToolResult, Tool
+from pydantic import FileUrl, HttpUrl
 
 from ..models import ServerScoreCard
+
+SourceUrl = HttpUrl | FileUrl
 
 
 class Severity(StrEnum):
@@ -80,6 +83,18 @@ class Constraint(ABC):
             str: The shorthand code (e.g., "TC")
         """
         ...
+
+    @classmethod
+    def sources(cls) -> list[SourceUrl]:
+        """Return a list of source URLs for documentation or reference.
+
+        Subclasses can override this method to provide relevant documentation
+        links for the constraint.
+
+        Returns:
+            list[SourceUrl]: List of HTTP or File URLs (default: empty list)
+        """
+        return []
 
     @abstractmethod
     def test(

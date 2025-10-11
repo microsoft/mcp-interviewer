@@ -3,10 +3,11 @@ from typing import Any
 
 from jsonschema import RefResolver
 from mcp import Tool
+from pydantic import HttpUrl
 
 from mcp_interviewer.constraints.base import ConstraintViolation, Severity
 
-from .base import ToolConstraint
+from .base import SourceUrl, ToolConstraint
 
 
 class ToolInputSchemaFlatnessConstraint(ToolConstraint):
@@ -30,6 +31,10 @@ class ToolInputSchemaFlatnessConstraint(ToolConstraint):
     def cli_code(cls) -> str:
         """Return the shorthand code for this constraint."""
         return "TSF"
+
+    @classmethod
+    def sources(cls) -> list[SourceUrl]:
+        return [HttpUrl("https://composio.dev/blog/gpt-4-function-calling-example")]
 
     def test_tool(self, tool: Tool) -> Generator[ConstraintViolation, None, None]:
         """Test if the tool's inputSchema has nested properties fields.

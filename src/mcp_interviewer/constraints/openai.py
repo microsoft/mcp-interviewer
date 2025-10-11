@@ -10,12 +10,14 @@ import re
 from collections.abc import Generator
 
 from mcp.types import CallToolResult, Tool
+from pydantic import HttpUrl
 
 from .base import (
     Constraint,
     ConstraintViolation,
     ServerScoreCard,
     Severity,
+    SourceUrl,
     ToolConstraint,
     ToolResultConstraint,
 )
@@ -38,6 +40,14 @@ class OpenAIToolCountConstraint(Constraint):
     def cli_code(cls) -> str:
         """Return the shorthand code for this constraint."""
         return "OTC"
+
+    @classmethod
+    def sources(cls) -> list[SourceUrl]:
+        return [
+            HttpUrl(
+                "https://platform.openai.com/docs/guides/function-calling#best-practices-for-defining-functions"
+            )
+        ]
 
     def test(
         self, server: ServerScoreCard
@@ -80,6 +90,14 @@ class OpenAIToolNameLengthConstraint(ToolConstraint):
         """Return the shorthand code for this constraint."""
         return "ONL"
 
+    @classmethod
+    def sources(cls) -> list[SourceUrl]:
+        return [
+            HttpUrl(
+                "https://github.com/openai/openai-python/blob/e5f93f5daee9f3fc7646833ac235b1693f192a56/src/openai/types/shared_params/function_definition.py#L17-L18"
+            )
+        ]
+
     def test_tool(self, tool: Tool) -> Generator[ConstraintViolation, None, None]:
         """Test if the tool name meets length requirements.
 
@@ -113,6 +131,14 @@ class OpenAIToolNamePatternConstraint(ToolConstraint):
     def cli_code(cls) -> str:
         """Return the shorthand code for this constraint."""
         return "ONP"
+
+    @classmethod
+    def sources(cls) -> list[SourceUrl]:
+        return [
+            HttpUrl(
+                "https://github.com/openai/openai-python/blob/e5f93f5daee9f3fc7646833ac235b1693f192a56/src/openai/types/shared_params/function_definition.py#L17-L18"
+            )
+        ]
 
     pattern = re.compile(r"^[a-zA-Z_]+[a-zA-Z0-9_]*$")
 
@@ -150,6 +176,10 @@ class OpenAIToolResultTokenLengthConstraint(ToolResultConstraint):
     def cli_code(cls) -> str:
         """Return the shorthand code for this constraint."""
         return "OTL"
+
+    @classmethod
+    def sources(cls) -> list[SourceUrl]:
+        return [HttpUrl("https://platform.openai.com/docs/models/compare")]
 
     def test_tool_result(
         self, result: CallToolResult
