@@ -1,7 +1,7 @@
 """Constraint violations report generation."""
 
 from ...constraints import get_selected_constraints
-from ...constraints.base import ConstraintViolation, Severity
+from ...constraints.base import Constraint, ConstraintViolation, Severity
 from ...models import ServerScoreCard
 from ..base import BaseReport
 
@@ -34,86 +34,42 @@ class ConstraintViolationsReport(BaseReport):
         # Add title
         self.add_title("Constraint Violations", 2)
 
-        # Always show summary message first
-        if not self.violations:
-            self.add_text("✅ **No constraint violations found**")
-            self.add_blank_line()
-        else:
-            # Group by severity
-            errors = [v for v in self.violations if v.severity == Severity.CRITICAL]
-            warnings = [v for v in self.violations if v.severity == Severity.WARNING]
+        # Group by constraint for consistent ordering
+        constraint_to_violations: dict[type[Constraint], list[ConstraintViolation]] = {
+            constraint: [] for constraint in self.selected_constraints
+        }
 
-            # Show summary counts
-            summary_parts = []
-            if errors:
-                summary_parts.append(
-                    f"❌ {len(errors)} error{'s' if len(errors) > 1 else ''}"
-                )
-            if warnings:
-                summary_parts.append(
-                    f"⚠️ {len(warnings)} warning{'s' if len(warnings) > 1 else ''}"
-                )
+        errors = 0
+        warnings = 0
+        for violation in self.violations:
+            if violation.severity == Severity.CRITICAL:
+                errors += 1
+            elif violation.severity == Severity.WARNING:
+                warnings += 1
+            constraint_to_violations[type(violation.constraint)].append(violation)
 
-            self.add_text(f"**Found:** {', '.join(summary_parts)}")
-            self.add_blank_line()
+        passes = len([v for v in constraint_to_violations.values() if not v])
 
-        # Put checked constraints in collapsible section
-        if self._options.use_collapsible:
-            self.add_text("<details>")
-            self.add_text("<summary>Checked constraints</summary>")
-            self.add_blank_line()
-
-        self.add_text(
-            f"**Constraints checked:** {', '.join(c.cli_name() for c in self.selected_constraints)}"
-        )
+        self.add_table_header(["❌ Errors", "⚠️ Warnings", "✅ Passes"])
+        self.add_table_row(list(map(str, (errors, warnings, passes))))
         self.add_blank_line()
 
-        if self._options.use_collapsible:
-            self.add_text("</details>")
-            self.add_blank_line()
+        self.start_collapsible("Details")
 
-        # Return early if no violations
-        if not self.violations:
-            return
+        for constraint, violations in sorted(
+            constraint_to_violations.items(), key=lambda item: item[0].cli_code()
+        ):
+            constraint_str = f"{constraint.cli_name()} ({constraint.cli_code()})"
+            if violations:
+                for violation in violations:
+                    if violation.severity == Severity.CRITICAL:
+                        self.add_text(f"❌ {constraint_str}: {violation.message}")
+                    elif violation.severity == Severity.WARNING:
+                        self.add_text(f"⚠️ {constraint_str}: {violation.message}")
 
-        # Put violation details in collapsible section
-        errors = [v for v in self.violations if v.severity == Severity.CRITICAL]
-        warnings = [v for v in self.violations if v.severity == Severity.WARNING]
-        if self._options.use_collapsible:
-            self.add_text("<details>")
-            self.add_text("<summary>Violation details</summary>")
-            self.add_blank_line()
+                    self.add_blank_line()
+            else:
+                self.add_text(f"✅ {constraint_str}")
+                self.add_blank_line()
 
-        if errors:
-            self.add_text(f"**Errors ({len(errors)}):**")
-            self.add_blank_line()
-            for violation in errors:
-                cli_code = (
-                    violation.constraint.cli_code()
-                    if hasattr(violation.constraint, "cli_code")
-                    else ""
-                )
-                if cli_code:
-                    self.add_text(f"- ❌ [{cli_code}] {violation.message}")
-                else:
-                    self.add_text(f"- ❌ {violation.message}")
-            self.add_blank_line()
-
-        if warnings:
-            self.add_text(f"**Warnings ({len(warnings)}):**")
-            self.add_blank_line()
-            for violation in warnings:
-                cli_code = (
-                    violation.constraint.cli_code()
-                    if hasattr(violation.constraint, "cli_code")
-                    else ""
-                )
-                if cli_code:
-                    self.add_text(f"- ⚠️ [{cli_code}] {violation.message}")
-                else:
-                    self.add_text(f"- ⚠️ {violation.message}")
-            self.add_blank_line()
-
-        if self._options.use_collapsible:
-            self.add_text("</details>")
-            self.add_blank_line()
+        self.end_collapsible()
