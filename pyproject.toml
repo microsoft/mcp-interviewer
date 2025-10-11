@@ -61,3 +61,4 @@ typecheck = "pyright src"
 check = ["formatcheck",  "lint",  "typecheck"]
 precommit = ["formatcheck",  "lint"]
 fix = ["format", "lintfix"]
+example = "mcp-interviewer --test --model gpt-4.1 'docker run -i --rm node:lts npx -y @modelcontextprotocol/server-everything'"
