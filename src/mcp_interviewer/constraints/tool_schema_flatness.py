@@ -1,9 +1,10 @@
 from collections.abc import Generator
 from typing import Any
 
-from jsonschema import RefResolver
 from mcp import Tool
 from pydantic import HttpUrl
+from referencing import Registry
+from referencing.jsonschema import DRAFT202012
 
 from mcp_interviewer.constraints.base import ConstraintViolation, Severity
 
@@ -45,12 +46,14 @@ class ToolInputSchemaFlatnessConstraint(ToolConstraint):
         Yields:
             ConstraintViolation: Warning if inputSchema contains nested "properties" fields
         """
-        # Create a resolver for handling $ref references
-        resolver = RefResolver.from_schema(tool.inputSchema)
+        # Create a registry for handling $ref references using the new referencing library
+        # Explicitly use DRAFT202012 specification
+        resource = DRAFT202012.create_resource(tool.inputSchema)
+        registry = Registry().with_resource(uri="", resource=resource)
 
         def has_nested_structure(
             obj: Any,
-            resolver: RefResolver,
+            registry: Any,
             depth: int = 0,
             inside_array: bool = False,
             visited: set[str] | None = None,
@@ -90,9 +93,11 @@ class ToolInputSchemaFlatnessConstraint(ToolConstraint):
                 visited.add(ref_url)
 
                 try:
-                    _, resolved = resolver.resolve(ref_url)
+                    # Use the new referencing API
+                    resolver = registry.resolver()
+                    resolved = resolver.lookup(ref_url).contents
                     if isinstance(resolved, dict) and has_nested_structure(
-                        resolved, resolver, depth, inside_array, visited
+                        resolved, registry, depth, inside_array, visited
                     ):
                         return True
                 except Exception:
@@ -106,31 +111,31 @@ class ToolInputSchemaFlatnessConstraint(ToolConstraint):
                     if isinstance(value, dict):
                         for prop_value in value.values():
                             if has_nested_structure(
-                                prop_value, resolver, depth + 1, inside_array, visited
+                                prop_value, registry, depth + 1, inside_array, visited
                             ):
                                 return True
                 elif key == "items":
                     # Check array items - set inside_array=True
                     if isinstance(value, dict):
-                        if has_nested_structure(value, resolver, depth, True, visited):
+                        if has_nested_structure(value, registry, depth, True, visited):
                             return True
                 elif isinstance(value, dict):
                     # Check nested structures (like oneOf, anyOf, allOf, etc.)
                     if has_nested_structure(
-                        value, resolver, depth, inside_array, visited
+                        value, registry, depth, inside_array, visited
                     ):
                         return True
                 elif isinstance(value, list):
                     # Check each item in arrays (like oneOf, anyOf, allOf)
                     for item in value:
                         if isinstance(item, dict) and has_nested_structure(
-                            item, resolver, depth, inside_array, visited
+                            item, registry, depth, inside_array, visited
                         ):
                             return True
 
             return False
 
-        if has_nested_structure(tool.inputSchema, resolver):
+        if has_nested_structure(tool.inputSchema, registry):
             yield ConstraintViolation(
                 self,
                 f"Tool '{tool.name}': inputSchema contains nested structures (nested objects or arrays). Tool parameters should be flat.",
