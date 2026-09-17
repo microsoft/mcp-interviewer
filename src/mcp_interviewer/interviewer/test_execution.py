@@ -94,12 +94,14 @@ async def execute_functional_test(
 
     step_outputs = []
     for i, step in enumerate(test.steps, 1):
-        logger.info(f"Step {i}/{len(test.steps)}: {step.tool_name}")
+        logger.info(f"  [{i}/{len(test.steps)}] Testing tool: {step.tool_name}")
         try:
             output = await execute_functional_test_step(session, step, request_counters)
             step_outputs.append(output)
         except Exception as e:
-            logger.error(f"Step {i}/{len(test.steps)} failed: {e}")
+            logger.error(
+                f"  [{i}/{len(test.steps)}] Tool {step.tool_name} test failed: {e}"
+            )
             raise
 
     return FunctionalTestOutput(

@@ -1,4 +1,3 @@
-import asyncio
 import logging
 from typing import Any
 
@@ -354,6 +353,7 @@ class MCPInterviewer:
             logger.info(f"Starting MCP Server Evaluation: {params.url}")
         logger.info("=" * 60)
 
+        scorecard: ServerScoreCard | None = None
         try:
             async with mcp_client(params) as (read, write):
                 async with ClientSession(
@@ -375,23 +375,20 @@ class MCPInterviewer:
                     logger.info("PHASE 2: Tool Quality Assessment")
                     logger.info("=" * 60)
                     if server.tools:
-                        logger.info(f"Evaluating {len(server.tools)} tools")
-                        tool_scorecards = await asyncio.gather(
-                            *[self.judge_tool(tool) for tool in server.tools],
-                            return_exceptions=True,
-                        )
+                        logger.info(f"Judging {len(server.tools)} tools")
 
-                        # Log any errors from tool judging
-                        successful_scorecards = []
-                        for i, scorecard in enumerate(tool_scorecards):
-                            if isinstance(scorecard, Exception):
-                                logger.error(
-                                    f"Tool {server.tools[i].name} judging failed: {scorecard}"
-                                )
-                            else:
-                                successful_scorecards.append(scorecard)
-
-                        tool_scorecards = successful_scorecards
+                        # Judge tools sequentially to show progress
+                        tool_scorecards = []
+                        for i, tool in enumerate(server.tools, 1):
+                            logger.info(
+                                f"  [{i}/{len(server.tools)}] Judging tool: {tool.name}"
+                            )
+                            try:
+                                tool_scorecard = await self.judge_tool(tool)
+                                tool_scorecards.append(tool_scorecard)
+                            except Exception as e:
+                                logger.error(f"  Tool {tool.name} judging failed: {e}")
+                                # Continue with other tools even if one fails
                     else:
                         logger.info("No tools found")
                         tool_scorecards = []
@@ -409,7 +406,12 @@ class MCPInterviewer:
                             functional_test_step_outputs,
                         ) = await self.execute_functional_test(session, functional_test)
 
-                        # Judge functional test
+                        # Judge functional test (if enabled)
+                        if self._should_judge_functional_test:
+                            logger.info(
+                                f"Judging {len(functional_test.steps)} test steps"
+                            )
+
                         functional_test_scorecard = await self.judge_functional_test(
                             functional_test,
                             functional_test_output,
@@ -434,8 +436,31 @@ class MCPInterviewer:
                     logger.info("Evaluation Complete")
                     logger.info("=" * 60)
 
-                    return scorecard
+        except ExceptionGroup as eg:
+            # Check if this is just cleanup errors after successful evaluation
+            import anyio
+
+            has_broken_resource = any(
+                isinstance(e, anyio.BrokenResourceError) for e in eg.exceptions
+            )
+
+            if has_broken_resource and scorecard is not None:
+                # Evaluation completed successfully, just cleanup noise
+                logger.debug(
+                    "Ignoring BrokenResourceError during cleanup (evaluation succeeded)"
+                )
+                return scorecard
+            else:
+                # Real error during evaluation
+                logger.error(f"Evaluation failed: {eg}", exc_info=True)
+                logger.error("=" * 60)
+                raise
         except Exception as e:
             logger.error(f"Evaluation failed: {e}", exc_info=True)
             logger.error("=" * 60)
             raise
+
+        if scorecard is None:
+            raise RuntimeError("Evaluation completed but no scorecard was created")
+
+        return scorecard

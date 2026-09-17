@@ -122,7 +122,11 @@ async def judge_functional_test(
     """
 
     step_scorecards: list[FunctionalTestStepScoreCard] = []
-    for step, step_output in zip(test.steps, step_outputs):
+    for i, (step, step_output) in enumerate(zip(test.steps, step_outputs), 1):
+        if should_judge:
+            logger.info(
+                f"  [{i}/{len(test.steps)}] Judging test step: {step.tool_name}"
+            )
         step_scorecard = await judge_functional_test_step(
             client, model, step, step_output, should_judge
         )
